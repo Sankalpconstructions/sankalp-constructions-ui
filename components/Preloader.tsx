@@ -4,9 +4,20 @@ import { motion } from "framer-motion";
 import { Home, Building, Blocks } from "lucide-react";
 
 export default function Preloader() {
-  const [isVisible, setIsVisible] = useState(true);
+  // Start invisible until we confirm on the client whether it should show
+  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
+    const alreadyShown = sessionStorage.getItem("preloader_shown");
+    if (alreadyShown) {
+      // Don't show again during this browser session
+      return;
+    }
+
+    // Mark as shown for the rest of this session
+    sessionStorage.setItem("preloader_shown", "true");
+    setIsVisible(true);
+
     const timer = setTimeout(() => {
       setIsVisible(false);
     }, 2000);

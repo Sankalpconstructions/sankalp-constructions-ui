@@ -5,19 +5,19 @@ import { X, Send } from "lucide-react";
 
 export default function PopupLeadForm() {
   const [isVisible, setIsVisible] = useState(false);
-  const [hasShown, setHasShown] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   useEffect(() => {
+    const alreadyShown = sessionStorage.getItem("popup_form_shown");
+    if (alreadyShown) return; // Already shown in this session, skip
+
     const timer = setTimeout(() => {
-      if (!hasShown) {
-        setIsVisible(true);
-        setHasShown(true);
-      }
+      sessionStorage.setItem("popup_form_shown", "true");
+      setIsVisible(true);
     }, 3000);
 
     return () => clearTimeout(timer);
-  }, [hasShown]);
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

@@ -85,7 +85,8 @@ export default function HeroBanner() {
   return (
     <section
       id="hero"
-      className="relative w-full h-screen overflow-hidden flex items-center justify-center bg-black"
+      className="relative w-full overflow-hidden flex items-center justify-center bg-black"
+      style={{ height: "100svh", minHeight: "500px" }}
     >
       <AnimatePresence mode="popLayout">
         {current.type === "video" ? (
@@ -102,6 +103,7 @@ export default function HeroBanner() {
             exit={{ opacity: 0 }}
             transition={{ duration: 1.4, ease: "easeOut" }}
             className="absolute inset-0 w-full h-full object-cover z-0"
+            style={{ width: "100%", height: "100%", objectFit: "cover" }}
           />
         ) : (
           <motion.img
@@ -112,6 +114,7 @@ export default function HeroBanner() {
             exit={{ opacity: 0 }}
             transition={{ duration: 1.4, ease: "easeOut" }}
             className="absolute inset-0 w-full h-full object-cover z-0"
+            style={{ width: "100%", height: "100%", objectFit: "cover" }}
             alt="Sankalp Constructions"
           />
         )}

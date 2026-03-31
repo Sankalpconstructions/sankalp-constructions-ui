@@ -70,72 +70,71 @@ function ProjectOverviewCard({
     <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
       {/* Header bar */}
       <div className="bg-gradient-to-r from-[#711113] to-[#9b1a1c] px-6 py-5">
-        <p className="text-[10px] font-bold uppercase tracking-[0.35em] text-white/60 mb-0.5">
-          Quick Summary
-        </p>
-        <h3 className="text-base font-extrabold text-white tracking-wide">
+        <h3 className="text-base font-extrabold text-white tracking-wide text-center">
           Project Overview
         </h3>
       </div>
 
       {/* Rows */}
-      <div className="px-5 py-2 divide-y divide-gray-50">
+      <div className="px-5 py-2 divide-y divide-gray-50 bg-white">
         {items.map(({ icon, label, value, badge, mono }) => (
           <div
             key={label}
             className="flex items-center justify-between gap-3 py-3.5"
           >
             {/* Label with icon */}
-            <div className="flex items-center gap-2.5 shrink-0">
-              <span className="w-7 h-7 bg-[#711113]/8 rounded-lg flex items-center justify-center shrink-0">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 bg-[#711113]/5 rounded-lg flex items-center justify-center shrink-0">
                 {icon}
-              </span>
+              </div>
               <span className="text-[11px] font-bold uppercase tracking-widest text-gray-400">
                 {label}
               </span>
             </div>
 
             {/* Value */}
-            {badge ? (
-              <span className="text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1 rounded-full leading-none shrink-0">
-                {value}
-              </span>
-            ) : (
-              <span
-                className={`text-right font-bold text-gray-800 shrink-0 ${
-                  mono
+            <div className="flex-1 flex justify-end">
+              {badge ? (
+                <span className="text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1 rounded-full leading-none whitespace-nowrap">
+                  {value}
+                </span>
+              ) : (
+                <span
+                  className={`text-right font-bold text-gray-900 line-clamp-1 ${mono
                     ? "font-mono text-[10px] text-[#711113] bg-[#711113]/5 px-2 py-1 rounded-md"
                     : "text-sm"
-                }`}
-              >
-                {value}
-              </span>
-            )}
+                    }`}
+                >
+                  {value}
+                </span>
+              )}
+            </div>
           </div>
         ))}
       </div>
 
       {/* CTA Buttons */}
-      <div className="px-5 pt-3 pb-5 flex flex-col gap-3">
+      <div className="px-5 pt-3 pb-5 flex flex-col sm:flex-row lg:flex-col gap-3 bg-gray-50/50">
         <button
           onClick={() =>
             openWhatsApp(
               `Hi, I'm interested in ${projectTitle}. Please share more details.`
             )
           }
-          className="w-full py-3.5 bg-[#711113] hover:bg-[#25D366] text-white font-bold uppercase tracking-widest text-xs rounded-xl shadow-md transition-colors duration-300 flex items-center justify-center gap-2"
+          className="flex-1 py-3.5 bg-[#711113] hover:bg-[#25D366] text-white font-bold uppercase tracking-widest text-[10px] md:text-xs rounded-xl shadow-md transition-all duration-300 flex items-center justify-center gap-2"
         >
           <MessageCircle size={16} /> Enquire Now
         </button>
         <button
-          onClick={() =>
-            openWhatsApp(
-              `Hi, I'd like to request the brochure for ${projectTitle}. Please share it with me.`
-            )
-          }
-          className="w-full py-3.5 bg-white border-2 border-gray-200 hover:border-[#711113] hover:text-[#711113] text-gray-600 font-bold uppercase tracking-widest text-xs rounded-xl transition-all duration-300 flex items-center justify-center gap-2"
+          onClick={() => {
+            const el = document.createElement("a");
+            el.href = "#"; // Replace with actual brochure URL
+            el.download = `${projectTitle.replace(/\s+/g, "_")}_Brochure.pdf`;
+            el.click();
+          }}
+          className="flex-1 py-3.5 bg-white border-2 border-gray-200 hover:border-[#711113] hover:text-[#711113] text-gray-700 font-bold uppercase tracking-widest text-[10px] md:text-xs rounded-xl transition-all duration-300 flex items-center justify-center gap-2"
         >
-          <FileDown size={16} /> Download Brochure
+          <FileDown size={16} /> Brochure
         </button>
       </div>
     </div>
@@ -184,7 +183,7 @@ function RelatedCarousel({ projects }: { projects: RelatedProject[] }) {
       <div className="px-5 py-4 border-b border-gray-100 flex items-center gap-3">
         <div className="w-1 h-6 bg-[#711113] rounded-full" />
         <div>
-          <p className="text-[10px] uppercase tracking-widest font-bold text-[#711113] leading-none">
+          <p className="text-[10px] uppercase tracking-widest font-bold text-[#711113] leading-none text-center">
             Explore More
           </p>
           <h3 className="text-sm font-extrabold text-gray-900">
@@ -242,14 +241,14 @@ function RelatedCarousel({ projects }: { projects: RelatedProject[] }) {
           <h4 className="font-extrabold text-gray-900 text-sm leading-snug line-clamp-2 mb-1.5">
             {current.title}
           </h4>
-          <p className="flex items-center gap-1 text-gray-500 text-xs mb-4">
+          <p className="flex items-center gap-1 text-gray-500 text-[10px] md:text-xs mb-4">
             <MapPin size={11} className="text-[#711113]" /> {current.location}
           </p>
           <Link
             href={`/projects/${current.id}`}
             className="flex items-center justify-center gap-2 bg-[#711113] hover:bg-[#F5C33C] hover:text-black text-white font-bold uppercase tracking-widest text-[10px] py-2.5 rounded-xl transition-all duration-300"
           >
-            View Project <ChevronRight size={13} />
+            View Details <ChevronRight size={13} />
           </Link>
         </motion.div>
       </AnimatePresence>
@@ -264,11 +263,10 @@ function RelatedCarousel({ projects }: { projects: RelatedProject[] }) {
                 resetTimer();
                 setIndex(i);
               }}
-              className={`rounded-full transition-all duration-500 ${
-                i === index
-                  ? "w-5 h-1.5 bg-[#711113]"
-                  : "w-1.5 h-1.5 bg-gray-300 hover:bg-gray-500"
-              }`}
+              className={`rounded-full transition-all duration-500 ${i === index
+                ? "w-5 h-1.5 bg-[#711113]"
+                : "w-1.5 h-1.5 bg-gray-300 hover:bg-gray-500"
+                }`}
             />
           ))}
         </div>
@@ -278,7 +276,7 @@ function RelatedCarousel({ projects }: { projects: RelatedProject[] }) {
       <div className="border-t border-gray-100 px-5 py-3 flex justify-end">
         <Link
           href="/projects"
-          className="flex items-center gap-1 text-[#711113] font-bold text-xs uppercase tracking-widest hover:gap-2 transition-all"
+          className="flex items-center gap-1 text-[#711113] font-bold text-[10px] uppercase tracking-widest hover:gap-2 transition-all"
         >
           View All Projects <ChevronRight size={13} />
         </Link>
@@ -298,7 +296,7 @@ export default function ProjectSidebar({
   relatedProjects,
 }: Props) {
   return (
-    <aside className="flex flex-col gap-6">
+    <aside className="flex flex-col gap-6 w-full max-w-full overflow-hidden">
       <ProjectOverviewCard
         projectTitle={projectTitle}
         status={status}

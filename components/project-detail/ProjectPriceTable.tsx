@@ -25,19 +25,19 @@ export default function ProjectPriceTable({ projectTitle, rows }: Props) {
   };
 
   return (
-    <section className="py-16 md:py-24 bg-gray-50 border-t border-gray-100">
-      <div className="container mx-auto px-4 lg:px-8">
-        <div className="text-center mb-10">
-          <span className="uppercase tracking-[0.25em] text-xs text-[#711113] font-bold mb-3 block">Pricing</span>
-          <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4">Configuration & Pricing</h2>
+    <section className="py-10 md:py-24 bg-gray-50 border-t border-gray-100">
+      <div className="container mx-auto px-0 md:px-4">
+        <div className="text-center mb-8">
+          <span className="uppercase tracking-[0.25em] text-[10px] md:text-xs text-[#711113] font-bold mb-3 block">Pricing</span>
+          <h2 className="text-2xl md:text-4xl font-extrabold text-gray-900 mb-4">Configuration & Pricing</h2>
           <div className="w-12 h-1 bg-[#711113] mx-auto rounded-full mb-4" />
-          <p className="text-gray-500 max-w-xl mx-auto">Find the configuration that fits your lifestyle. Contact us for detailed pricing & offers.</p>
+          <p className="text-gray-500 text-sm md:text-base max-w-xl mx-auto px-4">Find the configuration that fits your lifestyle. Contact us for detailed pricing & offers.</p>
         </div>
 
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-4xl mx-auto px-2 sm:px-0">
           <div className="bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden">
             {/* Table header */}
-            <div className="grid grid-cols-3 bg-[#711113] text-white text-xs font-bold uppercase tracking-widest px-6 py-4">
+            <div className="grid grid-cols-3 bg-[#711113] text-white text-[9px] md:text-xs font-bold uppercase tracking-widest px-4 md:px-6 py-4">
               <span>Type</span>
               <span className="text-center">Carpet Area</span>
               <span className="text-right">Price</span>
@@ -47,23 +47,25 @@ export default function ProjectPriceTable({ projectTitle, rows }: Props) {
             {rows.map((row, i) => (
               <div
                 key={i}
-                className={`grid grid-cols-3 px-6 py-5 border-b border-gray-50 items-center ${i % 2 === 0 ? "bg-white" : "bg-gray-50/50"}`}
+                className={`grid grid-cols-3 px-4 md:px-6 py-4 md:py-5 border-b border-gray-50 items-center ${i % 2 === 0 ? "bg-white" : "bg-gray-50/50"}`}
               >
-                <span className="text-sm font-bold text-gray-900">{row.type}</span>
-                <span className="text-sm text-gray-600 text-center">{row.area}</span>
+                <div className="flex flex-col">
+                  <span className="text-xs md:text-sm font-bold text-gray-900">{row.type}</span>
+                </div>
+                <span className="text-[11px] md:text-sm text-gray-600 text-center">{row.area}</span>
                 <div className="flex justify-end">
                   <button
                     onClick={() => setShowForm(true)}
-                    className="flex items-center gap-1.5 text-xs font-bold text-[#711113] border border-[#711113]/30 px-3 py-1.5 rounded-full hover:bg-[#711113] hover:text-white transition-all"
+                    className="flex items-center gap-1 text-[10px] md:text-xs font-bold text-[#711113] border border-[#711113]/30 px-2.5 md:px-3 py-1 rounded-full hover:bg-[#711113] hover:text-white transition-all shadow-sm"
                   >
-                    <Lock size={11} /> Get Price
+                    <Lock size={10} className="md:w-3 md:h-3" /> <span className="whitespace-nowrap">Get Price</span>
                   </button>
                 </div>
               </div>
             ))}
           </div>
 
-          <p className="text-xs text-gray-400 text-center mt-6">* Prices are subject to change. GST &amp; other charges applicable. Contact our sales team for the latest pricing.</p>
+          <p className="text-[10px] text-gray-400 text-center mt-5 px-4">* Prices are subject to change. GST &amp; other charges applicable. Contact our sales team for the latest pricing.</p>
         </div>
       </div>
 

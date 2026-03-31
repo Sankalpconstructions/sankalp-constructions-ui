@@ -90,13 +90,6 @@ export default function ProjectBannerCarousel({ slides, title, location, type }:
         </>
       )}
 
-      {/* Back link */}
-      <Link
-        href="/#projects"
-        className="absolute top-4 left-4 md:top-6 md:left-8 z-20 flex items-center gap-2 text-white/80 hover:text-white text-xs uppercase tracking-widest font-bold transition-colors bg-black/30 backdrop-blur-sm px-3 py-1.5 rounded-full border border-white/10"
-      >
-        <ChevronLeft size={14} /> Back
-      </Link>
     </section>
   );
 }

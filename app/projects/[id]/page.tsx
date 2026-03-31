@@ -282,12 +282,12 @@ export default function ProjectDetailsPage() {
       </div>
 
       {/* ── Two-Column Layout: Main Content + Sidebar ── */}
-      <div className="container mx-auto px-4 lg:px-8 py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] xl:grid-cols-[1fr_360px] gap-10 items-start">
+      <div className="container mx-auto px-4 lg:px-8 py-8 md:py-12">
+        <div className="flex flex-col lg:grid lg:grid-cols-[1fr_320px] xl:grid-cols-[1fr_360px] gap-10 items-start">
 
           {/* ── Left: Main Content ── */}
-          <div className="min-w-0">
-            {/* Description + Key Highlights + Overview Card */}
+          <div className="min-w-0 w-full order-1">
+            {/* Description + Key Highlights */}
             <ProjectDescription
               description={project.description}
               highlights={project.highlights}
@@ -325,8 +325,8 @@ export default function ProjectDetailsPage() {
             />
           </div>
 
-          {/* ── Right: Sticky Sidebar ── */}
-          <div className="hidden lg:block">
+          {/* ── Right: Sidebar (shown below content on mobile, sticky on desktop) ── */}
+          <div className="w-full lg:w-auto lg:sticky lg:top-28 order-2">
             <ProjectSidebar
               projectTitle={project.title}
               status={project.status}

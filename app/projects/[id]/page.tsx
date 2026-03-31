@@ -11,7 +11,7 @@ import ProjectDescription from "@/components/project-detail/ProjectDescription";
 import ProjectPriceTable from "@/components/project-detail/ProjectPriceTable";
 import ProjectGallery from "@/components/project-detail/ProjectGallery";
 import ProjectLocation from "@/components/project-detail/ProjectLocation";
-import RelatedProjects from "@/components/project-detail/RelatedProjects";
+import ProjectSidebar from "@/components/project-detail/ProjectSidebar";
 
 // ─── Project Data ─────────────────────────────────────────────────────────────
 const projectData: Record<string, {
@@ -262,15 +262,16 @@ export default function ProjectDetailsPage() {
   const id = (params?.id as string) || "1";
   const project = projectData[id] || projectData["1"];
 
-  // Related = all except current
-  const related = ALL_PROJECTS.filter((p) => p.id !== id).slice(0, 3);
+  // Related = all except current (max 4 for sidebar carousel)
+  const related = ALL_PROJECTS.filter((p) => p.id !== id);
+  const sidebarRelated = related.slice(0, 4);
 
   return (
     <main className="min-h-screen bg-white">
       {/* Sticky Header */}
       <Header />
 
-      {/* Banner Carousel */}
+      {/* Banner Carousel — full width */}
       <div className="pt-0">
         <ProjectBannerCarousel
           slides={project.slides}
@@ -280,45 +281,66 @@ export default function ProjectDetailsPage() {
         />
       </div>
 
-      {/* Description + Key Highlights + Overview Card */}
-      <ProjectDescription
-        description={project.description}
-        highlights={project.highlights}
-        status={project.status}
-        possessionDate={project.possessionDate}
-        totalFloors={project.totalFloors}
-        totalUnits={project.totalUnits}
-        rera={project.rera}
-        projectTitle={project.title}
-      />
+      {/* ── Two-Column Layout: Main Content + Sidebar ── */}
+      <div className="container mx-auto px-4 lg:px-8 py-12">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] xl:grid-cols-[1fr_360px] gap-10 items-start">
 
-      {/* Price Table */}
-      <ProjectPriceTable
-        projectTitle={project.title}
-        rows={project.pricingRows}
-      />
+          {/* ── Left: Main Content ── */}
+          <div className="min-w-0">
+            {/* Description + Key Highlights + Overview Card */}
+            <ProjectDescription
+              description={project.description}
+              highlights={project.highlights}
+              status={project.status}
+              possessionDate={project.possessionDate}
+              totalFloors={project.totalFloors}
+              totalUnits={project.totalUnits}
+              rera={project.rera}
+              projectTitle={project.title}
+            />
 
-      {/* Amenities (existing component) */}
-      <AmenitiesSection projectId={id} />
+            {/* Price Table */}
+            <ProjectPriceTable
+              projectTitle={project.title}
+              rows={project.pricingRows}
+            />
 
-      {/* Floor Plans — Master Plan visible, Floor Plans behind form */}
-      <FloorPlansSection
-        projectTitle={project.title}
-        overviewImg={project.slides[0]?.image}
-      />
+            {/* Amenities */}
+            <AmenitiesSection projectId={id} />
 
-      {/* Gallery */}
-      <ProjectGallery images={project.gallery} />
+            {/* Floor Plans */}
+            <FloorPlansSection
+              projectTitle={project.title}
+              overviewImg={project.slides[0]?.image}
+            />
 
-      {/* Location */}
-      <ProjectLocation
-        mapSrc={project.mapSrc}
-        address={project.address}
-        nearbyLocations={project.nearbyLocations}
-      />
+            {/* Gallery */}
+            <ProjectGallery images={project.gallery} />
 
-      {/* Related Projects */}
-      <RelatedProjects projects={related} />
+            {/* Location */}
+            <ProjectLocation
+              mapSrc={project.mapSrc}
+              address={project.address}
+              nearbyLocations={project.nearbyLocations}
+            />
+          </div>
+
+          {/* ── Right: Sticky Sidebar ── */}
+          <div className="hidden lg:block">
+            <ProjectSidebar
+              projectTitle={project.title}
+              status={project.status}
+              possessionDate={project.possessionDate}
+              totalFloors={project.totalFloors}
+              totalUnits={project.totalUnits}
+              rera={project.rera}
+              relatedProjects={sidebarRelated}
+            />
+          </div>
+        </div>
+      </div>
+
+
 
       <ContactFloating />
       <ScrollController />

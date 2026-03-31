@@ -82,7 +82,7 @@ export default function ProjectsShowcase() {
                     className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-700 ease-in-out"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-                  
+
                   <div className="absolute bottom-6 left-6 right-6 text-white text-left">
                     <p className="uppercase tracking-[0.2em] text-[#F5C33C] text-xs font-bold mb-2">
                       {project.type}
@@ -108,7 +108,7 @@ export default function ProjectsShowcase() {
 
         <div className="flex justify-center mt-8">
           <Link
-            href="/blog"
+            href="/projects"
             className="inline-flex items-center gap-2 text-[#711113] font-bold uppercase tracking-widest hover:text-[#29B1D2] transition-colors border-b-2 border-transparent hover:border-[#29B1D2] pb-1"
           >
             View All Projects

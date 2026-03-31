@@ -4,20 +4,20 @@ import { MapPin, Phone, Mail, Clock } from "lucide-react";
 
 export default function ContactSection() {
   return (
-    <section id="contact" className="py-24 bg-gray-50 text-gray-900 overflow-hidden border-t border-gray-200">
+    <section id="contact" className="py-8 md:py-24 bg-gray-50 text-gray-900 overflow-hidden border-t border-gray-200">
       <div className="container mx-auto px-4 lg:px-8">
         
-        <div className="text-center max-w-2xl mx-auto mb-16">
+        <div className="text-center max-w-2xl mx-auto mb-8 md:mb-16">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
-            className="text-4xl font-extrabold text-[#711113] uppercase tracking-wide"
+            className="text-xl md:text-3xl lg:text-4xl font-extrabold text-[#711113] uppercase tracking-wide px-4"
           >
             Get In Touch
           </motion.h2>
-          <div className="w-24 h-1 bg-[#29B1D2] mx-auto mt-4 mb-6"></div>
-          <p className="text-gray-500 text-lg">
+          <div className="w-16 md:w-24 h-1 bg-[#29B1D2] mx-auto mt-3 md:mt-4 mb-5 md:mb-6"></div>
+          <p className="text-gray-500 text-xs md:text-lg px-2 leading-relaxed">
             Reach out to our expert team for any inquiries, site visits, or investment opportunities.
           </p>
         </div>
@@ -25,9 +25,9 @@ export default function ContactSection() {
         <div className="flex flex-col lg:flex-row bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
           
           {/* Form Side (Left) */}
-          <div className="lg:w-1/2 p-10 lg:p-14 flex flex-col justify-center">
-            <h3 className="text-2xl font-bold uppercase text-gray-900 mb-2">Send a Message</h3>
-            <p className="text-gray-500 mb-8">Fill out the form below and our real estate consultant will get back to you shortly.</p>
+          <div className="lg:w-1/2 p-5 md:p-10 lg:p-14 flex flex-col justify-center">
+            <h3 className="text-lg md:text-2xl font-bold uppercase text-gray-900 mb-1.5">Send a Message</h3>
+            <p className="text-[10px] md:text-sm text-gray-500 mb-5 md:mb-8">Fill out the form below and our real estate consultant will get back to you shortly.</p>
             
             <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

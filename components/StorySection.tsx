@@ -3,22 +3,22 @@ import { motion } from "framer-motion";
 
 export default function StorySection() {
   return (
-    <section id="story" className="py-24 bg-white relative overflow-hidden">
+    <section id="story" className="py-8 md:py-24 bg-white relative overflow-hidden">
       <div className="container mx-auto px-4 lg:px-8 z-10 relative">
-        <div className="flex flex-col md:flex-row items-center gap-12 lg:gap-20 text-gray-900">
+        <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12 lg:gap-20 text-gray-900">
 
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.8 }}
-            className="md:w-1/2 relative"
+            className="md:w-1/2 relative w-full"
           >
             <div className="absolute -left-4 -top-4 w-32 h-32 bg-[#F5C33C]/20 rounded-full blur-3xl text-sm tracking-widest uppercase text-white font-bold opacity-0"></div>
             <img
               src="/assets/about-us-dummy.png"
               alt="Brand Story"
-              className="rounded-lg shadow-2xl relative z-10 w-full object-cover h-[350px] md:h-[500px]"
+              className="rounded-lg shadow-2xl relative z-10 w-full object-cover h-[280px] md:h-[500px]"
             />
             <div className="absolute -bottom-10 -right-10 bg-[#711113] rounded-lg p-8 text-white z-20 shadow-xl hidden lg:block">
               <h4 className="text-4xl font-extrabold mb-1">25+</h4>
@@ -31,16 +31,16 @@ export default function StorySection() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="md:w-1/2"
+            className="md:w-1/2 mt-8 md:mt-0"
           >
-            <h2 className="text-[#711113] text-sm tracking-widest uppercase font-bold mb-4">
+            <h2 className="text-[#711113] text-[9px] md:text-sm tracking-[0.25em] uppercase font-bold mb-2 md:mb-3">
               Brand Story
             </h2>
-            <h3 className="text-4xl font-extrabold uppercase mb-6 leading-tight">
+            <h3 className="text-xl md:text-4xl font-extrabold uppercase mb-4 md:mb-6 leading-tight">
               A Legacy of <br />
               <span className="text-[#29B1D2]">Trust & Quality</span>
             </h3>
-            <div className="w-24 h-1 bg-[#F5C33C] mb-8"></div>
+            <div className="w-16 md:w-24 h-1 bg-[#F5C33C] mb-5 md:mb-8"></div>
 
             <p className="text-gray-600 mb-10 leading-relaxed text-[15px]">
               Since our inception, Sankalp Constructions has been a trusted real estate developer, known for delivering high-quality residential and commercial spaces. With a strong foundation of trust, innovation, and a customer-first approach, we continue to redefine the real estate landscape, creating sustainable, future-ready spaces that inspire modern urban living.

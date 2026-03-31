@@ -26,19 +26,19 @@ export default function ProjectsShowcase() {
   };
 
   return (
-    <section id="projects" className="py-24 bg-gray-50 overflow-hidden text-gray-900">
+    <section id="projects" className="py-8 md:py-24 bg-gray-50 overflow-hidden text-gray-900">
       <div className="container mx-auto px-4 lg:px-8">
-        <div className="flex justify-between items-end mb-12">
+        <div className="flex justify-between items-end mb-6 md:mb-12">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
           >
-            <h2 className="text-4xl font-extrabold text-[#711113] uppercase tracking-wide">
+            <h2 className="text-xl md:text-4xl font-extrabold text-[#711113] uppercase tracking-wide">
               Our Projects
             </h2>
-            <div className="w-24 h-1 bg-[#29B1D2] mt-4 mb-2"></div>
-            <p className="text-gray-500 max-w-lg mt-4">
+            <div className="w-20 md:w-24 h-1 bg-[#29B1D2] mt-3 md:mt-4 mb-2"></div>
+            <p className="text-gray-500 text-xs md:text-base max-w-lg mt-3 md:mt-4">
               Explore our diverse portfolio of residential & commercial masterpieces designed for the modern era.
             </p>
           </motion.div>

@@ -35,7 +35,7 @@ export default function TestimonialsSection() {
 
   return (
     <section
-      className="py-16 md:py-24 lg:py-32 bg-white relative overflow-hidden"
+      className="py-8 md:py-24 lg:py-32 bg-white relative overflow-hidden"
       id="testimonials"
     >
       {/* Custom Pagination Styles */}
@@ -73,15 +73,15 @@ export default function TestimonialsSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.8 }}
-          className="text-center mb-12 md:mb-16"
+          className="text-center mb-8 md:mb-16"
         >
-          <span className="uppercase tracking-[0.4em] text-[10px] md:text-xs font-semibold text-[#711113] mb-3 block">
+          <span className="uppercase tracking-[0.4em] text-[9px] md:text-xs font-semibold text-[#711113] mb-3 block">
             Hear from our clients
           </span>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-medium uppercase tracking-widest text-gray-900">
+          <h2 className="text-xl md:text-5xl font-medium uppercase tracking-widest text-gray-900">
             Testimonials
           </h2>
-          <div className="w-16 h-[2px] bg-[#711113] mx-auto mt-5" />
+          <div className="w-12 md:w-16 h-[2px] bg-[#711113] mx-auto mt-4 md:mt-5" />
         </motion.div>
 
         {/* Infinite Loop Carousel */}

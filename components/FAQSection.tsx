@@ -34,20 +34,20 @@ export default function FAQSection() {
   };
 
   return (
-    <section id="faq" className="py-24 bg-gray-50 text-gray-900 overflow-hidden border-t border-gray-200">
+    <section id="faq" className="py-8 md:py-24 bg-gray-50 text-gray-900 overflow-hidden border-t border-gray-200">
       <div className="container mx-auto px-4 lg:px-8 max-w-4xl">
         
-        <div className="text-center mb-16">
+        <div className="text-center mb-8 md:mb-16">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
-            className="text-4xl font-extrabold text-[#711113] uppercase tracking-wide"
+            className="text-xl md:text-4xl font-extrabold text-[#711113] uppercase tracking-wide"
           >
             Frequently Asked Questions
           </motion.h2>
-          <div className="w-24 h-1 bg-[#29B1D2] mx-auto mt-4 mb-6"></div>
-          <p className="text-gray-500 text-lg">
+          <div className="w-20 md:w-24 h-1 bg-[#29B1D2] mx-auto mt-4 mb-6"></div>
+          <p className="text-gray-500 text-sm md:text-lg px-2">
             Find answers to common questions about buying a property with Sankalp Constructions.
           </p>
         </div>

@@ -85,8 +85,7 @@ export default function HeroBanner() {
   return (
     <section
       id="hero"
-      className="relative w-full overflow-hidden flex items-center justify-center bg-black"
-      style={{ height: "100svh", minHeight: "500px" }}
+      className="relative w-full h-[50vh] md:h-screen min-h-[400px] md:min-h-[600px] overflow-hidden flex items-center justify-center bg-black"
     >
       <AnimatePresence mode="popLayout">
         {current.type === "video" ? (

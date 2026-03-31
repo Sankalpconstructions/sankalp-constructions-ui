@@ -10,20 +10,20 @@ const teamMembers = [
 
 export default function TeamSection() {
   return (
-    <section id="team" className="py-24 bg-white text-gray-900 overflow-hidden">
+    <section id="team" className="py-8 md:py-24 bg-white text-gray-900 overflow-hidden">
       <div className="container mx-auto px-4 lg:px-8">
         
-        <div className="text-center max-w-2xl mx-auto mb-16">
+        <div className="text-center max-w-2xl mx-auto mb-8 md:mb-16">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
-            className="text-4xl font-extrabold text-[#711113] uppercase tracking-wide"
+            className="text-xl md:text-4xl font-extrabold text-[#711113] uppercase tracking-wide"
           >
             Meet Our Team
           </motion.h2>
-          <div className="w-24 h-1 bg-[#29B1D2] mx-auto mt-4 mb-6"></div>
-          <p className="text-gray-500 text-lg">
+          <div className="w-16 md:w-24 h-1 bg-[#29B1D2] mx-auto mt-3 md:mt-4 mb-5 md:mb-6"></div>
+          <p className="text-gray-500 text-xs md:text-lg px-2 leading-relaxed">
             The visionary leaders and dedicated experts behind Sankalp Constructions' success.
           </p>
         </div>

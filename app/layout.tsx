@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Sankalp Constructions | Premium Real Estate",
-  description: "Discover our premium real estate properties. Modern design, luxurious amenities, and dynamic living spaces.",
+  description: "Discover the unparalleled excellence of Sankalp Constructions, where we craft premium, future-ready real estate properties designed to elevate your everyday living. Boasting a robust and versatile portfolio spanning luxurious residential apartments, peaceful eco-friendly villas, and state-of-the-art commercial hubs, our developments seamlessly combine cutting-edge modern design, sustainable architecture, and exclusive, resort-like amenities. We are relentlessly committed to delivering dynamic, vibrant structural spaces that cater specifically to the sophisticated lifestyle demands of modern families and professionals, ensuring that every investment not only provides immense comfort and unparalleled security but also guarantees exceptional long-term financial growth and holistic community well-being.",
   keywords: "real estate, premium apartments, Sankalp Constructions, properties, modern homes",
   icons: {
     icon: "/favicon.ico",

@@ -36,7 +36,7 @@ export default function FAQSection() {
   return (
     <section id="faq" className="py-8 md:py-24 bg-gray-50 text-gray-900 overflow-hidden border-t border-gray-200">
       <div className="container mx-auto px-4 lg:px-8 max-w-4xl">
-        
+
         <div className="text-center mb-8 md:mb-16">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}

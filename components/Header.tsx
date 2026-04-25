@@ -1,11 +1,12 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import sankalpLogo from "../public/assets/sankalp-red.png";
-import { Menu, X, Search, ChevronDown } from "lucide-react";
+import { Menu, X, Search, ChevronDown, Loader2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter, usePathname } from "next/navigation";
+import { useProjects } from "@/context/ProjectContext";
 
 const navLinks = [
   { name: "About", href: "/#story" },
@@ -20,6 +21,7 @@ export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const { projects, loading: loadingProjects } = useProjects();
   const pathname = usePathname();
   const router = useRouter();
 
@@ -31,14 +33,38 @@ export default function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Handle cross-page hash scrolling
+  useEffect(() => {
+    if (pathname === "/" && typeof window !== "undefined" && window.location.hash) {
+      const targetId = window.location.hash.replace("#", "");
+      // Small timeout to ensure the DOM and components (like Testimonials) are rendered
+      const timer = setTimeout(() => {
+        const elem = document.getElementById(targetId);
+        if (elem) {
+          elem.scrollIntoView({ behavior: "smooth" });
+        }
+      }, 800); 
+      return () => clearTimeout(timer);
+    }
+  }, [pathname]);
+
+  const ongoingProjects = useMemo(() => projects.filter(p => p.status === 'Ongoing'), [projects]);
+  const upcomingProjects = useMemo(() => projects.filter(p => p.status === 'Upcoming'), [projects]);
+  const completedProjects = useMemo(() => projects.filter(p => p.status === 'Completed'), [projects]);
+
   const handleScrollTo = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>, href: string) => {
-    if (href.startsWith("/#") && pathname === "/") {
-      e.preventDefault();
-      const targetId = href.replace("/#", "");
+    // If it's a hash link, check if the target exists on the CURRENT page
+    if (href.includes("#")) {
+      const targetId = href.split("#")[1];
       const elem = document.getElementById(targetId);
+      
+      // If the element exists on this page, scroll to it immediately
       if (elem) {
+        e.preventDefault();
         elem.scrollIntoView({ behavior: "smooth" });
         setIsOpen(false);
+        // Update URL hash without reload
+        window.history.pushState(null, "", href);
       }
     }
   };
@@ -58,7 +84,6 @@ export default function Header() {
       className={`fixed top-0 w-full z-50 transition-all duration-700 ${isScrolled ? "bg-[#050505] py-2 lg:py-3 shadow-2xl border-b border-white/5" : "bg-gradient-to-b from-black/60 to-transparent py-6 lg:py-8 border-transparent"}`}
     >
       <div className="container mx-auto px-4 lg:px-8 flex justify-between items-center relative">
-        {/* Logo */}
         <Link href="/" className="flex items-center gap-2 group z-20">
           <Image
             src={sankalpLogo}
@@ -70,7 +95,6 @@ export default function Header() {
           />
         </Link>
 
-        {/* Desktop Nav */}
         <nav className="hidden md:flex gap-8 items-center z-20">
           {navLinks.map((link) => (
             <div key={link.name} className="relative group">
@@ -86,24 +110,40 @@ export default function Header() {
               {link.name === "Our Projects" && (
                 <div className="fixed top-[110px] left-0 w-full opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-500 pointer-events-none z-50 flex justify-center">
                   <div className="w-full max-w-[95vw] lg:max-w-[950px] bg-[#050505] text-white shadow-2xl rounded-sm p-10 border border-t-0 border-white/10 flex flex-col md:flex-row justify-between gap-12 cursor-default pointer-events-auto">
+                    
                     <div className="flex-1">
-                      <h3 className="text-[#F5C33C] text-[10px] uppercase tracking-[0.3em] mb-6 border-b border-white/10 pb-3 whitespace-nowrap">Ongoing Projects</h3>
+                      <h3 className="text-[#F5C33C] text-[10px] uppercase tracking-[0.3em] mb-6 border-b border-white/10 pb-3 whitespace-nowrap flex items-center gap-2">
+                        Ongoing Projects {loadingProjects && <Loader2 size={12} className="animate-spin opacity-50" />}
+                      </h3>
                       <ul className="space-y-4">
-                        <li><Link href="/projects/1" className="text-[13px] text-white/60 hover:text-white transition-colors">Sankalp Heights</Link></li>
-                        <li><Link href="/projects/2" className="text-[13px] text-white/60 hover:text-white transition-colors">Sankalp Oasis</Link></li>
+                        {ongoingProjects.map(p => (
+                          <li key={p._id}><Link href={`/projects/${p._id}`} className="text-[13px] text-white/60 hover:text-white transition-colors">{p.title}</Link></li>
+                        ))}
+                        {ongoingProjects.length === 0 && !loadingProjects && <li className="text-[11px] text-white/30 italic uppercase tracking-widest">No ongoing projects</li>}
                       </ul>
                     </div>
+
                     <div className="flex-1 border-l border-white/5 pl-8 lg:pl-12">
-                      <h3 className="text-[#F5C33C] text-[10px] uppercase tracking-[0.3em] mb-6 border-b border-white/10 pb-3 whitespace-nowrap">Upcoming Projects</h3>
+                      <h3 className="text-[#F5C33C] text-[10px] uppercase tracking-[0.3em] mb-6 border-b border-white/10 pb-3 whitespace-nowrap flex items-center gap-2">
+                        Upcoming Projects {loadingProjects && <Loader2 size={12} className="animate-spin opacity-50" />}
+                      </h3>
                       <ul className="space-y-4">
-                        <li><Link href="/projects/3" className="text-[13px] text-white/60 hover:text-white transition-colors">Sankalp Residency</Link></li>
-                        <li><Link href="/projects/4" className="text-[13px] text-white/60 hover:text-white transition-colors">Sankalp Greens</Link></li>
+                        {upcomingProjects.map(p => (
+                          <li key={p._id}><Link href={`/projects/${p._id}`} className="text-[13px] text-white/60 hover:text-white transition-colors">{p.title}</Link></li>
+                        ))}
+                        {upcomingProjects.length === 0 && !loadingProjects && <li className="text-[11px] text-white/30 italic uppercase tracking-widest">No upcoming projects</li>}
                       </ul>
                     </div>
+
                     <div className="flex-1 border-l border-white/5 pl-8 lg:pl-12">
-                      <h3 className="text-[#F5C33C] text-[10px] uppercase tracking-[0.3em] mb-6 border-b border-white/10 pb-3 whitespace-nowrap">Completed Projects</h3>
+                      <h3 className="text-[#F5C33C] text-[10px] uppercase tracking-[0.3em] mb-6 border-b border-white/10 pb-3 whitespace-nowrap flex items-center gap-2">
+                        Completed Projects {loadingProjects && <Loader2 size={12} className="animate-spin opacity-50" />}
+                      </h3>
                       <ul className="space-y-4">
-                        <li><Link href="/projects/5" className="text-[13px] text-white/60 hover:text-white transition-colors">Sankalp Villas</Link></li>
+                        {completedProjects.map(p => (
+                          <li key={p._id}><Link href={`/projects/${p._id}`} className="text-[13px] text-white/60 hover:text-white transition-colors">{p.title}</Link></li>
+                        ))}
+                        {completedProjects.length === 0 && !loadingProjects && <li className="text-[11px] text-white/30 italic uppercase tracking-widest">No completed projects</li>}
                       </ul>
                     </div>
                   </div>
@@ -127,7 +167,6 @@ export default function Header() {
           </Link>
         </nav>
 
-        {/* Mobile menu toggle */}
         <div className="flex md:hidden items-center gap-4 z-20">
           <button
             onClick={() => setIsSearchOpen(!isSearchOpen)}
@@ -143,7 +182,6 @@ export default function Header() {
           </button>
         </div>
 
-        {/* Search Overlay Dropdown */}
         <AnimatePresence>
           {isSearchOpen && (
             <motion.div
@@ -170,7 +208,6 @@ export default function Header() {
         </AnimatePresence>
       </div>
 
-      {/* Mobile Nav */}
       <AnimatePresence>
         {isOpen && (
           <motion.nav
@@ -194,24 +231,31 @@ export default function Header() {
                         {link.name} <ChevronDown size={18} />
                       </button>
                       <div id="mobile-projects" className="hidden w-full bg-gray-50/80 py-4 px-6 mt-2 rounded-lg text-left">
+                        
                         <div className="mb-4 text-center">
                           <h4 className="text-[#711113] font-bold text-xs uppercase tracking-widest border-b border-gray-200 pb-1 mb-2 inline-block">Ongoing</h4>
                           <div className="flex flex-col gap-2">
-                            <Link href="/projects/1" onClick={() => setIsOpen(false)} className="text-gray-600 text-sm">Sankalp Heights</Link>
-                            <Link href="/projects/2" onClick={() => setIsOpen(false)} className="text-gray-600 text-sm">Sankalp Oasis</Link>
+                            {ongoingProjects.map(p => (
+                              <Link key={p._id} href={`/projects/${p._id}`} onClick={() => setIsOpen(false)} className="text-gray-600 text-sm">{p.title}</Link>
+                            ))}
                           </div>
                         </div>
+
                         <div className="mb-4 text-center">
                           <h4 className="text-[#711113] font-bold text-xs uppercase tracking-widest border-b border-gray-200 pb-1 mb-2 inline-block">Upcoming</h4>
                           <div className="flex flex-col gap-2">
-                            <Link href="/projects/3" onClick={() => setIsOpen(false)} className="text-gray-600 text-sm">Sankalp Residency</Link>
-                            <Link href="/projects/4" onClick={() => setIsOpen(false)} className="text-gray-600 text-sm">Sankalp Greens</Link>
+                            {upcomingProjects.map(p => (
+                              <Link key={p._id} href={`/projects/${p._id}`} onClick={() => setIsOpen(false)} className="text-gray-600 text-sm">{p.title}</Link>
+                            ))}
                           </div>
                         </div>
+
                         <div className="text-center">
                           <h4 className="text-[#711113] font-bold text-xs uppercase tracking-widest border-b border-gray-200 pb-1 mb-2 inline-block">Completed</h4>
                           <div className="flex flex-col gap-2">
-                            <Link href="/projects/5" onClick={() => setIsOpen(false)} className="text-gray-600 text-sm">Sankalp Villas</Link>
+                            {completedProjects.map(p => (
+                              <Link key={p._id} href={`/projects/${p._id}`} onClick={() => setIsOpen(false)} className="text-gray-600 text-sm">{p.title}</Link>
+                            ))}
                           </div>
                         </div>
                       </div>

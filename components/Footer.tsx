@@ -1,9 +1,17 @@
+"use client";
+import React from "react";
 import { MapPin, Phone, Mail, Instagram, Linkedin, Facebook } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import sankalpLogo from "../public/assets/sankalp-red.png";
+import { useProjects } from "@/context/ProjectContext";
 
 export default function Footer() {
+  const { projects, loading } = useProjects();
+  
+  // Take only the top 5 projects for the footer
+  const topProjects = projects.slice(0, 5);
+
   return (
     <footer className="bg-gray-900 pt-20 pb-10 text-gray-300">
       <div className="container mx-auto px-4 lg:px-8">
@@ -11,7 +19,7 @@ export default function Footer() {
 
           {/* Brand Info */}
           <div>
-            <Link href="/" className="flex items-center gap-2 mb-6 pointer-events-none">
+            <Link href="/" className="flex items-center gap-2 mb-6">
               <Image
                 src={sankalpLogo}
                 alt="Sankalp Constructions Logo"
@@ -43,19 +51,33 @@ export default function Footer() {
             <ul className="space-y-3">
               <li><Link href="/#story" className="text-sm hover:text-[#F5C33C] transition-colors">Brand Story</Link></li>
               <li><Link href="/#projects" className="text-sm hover:text-[#F5C33C] transition-colors">Our Projects</Link></li>
-              <li><Link href="/#amenities" className="text-sm hover:text-[#F5C33C] transition-colors">Amenities</Link></li>
+              <li><Link href="/csr" className="text-sm hover:text-[#F5C33C] transition-colors">CSR Initiatives</Link></li>
               <li><Link href="/blog" className="text-sm hover:text-[#F5C33C] transition-colors">Insights & Blogs</Link></li>
             </ul>
           </div>
 
-          {/* Our Projects */}
+          {/* Dynamic Top Projects */}
           <div>
             <h4 className="text-white font-bold uppercase tracking-widest mb-6">Top Projects</h4>
             <ul className="space-y-3">
-              <li><Link href="/blog" className="text-sm hover:text-[#29B1D2] transition-colors">Sankalp Heights</Link></li>
-              <li><Link href="/blog" className="text-sm hover:text-[#29B1D2] transition-colors">Sankalp Residency</Link></li>
-              <li><Link href="/blog" className="text-sm hover:text-[#29B1D2] transition-colors">Sankalp Villas</Link></li>
-              <li><Link href="/blog" className="text-sm hover:text-[#29B1D2] transition-colors">Sankalp Greens</Link></li>
+              {!loading ? (
+                topProjects.map((project) => (
+                  <li key={project._id}>
+                    <Link href={`/projects/${project._id}`} className="text-sm hover:text-[#29B1D2] transition-colors">
+                      {project.title}
+                    </Link>
+                  </li>
+                ))
+              ) : (
+                <li className="text-sm text-gray-600 animate-pulse">Loading projects...</li>
+              )}
+              {!loading && projects.length > 0 && (
+                <li>
+                  <Link href="/#projects" className="text-xs font-bold text-[#F5C33C] uppercase tracking-widest hover:underline mt-2 inline-block">
+                    View All Projects
+                  </Link>
+                </li>
+              )}
             </ul>
           </div>
 

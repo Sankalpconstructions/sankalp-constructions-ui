@@ -2,29 +2,52 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Send } from "lucide-react";
+import { submitLead } from "@/lib/leads";
 
 export default function PopupLeadForm() {
   const [isVisible, setIsVisible] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    phone: "",
+    email: "",
+    interest: "General"
+  });
 
   useEffect(() => {
     const alreadyShown = sessionStorage.getItem("popup_form_shown");
-    if (alreadyShown) return; // Already shown in this session, skip
+    if (alreadyShown) return; 
 
     const timer = setTimeout(() => {
       sessionStorage.setItem("popup_form_shown", "true");
       setIsVisible(true);
-    }, 3000);
+    }, 15000); // Show after 15 seconds
 
     return () => clearTimeout(timer);
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitted(true);
-    setTimeout(() => {
-      setIsVisible(false);
-    }, 2000);
+    setIsSubmitting(true);
+    try {
+      await submitLead({
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        project: formData.interest,
+        message: `Callback request from Popup Form. Interested in ${formData.interest}`
+      });
+      setIsSubmitted(true);
+      setTimeout(() => {
+        setIsVisible(false);
+      }, 3000);
+    } catch (error) {
+      console.error(error);
+      alert("Failed to submit. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -61,36 +84,45 @@ export default function PopupLeadForm() {
                     required
                     type="text"
                     placeholder="Name"
+                    value={formData.name}
+                    onChange={(e) => setFormData({...formData, name: e.target.value})}
                     className="p-3 border border-gray-200 rounded text-sm focus:outline-[#29B1D2] focus:border-[#29B1D2] transition-colors bg-gray-50"
                   />
                   <input
                     required
                     type="tel"
                     placeholder="Phone"
+                    value={formData.phone}
+                    onChange={(e) => setFormData({...formData, phone: e.target.value})}
                     className="p-3 border border-gray-200 rounded text-sm focus:outline-[#29B1D2] focus:border-[#29B1D2] transition-colors bg-gray-50"
                   />
                   <input
                     required
                     type="email"
                     placeholder="Email"
+                    value={formData.email}
+                    onChange={(e) => setFormData({...formData, email: e.target.value})}
                     className="p-3 border border-gray-200 rounded text-sm focus:outline-[#29B1D2] focus:border-[#29B1D2] transition-colors bg-gray-50"
                   />
                   <select
                     required
+                    value={formData.interest}
+                    onChange={(e) => setFormData({...formData, interest: e.target.value})}
                     className="p-3 border border-gray-200 rounded text-sm focus:outline-[#29B1D2] focus:border-[#29B1D2] transition-colors bg-gray-50"
                   >
-                    <option value="" disabled selected>Select Interest</option>
-                    <option value="2bhk">2 BHK Apartments</option>
-                    <option value="3bhk">3 BHK Apartments</option>
-                    <option value="luxury">Luxury Villas</option>
-                    <option value="commercial">Commercial Space</option>
+                    <option value="General">Select Interest</option>
+                    <option value="2 BHK Apartments">2 BHK Apartments</option>
+                    <option value="3 BHK Apartments">3 BHK Apartments</option>
+                    <option value="Luxury Villas">Luxury Villas</option>
+                    <option value="Commercial Space">Commercial Space</option>
                   </select>
                   
                   <button
                     type="submit"
-                    className="mt-2 py-4 bg-[#711113] text-white hover:bg-[#520c0d] font-bold uppercase tracking-widest text-sm rounded shadow-lg transition-colors flex justify-center items-center gap-2"
+                    disabled={isSubmitting}
+                    className="mt-2 py-4 bg-[#711113] text-white hover:bg-[#520c0d] font-bold uppercase tracking-widest text-sm rounded shadow-lg transition-colors flex justify-center items-center gap-2 disabled:opacity-70"
                   >
-                    <Send size={16} /> Submit Callback
+                    {isSubmitting ? "Submitting..." : <><Send size={16} /> Submit Callback</>}
                   </button>
                 </form>
               </>

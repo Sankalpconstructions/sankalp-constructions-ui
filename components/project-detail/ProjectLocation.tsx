@@ -24,6 +24,56 @@ const categoryColors: Record<string, string> = {
 };
 
 export default function ProjectLocation({ mapSrc, address, nearbyLocations }: Props) {
+  // Helper to determine if mapSrc is an iframe or a raw coordinate/query
+  const renderMap = () => {
+    if (!mapSrc) return null;
+
+    // If it's already an iframe string (contains <iframe)
+    if (mapSrc.includes("<iframe")) {
+      // Extract src from iframe string if possible, or just dangerouslySet
+      const srcMatch = mapSrc.match(/src="([^"]+)"/);
+      const actualSrc = srcMatch ? srcMatch[1] : "";
+      
+      if (actualSrc) {
+        return (
+          <iframe
+            src={actualSrc}
+            width="100%"
+            height="100%"
+            style={{ border: 0 }}
+            allowFullScreen
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            title="Project Location Map"
+          />
+        );
+      }
+    }
+
+    // If it's just a URL or a search query
+    const finalSrc = mapSrc.startsWith("http") 
+      ? mapSrc 
+      : `https://www.google.com/maps/embed/v1/place?key=REPLACE_WITH_API_KEY&q=${encodeURIComponent(mapSrc)}`;
+
+    // Fallback if no API key is provided for v1/place - use generic embed
+    const embedUrl = mapSrc.startsWith("http") 
+      ? mapSrc 
+      : `https://maps.google.com/maps?q=${encodeURIComponent(mapSrc)}&t=&z=13&ie=UTF8&iwloc=&output=embed`;
+
+    return (
+      <iframe
+        src={embedUrl}
+        width="100%"
+        height="100%"
+        style={{ border: 0 }}
+        allowFullScreen
+        loading="lazy"
+        referrerPolicy="no-referrer-when-downgrade"
+        title="Project Location Map"
+      />
+    );
+  };
+
   return (
     <section className="py-16 md:py-24 bg-gray-50 border-t border-gray-100">
       <div className="container mx-auto px-4 lg:px-8">
@@ -43,7 +93,7 @@ export default function ProjectLocation({ mapSrc, address, nearbyLocations }: Pr
               <Navigation size={18} className="text-[#711113]" /> Nearby Landmarks
             </h3>
             <div className="space-y-3">
-              {nearbyLocations.map((loc, i) => (
+              {nearbyLocations.length > 0 ? nearbyLocations.map((loc, i) => (
                 <motion.div
                   key={i}
                   initial={{ opacity: 0, x: -15 }}
@@ -60,23 +110,16 @@ export default function ProjectLocation({ mapSrc, address, nearbyLocations }: Pr
                   </div>
                   <span className="text-sm font-bold text-[#711113] flex-shrink-0 ml-3">{loc.distance}</span>
                 </motion.div>
-              ))}
+              )) : (
+                <p className="text-xs text-gray-400 italic">Landmarks data being updated...</p>
+              )}
             </div>
           </div>
 
           {/* Right: Map */}
           <div className="lg:w-7/12">
-            <div className="w-full h-[350px] md:h-[480px] rounded-2xl overflow-hidden shadow-xl border border-gray-200">
-              <iframe
-                src={mapSrc}
-                width="100%"
-                height="100%"
-                style={{ border: 0 }}
-                allowFullScreen
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                title="Project Location Map"
-              />
+            <div className="w-full h-[350px] md:h-[480px] rounded-2xl overflow-hidden shadow-xl border border-gray-200 bg-white">
+              {renderMap()}
             </div>
           </div>
         </div>

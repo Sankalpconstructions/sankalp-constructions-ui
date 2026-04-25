@@ -2,21 +2,17 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Lock, X, FileText } from "lucide-react";
+import { submitLead } from "@/lib/leads";
 
 interface Props {
   projectTitle?: string;
   overviewImg?: string;
+  floorPlansCount?: number;
+  configurations?: any[];
 }
 
 type Tab = "master" | "floor";
 
-const FLOOR_PLANS = [
-  { id: 1, type: "2 BHK", area: "1,150 sq.ft.", img: "https://images.unsplash.com/photo-1628192078696-6e47c1b8f106?w=600" },
-  { id: 2, type: "3 BHK", area: "1,550 sq.ft.", img: "https://images.unsplash.com/photo-1596495577610-8b14e3049fb5?w=600" },
-  { id: 3, type: "4 BHK", area: "2,200 sq.ft.", img: "https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?w=600" },
-];
-
-// Direction-aware slide variants
 const variants = {
   enter: (dir: number) => ({
     opacity: 0,
@@ -32,12 +28,18 @@ const variants = {
   }),
 };
 
-export default function FloorPlansSection({ projectTitle, overviewImg }: Props) {
+export default function FloorPlansSection({ projectTitle, overviewImg, floorPlansCount = 0, configurations = [] }: Props) {
   const [activeTab, setActiveTab] = useState<Tab>("master");
-  const [direction, setDirection] = useState<number>(1); // +1 = going right, -1 = going left
+  const [direction, setDirection] = useState<number>(1);
   const [showFloorForm, setShowFloorForm] = useState(false);
   const [hasUnlocked, setHasUnlocked] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  const [formData, setFormData] = useState({
+    name: "",
+    phone: "",
+    email: ""
+  });
 
   const handleTabChange = (tab: Tab) => {
     if (tab === activeTab) return;
@@ -45,15 +47,29 @@ export default function FloorPlansSection({ projectTitle, overviewImg }: Props) 
     setActiveTab(tab);
   };
 
-  const handleUnlock = (e: React.FormEvent) => {
+  const handleUnlock = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
-    setTimeout(() => {
+    setIsSubmitting(true);
+    try {
+      await submitLead({
+        ...formData,
+        project: projectTitle || "General",
+        message: `Requested to view ${floorPlansCount} Floor Plans for ${projectTitle}`
+      });
+      
       setHasUnlocked(true);
-      setShowFloorForm(false);
-      setSubmitted(false);
-    }, 1500);
+      setTimeout(() => {
+        setShowFloorForm(false);
+        setIsSubmitting(false);
+      }, 1500);
+    } catch (error) {
+      console.error(error);
+      setIsSubmitting(false);
+    }
   };
+
+  // If no floor plans and no master plan, don't show
+  if (floorPlansCount === 0 && !overviewImg) return null;
 
   return (
     <section id="floorplans" className="py-10 md:py-24 bg-gray-50 border-t border-gray-100">
@@ -74,10 +90,9 @@ export default function FloorPlansSection({ projectTitle, overviewImg }: Props) 
           </p>
         </div>
 
-        {/* ── Tab Bar ── */}
+        {/* Tab Bar */}
         <div className="flex justify-center mb-8">
           <div className="relative inline-flex items-center bg-white border border-gray-200 rounded-xl md:rounded-2xl p-1 md:p-1.5 shadow-sm">
-            {/* Sliding pill indicator */}
             <motion.div
               layout
               transition={{ type: "spring", stiffness: 380, damping: 32 }}
@@ -97,9 +112,7 @@ export default function FloorPlansSection({ projectTitle, overviewImg }: Props) 
                 key={tab.key}
                 onClick={() => handleTabChange(tab.key)}
                 className={`relative z-10 px-4 md:px-8 py-2 md:py-3 text-[10px] md:text-sm font-bold uppercase tracking-widest rounded-lg md:rounded-xl transition-colors duration-300 min-w-[120px] md:min-w-[140px] ${
-                  activeTab === tab.key
-                    ? "text-white"
-                    : "text-gray-500 hover:text-gray-800"
+                  activeTab === tab.key ? "text-white" : "text-gray-500 hover:text-gray-800"
                 }`}
               >
                 {tab.label}
@@ -108,7 +121,7 @@ export default function FloorPlansSection({ projectTitle, overviewImg }: Props) 
           </div>
         </div>
 
-        {/* ── Tab Content with slide animation ── */}
+        {/* Tab Content */}
         <div className="relative overflow-hidden min-h-[340px]">
           <AnimatePresence mode="popLayout" custom={direction}>
             {activeTab === "master" ? (
@@ -122,14 +135,17 @@ export default function FloorPlansSection({ projectTitle, overviewImg }: Props) 
                 transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
               >
                 <div className="bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden p-4 md:p-8">
-                  <img
-                    src={
-                      overviewImg ||
-                      "https://images.unsplash.com/photo-1628192078696-6e47c1b8f106?w=1200"
-                    }
-                    alt="Master Plan"
-                    className="w-full max-h-[520px] object-contain rounded-xl bg-gray-50"
-                  />
+                  {overviewImg ? (
+                    <img
+                      src={overviewImg}
+                      alt="Master Plan"
+                      className="w-full max-h-[520px] object-contain rounded-xl bg-gray-50"
+                    />
+                  ) : (
+                    <div className="py-20 text-center text-gray-400">
+                      <p className="text-xs font-black uppercase tracking-widest">Master Plan arriving soon</p>
+                    </div>
+                  )}
                 </div>
               </motion.div>
             ) : (
@@ -142,50 +158,37 @@ export default function FloorPlansSection({ projectTitle, overviewImg }: Props) 
                 exit="exit"
                 transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
               >
-                {/* Unlock button when locked */}
                 {!hasUnlocked && (
-                  <div className="flex justify-end mb-5">
+                  <div className="flex justify-center mb-10">
                     <button
                       onClick={() => setShowFloorForm(true)}
-                      className="flex items-center gap-2 bg-[#711113] text-white text-xs font-bold uppercase tracking-widest px-5 py-3 rounded-xl hover:bg-[#520c0d] transition-colors shadow-md"
+                      className="flex items-center gap-2 bg-[#711113] text-white text-xs font-bold uppercase tracking-widest px-8 py-4 rounded-xl hover:bg-[#520c0d] transition-all shadow-xl shadow-[#711113]/20 active:scale-95"
                     >
-                      <Lock size={13} /> Unlock Floor Plans
+                      <Lock size={13} /> Unlock {floorPlansCount} Floor Plans
                     </button>
                   </div>
                 )}
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {FLOOR_PLANS.map((plan) => (
-                    <div
-                      key={plan.id}
-                      className="relative rounded-2xl overflow-hidden border border-gray-100 bg-white shadow-sm"
-                    >
-                      {/* Locked overlay */}
+                  {(configurations.length > 0 ? configurations : [1, 2, 3]).map((item, idx) => (
+                    <div key={idx} className="relative rounded-2xl overflow-hidden border border-gray-100 bg-white shadow-sm">
                       {!hasUnlocked && (
-                        <div className="absolute inset-0 bg-black/50 backdrop-blur-[3px] z-20 flex flex-col items-center justify-center">
+                        <div className="absolute inset-0 bg-black/50 backdrop-blur-[4px] z-20 flex flex-col items-center justify-center">
                           <Lock size={30} className="text-[#F5C33C] mb-3" />
-                          <p className="text-white text-xs font-bold text-center px-6">
-                            Fill in a quick form to view this floor plan
+                          <p className="text-white text-[10px] font-black uppercase tracking-widest text-center px-6">
+                            Fill form to view plan
                           </p>
                         </div>
                       )}
-
-                      {/* Card content (blurred when locked) */}
-                      <div className={hasUnlocked ? "" : "filter blur-[3px] grayscale"}>
+                      <div className={hasUnlocked ? "" : "filter blur-[6px] grayscale"}>
                         <div className="p-5 border-b border-gray-100 flex items-center justify-between">
-                          <span className="font-extrabold text-[#711113] text-lg">
-                            {plan.type}
-                          </span>
-                          <span className="flex items-center gap-1 text-xs font-bold bg-[#711113]/10 text-[#711113] px-3 py-1 rounded-full">
-                            <FileText size={12} /> {plan.area}
+                          <span className="font-extrabold text-[#711113] text-lg">{item.configuration || "Unit Plan"}</span>
+                          <span className="flex items-center gap-1 text-[10px] font-black uppercase tracking-widest bg-[#711113]/10 text-[#711113] px-3 py-1 rounded-full">
+                            <FileText size={12} /> {item.carpetArea || "TBA"}
                           </span>
                         </div>
                         <div className="p-4">
-                          <img
-                            src={plan.img}
-                            alt={plan.type}
-                            className="w-full aspect-video object-cover rounded-xl"
-                          />
+                          <img src={overviewImg || "https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?w=600"} alt="Plan Preview" className="w-full aspect-video object-cover rounded-xl" />
                         </div>
                       </div>
                     </div>
@@ -197,7 +200,7 @@ export default function FloorPlansSection({ projectTitle, overviewImg }: Props) 
         </div>
       </div>
 
-      {/* ── Floor Plan Unlock Modal ── */}
+      {/* Unlock Modal */}
       <AnimatePresence>
         {showFloorForm && (
           <>
@@ -213,7 +216,6 @@ export default function FloorPlansSection({ projectTitle, overviewImg }: Props) 
                 initial={{ opacity: 0, scale: 0.95, y: 20 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                transition={{ type: "spring", stiffness: 300, damping: 30 }}
                 className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full relative pointer-events-auto"
               >
                 <button
@@ -225,46 +227,50 @@ export default function FloorPlansSection({ projectTitle, overviewImg }: Props) 
                 <div className="w-12 h-12 bg-[#711113]/10 rounded-xl flex items-center justify-center text-[#711113] mb-5">
                   <Lock size={22} />
                 </div>
-                <h3 className="text-2xl font-extrabold text-gray-900 mb-2">
-                  Unlock Floor Plans
-                </h3>
-                <p className="text-gray-500 text-sm mb-6">
-                  Enter your details to instantly view all floor plans for{" "}
-                  {projectTitle}.
-                </p>
+                <h3 className="text-2xl font-extrabold text-gray-900 mb-2">Unlock Floor Plans</h3>
+                <p className="text-gray-500 text-sm mb-6">Enter your details to instantly unlock all {floorPlansCount} floor plans for {projectTitle}.</p>
 
-                {submitted ? (
+                {hasUnlocked ? (
                   <div className="text-center py-6">
-                    <div className="text-4xl mb-3">🔓</div>
-                    <p className="text-green-700 font-bold">
-                      Access granted! Loading plans…
-                    </p>
+                    <motion.div 
+                      initial={{ scale: 0 }} 
+                      animate={{ scale: 1 }} 
+                      className="text-5xl mb-4"
+                    >
+                      🔓
+                    </motion.div>
+                    <p className="text-green-700 font-bold uppercase tracking-widest text-xs">Access Granted! Unlocking now...</p>
                   </div>
                 ) : (
                   <form onSubmit={handleUnlock} className="flex flex-col gap-4">
-                    <input
-                      required
-                      type="text"
-                      placeholder="Full Name"
-                      className="p-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#711113]"
-                    />
-                    <input
-                      required
-                      type="tel"
-                      placeholder="Phone Number"
-                      className="p-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#711113]"
-                    />
-                    <input
-                      required
-                      type="email"
-                      placeholder="Email Address"
-                      className="p-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#711113]"
-                    />
-                    <button
-                      type="submit"
-                      className="mt-2 py-4 bg-[#711113] text-white font-bold uppercase tracking-widest rounded-xl shadow-lg hover:bg-[#520c0d] transition-colors"
+                    <div className="space-y-1">
+                       <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-1">Full Name</label>
+                       <input 
+                        required 
+                        type="text" 
+                        placeholder="e.g. John Doe" 
+                        value={formData.name}
+                        onChange={(e) => setFormData({...formData, name: e.target.value})}
+                        className="w-full p-3.5 bg-gray-50 border border-gray-100 rounded-xl text-sm focus:outline-none focus:border-[#711113] transition-all" 
+                      />
+                    </div>
+                    <div className="space-y-1">
+                       <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-1">Phone Number</label>
+                       <input 
+                        required 
+                        type="tel" 
+                        placeholder="+91 99999 99999" 
+                        value={formData.phone}
+                        onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                        className="w-full p-3.5 bg-gray-50 border border-gray-100 rounded-xl text-sm focus:outline-none focus:border-[#711113] transition-all" 
+                      />
+                    </div>
+                    <button 
+                      type="submit" 
+                      disabled={isSubmitting}
+                      className="mt-4 py-4 bg-[#711113] text-white font-bold uppercase tracking-[0.2em] rounded-xl shadow-xl shadow-[#711113]/20 hover:bg-[#520c0d] transition-all disabled:opacity-70"
                     >
-                      View Floor Plans
+                      {isSubmitting ? "Unlocking..." : "View Floor Plans"}
                     </button>
                   </form>
                 )}

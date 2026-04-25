@@ -3,10 +3,6 @@ import { useState, useEffect } from "react";
 import { ChevronRight, MapPin, Clock, CheckCircle2, Building2, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import Footer from "@/components/Footer";
-import ContactFloating from "@/components/ContactFloating";
-import ScrollController from "@/components/ScrollController";
-import Header from "@/components/Header";
 
 // ─── Data ────────────────────────────────────────────────────────────────────
 type ProjectStatus = "ongoing" | "upcoming" | "completed";
@@ -83,9 +79,7 @@ export default function AllProjectsPage() {
       : projects.filter((p) => p.status === activeTab);
 
   return (
-    <main className="min-h-screen bg-[#f8f5f0] text-gray-900">
-      <Header />
-
+    <div className="bg-[#f8f5f0] text-gray-900">
       <div
         className="relative w-full bg-[#050505] flex items-end"
         style={{ minHeight: "280px", paddingTop: "120px" }}
@@ -224,9 +218,6 @@ export default function AllProjectsPage() {
         )}
       </div>
 
-      <ContactFloating />
-      <ScrollController />
-      <Footer />
-    </main>
+    </div>
   );
 }

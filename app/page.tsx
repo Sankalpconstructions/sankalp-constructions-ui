@@ -1,4 +1,3 @@
-import Header from "@/components/Header";
 import Preloader from "@/components/Preloader";
 import HeroBanner from "@/components/HeroBanner";
 import StorySection from "@/components/StorySection";
@@ -8,10 +7,7 @@ import TeamSection from "@/components/TeamSection";
 import FAQSection from "@/components/FAQSection";
 import ContactSection from "@/components/ContactSection";
 import PopupLeadForm from "@/components/PopupLeadForm";
-import ContactFloating from "@/components/ContactFloating";
-import ScrollController from "@/components/ScrollController";
 import Chatbot from "@/components/Chatbot";
-import Footer from "@/components/Footer";
 
 import { constructMetadata } from "@/lib/seo";
 
@@ -22,9 +18,8 @@ export const metadata = constructMetadata({
 
 export default function Home() {
   return (
-    <main className="relative min-h-screen">
+    <>
       <Preloader />
-      <Header />
       
       <HeroBanner />
       <StorySection />
@@ -38,11 +33,7 @@ export default function Home() {
       
       {/* Utility components */}
       <PopupLeadForm />
-      <ContactFloating />
-      <ScrollController />
       <Chatbot />
-      
-      <Footer />
-    </main>
+    </>
   );
 }

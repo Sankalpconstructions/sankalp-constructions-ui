@@ -49,8 +49,8 @@ export default function Footer() {
           <div>
             <h4 className="text-white font-bold uppercase tracking-widest mb-6">Quick Links</h4>
             <ul className="space-y-3">
-              <li><Link href="/#story" className="text-sm hover:text-[#F5C33C] transition-colors">Brand Story</Link></li>
-              <li><Link href="/#projects" className="text-sm hover:text-[#F5C33C] transition-colors">Our Projects</Link></li>
+              <li><Link href="/about" className="text-sm hover:text-[#F5C33C] transition-colors">Brand Story</Link></li>
+              <li><Link href="/projects" className="text-sm hover:text-[#F5C33C] transition-colors">Our Projects</Link></li>
               <li><Link href="/csr" className="text-sm hover:text-[#F5C33C] transition-colors">CSR Initiatives</Link></li>
               <li><Link href="/blog" className="text-sm hover:text-[#F5C33C] transition-colors">Insights & Blogs</Link></li>
             </ul>
@@ -73,7 +73,7 @@ export default function Footer() {
               )}
               {!loading && projects.length > 0 && (
                 <li>
-                  <Link href="/#projects" className="text-xs font-bold text-[#F5C33C] uppercase tracking-widest hover:underline mt-2 inline-block">
+                  <Link href="/projects" className="text-xs font-bold text-[#F5C33C] uppercase tracking-widest hover:underline mt-2 inline-block">
                     View All Projects
                   </Link>
                 </li>

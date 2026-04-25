@@ -3,10 +3,6 @@ import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { Loader2 } from "lucide-react";
-import ContactFloating from "@/components/ContactFloating";
-import ScrollController from "@/components/ScrollController";
-import Footer from "@/components/Footer";
-import Header from "@/components/Header";
 import AmenitiesSection from "@/components/AmenitiesSection";
 import FloorPlansSection from "@/components/FloorPlansSection";
 import ProjectBannerCarousel from "@/components/project-detail/ProjectBannerCarousel";
@@ -107,7 +103,6 @@ export default function ProjectDetailsPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-white flex flex-col items-center justify-center">
-        <Header />
         <Loader2 className="animate-spin text-[#711113] mb-4" size={48} />
         <p className="uppercase tracking-[0.25em] font-bold text-[10px] text-gray-400">Loading project details...</p>
       </div>
@@ -117,7 +112,6 @@ export default function ProjectDetailsPage() {
   if (error || !project) {
     return (
       <div className="min-h-screen bg-white flex flex-col items-center justify-center">
-        <Header />
         <p className="text-red-500 font-bold uppercase tracking-widest text-xs">{error || "Project not found"}</p>
         <Link href="/projects" className="mt-4 text-[#711113] hover:underline uppercase text-xs font-bold tracking-widest">Back to All Projects</Link>
       </div>
@@ -125,8 +119,7 @@ export default function ProjectDetailsPage() {
   }
 
   return (
-    <main className="min-h-screen bg-white">
-      <Header />
+    <div className="bg-white">
 
       <div className="pt-0">
         <ProjectBannerCarousel
@@ -190,9 +183,6 @@ export default function ProjectDetailsPage() {
         </div>
       </div>
 
-      <ContactFloating />
-      <ScrollController />
-      <Footer />
-    </main>
+    </div>
   );
 }

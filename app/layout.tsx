@@ -3,6 +3,10 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ProjectProvider } from "@/context/ProjectContext";
 import ScrollToTop from "@/components/ScrollToTop";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import ContactFloating from "@/components/ContactFloating";
+import ScrollController from "@/components/ScrollController";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -37,7 +41,11 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col bg-white text-gray-900 override">
         <ProjectProvider>
           <ScrollToTop />
-          {children}
+          <Header />
+          <main className="flex-grow flex flex-col relative">{children}</main>
+          <ContactFloating />
+          <ScrollController />
+          <Footer />
         </ProjectProvider>
       </body>
     </html>

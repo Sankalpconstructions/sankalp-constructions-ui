@@ -1,25 +1,43 @@
 "use client";
 import React, { useState } from "react";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import ContactFloating from "@/components/ContactFloating";
-import ScrollController from "@/components/ScrollController";
 import { motion } from "framer-motion";
 import { MapPin, Phone, Mail, Clock, Send, MessageSquare } from "lucide-react";
 
-export default function ContactPage() {
-  const [formStatus, setFormStatus] = useState<"idle" | "submitting" | "success">("idle");
+import { submitLead } from "@/lib/leads";
 
-  const handleSubmit = (e: React.FormEvent) => {
+export default function ContactPage() {
+  const [formStatus, setFormStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+  const [formData, setFormData] = useState({
+    name: "",
+    phone: "",
+    email: "",
+    project: "",
+    message: ""
+  });
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormStatus("submitting");
-    setTimeout(() => setFormStatus("success"), 1500);
+    try {
+      await submitLead({
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        project: formData.project || "General Inquiry",
+        message: formData.message
+      });
+      setFormStatus("success");
+      setFormData({ name: "", phone: "", email: "", project: "", message: "" });
+      setTimeout(() => setFormStatus("idle"), 5000);
+    } catch (error) {
+      console.error(error);
+      setFormStatus("error");
+      setTimeout(() => setFormStatus("idle"), 5000);
+    }
   };
 
   return (
-    <main id="projects" className="min-h-screen  bg-white">
-      <Header />
-
+    <div className="bg-white">
       {/* Hero Banner */}
       <section className="relative w-full h-[50vh] md:h-[60vh] flex items-center justify-center pt-20 bg-gray-900">
         <div className="absolute inset-0">
@@ -116,22 +134,22 @@ export default function ContactPage() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
                         <label className="block text-sm uppercase tracking-wider font-semibold text-gray-600 mb-2">Full Name <span className="text-red-500">*</span></label>
-                        <input required type="text" className="w-full p-4 bg-gray-50 border border-gray-200 rounded-lg outline-none focus:border-[#29B1D2] focus:bg-white transition-all text-gray-800 shadow-sm" placeholder="John Doe" />
+                        <input required type="text" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} className="w-full p-4 bg-gray-50 border border-gray-200 rounded-lg outline-none focus:border-[#29B1D2] focus:bg-white transition-all text-gray-800 shadow-sm" placeholder="John Doe" />
                       </div>
                       <div>
                         <label className="block text-sm uppercase tracking-wider font-semibold text-gray-600 mb-2">Phone Number <span className="text-red-500">*</span></label>
-                        <input required type="tel" className="w-full p-4 bg-gray-50 border border-gray-200 rounded-lg outline-none focus:border-[#29B1D2] focus:bg-white transition-all text-gray-800 shadow-sm" placeholder="+91 99999 99999" />
+                        <input required type="tel" value={formData.phone} onChange={(e) => setFormData({...formData, phone: e.target.value})} className="w-full p-4 bg-gray-50 border border-gray-200 rounded-lg outline-none focus:border-[#29B1D2] focus:bg-white transition-all text-gray-800 shadow-sm" placeholder="+91 99999 99999" />
                       </div>
                     </div>
 
                     <div>
                       <label className="block text-sm uppercase tracking-wider font-semibold text-gray-600 mb-2">Email Address <span className="text-gray-400 font-normal lowercase">(Optional)</span></label>
-                      <input type="email" className="w-full p-4 bg-gray-50 border border-gray-200 rounded-lg outline-none focus:border-[#29B1D2] focus:bg-white transition-all text-gray-800 shadow-sm" placeholder="john@example.com" />
+                      <input type="email" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} className="w-full p-4 bg-gray-50 border border-gray-200 rounded-lg outline-none focus:border-[#29B1D2] focus:bg-white transition-all text-gray-800 shadow-sm" placeholder="john@example.com" />
                     </div>
 
                     <div>
                       <label className="block text-sm uppercase tracking-wider font-semibold text-gray-600 mb-2">Project of Interest</label>
-                      <select className="w-full p-4 bg-gray-50 border border-gray-200 rounded-lg outline-none focus:border-[#29B1D2] focus:bg-white transition-all text-gray-800 shadow-sm appearance-none cursor-pointer">
+                      <select value={formData.project} onChange={(e) => setFormData({...formData, project: e.target.value})} className="w-full p-4 bg-gray-50 border border-gray-200 rounded-lg outline-none focus:border-[#29B1D2] focus:bg-white transition-all text-gray-800 shadow-sm appearance-none cursor-pointer">
                         <option value="">Select a Project</option>
                         <option value="Sankalp Heights">Sankalp Heights</option>
                         <option value="Sankalp Oasis">Sankalp Oasis</option>
@@ -143,13 +161,13 @@ export default function ContactPage() {
 
                     <div>
                       <label className="block text-sm uppercase tracking-wider font-semibold text-gray-600 mb-2">Your Message <span className="text-red-500">*</span></label>
-                      <textarea required rows={4} className="w-full p-4 bg-gray-50 border border-gray-200 rounded-lg outline-none focus:border-[#29B1D2] focus:bg-white transition-all text-gray-800 shadow-sm resize-none" placeholder="Let us know how we can assist you..."></textarea>
+                      <textarea required rows={4} value={formData.message} onChange={(e) => setFormData({...formData, message: e.target.value})} className="w-full p-4 bg-gray-50 border border-gray-200 rounded-lg outline-none focus:border-[#29B1D2] focus:bg-white transition-all text-gray-800 shadow-sm resize-none" placeholder="Let us know how we can assist you..."></textarea>
                     </div>
 
                     <button
                       type="submit"
                       disabled={formStatus === "submitting"}
-                      className="w-full py-4 bg-[#711113] hover:bg-[#520c0d] text-white font-bold uppercase tracking-[0.2em] rounded-lg shadow-xl shadow-[#711113]/20 transition-all flex items-center justify-center gap-2 group border border-transparent hover:border-[#F5C33C]/50"
+                      className="w-full py-4 bg-[#711113] hover:bg-[#520c0d] text-white font-bold uppercase tracking-[0.2em] rounded-lg shadow-xl shadow-[#711113]/20 transition-all flex items-center justify-center gap-2 group border border-transparent hover:border-[#F5C33C]/50 disabled:opacity-70"
                     >
                       {formStatus === "submitting" ? (
                         <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
@@ -157,6 +175,9 @@ export default function ContactPage() {
                         <>Send Message <Send size={18} className="group-hover:translate-x-1 transition-transform" /></>
                       )}
                     </button>
+                    {formStatus === "error" && (
+                      <p className="text-red-500 text-sm font-bold text-center mt-2">Failed to send message. Please try again.</p>
+                    )}
                     <p className="text-xs text-center text-gray-400 mt-4">By submitting this form, you agree to our privacy policy and terms of service.</p>
                   </form>
                 )}
@@ -191,9 +212,6 @@ export default function ContactPage() {
         </div>
       </section>
 
-      <ContactFloating />
-      <ScrollController />
-      <Footer />
-    </main>
+    </div>
   );
 }

@@ -3,10 +3,6 @@ import { useState, useEffect, useMemo, useRef } from "react";
 import { Search, ChevronRight, Loader2, ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import ContactFloating from "@/components/ContactFloating";
-import ScrollController from "@/components/ScrollController";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
@@ -56,8 +52,7 @@ export default function BlogPage() {
   };
 
   return (
-    <main className="min-h-screen bg-gray-50 text-gray-900 override">
-      <Header />
+    <div className="bg-gray-50 text-gray-900 override">
 
       <div 
         className="relative w-full bg-[#050505] flex items-end mb-12"
@@ -204,9 +199,6 @@ export default function BlogPage() {
         )}
       </div>
 
-      <ContactFloating />
-      <ScrollController />
-      <Footer />
 
       <style jsx global>{`
         .no-scrollbar::-webkit-scrollbar {
@@ -217,6 +209,6 @@ export default function BlogPage() {
           scrollbar-width: none;
         }
       `}</style>
-    </main>
+    </div>
   );
 }

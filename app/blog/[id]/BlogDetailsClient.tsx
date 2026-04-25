@@ -3,11 +3,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, User, Calendar, Tag, Facebook, Twitter, Loader2, Share2, Copy, Check, MessageCircle } from "lucide-react";
-import ContactFloating from "@/components/ContactFloating";
-import ScrollController from "@/components/ScrollController";
 import { motion, AnimatePresence } from "framer-motion";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
@@ -63,7 +59,6 @@ export default function BlogDetailsPage() {
   if (loading) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-white">
-        <Header />
         <Loader2 className="animate-spin text-[#711113] mb-4" size={48} />
         <p className="text-gray-400 font-bold uppercase tracking-widest text-xs">Loading article details...</p>
       </div>
@@ -73,7 +68,6 @@ export default function BlogDetailsPage() {
   if (!blog) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-white">
-        <Header />
         <h2 className="text-2xl font-bold text-gray-900 uppercase mb-4">Article Not Found</h2>
         <Link href="/blog" className="text-[#711113] font-bold uppercase tracking-widest text-sm flex items-center gap-2">
           <ArrowLeft size={16} /> Back to Blog
@@ -83,8 +77,7 @@ export default function BlogDetailsPage() {
   }
 
   return (
-    <main className="min-h-screen bg-white text-gray-900">
-      <Header />
+    <div className="bg-white text-gray-900">
 
       {/* Banner */}
       <section className="relative w-full h-[50vh] flex flex-col justify-end pb-12 pt-24 mt-0 bg-gray-900">
@@ -166,10 +159,6 @@ export default function BlogDetailsPage() {
         </div>
       </section>
 
-      <ContactFloating />
-      <ScrollController />
-      <Footer />
-      
       <style jsx global>{`
         .blog-content {
           font-size: 1.125rem;
@@ -183,6 +172,6 @@ export default function BlogDetailsPage() {
           margin-bottom: 1rem;
         }
       `}</style>
-    </main>
+    </div>
   );
 }

@@ -1,7 +1,5 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 import Preloader from "@/components/Preloader";
 import { motion, AnimatePresence } from "framer-motion";
 import { Calendar, Clock, X, ChevronRight, Image as ImageIcon, Users, Loader2 } from "lucide-react";
@@ -34,9 +32,8 @@ export default function CSRClient() {
   const selectedEvent = events.find((item) => (item._id || item.id) === selectedId);
 
   return (
-    <main className="relative min-h-screen bg-white text-gray-900">
+    <div className="relative bg-white text-gray-900">
       <Preloader />
-      <Header />
 
       {/* Hero Section */}
       <section className="relative pt-40 pb-20 lg:pt-52 lg:pb-32 px-4 lg:px-8 overflow-hidden z-10 bg-[#050505]">
@@ -139,8 +136,6 @@ export default function CSRClient() {
         </div>
       </section>
 
-      <Footer />
-
       {/* Modal for Details with Photo Gallery */}
       <AnimatePresence>
         {selectedEvent && (
@@ -230,6 +225,6 @@ export default function CSRClient() {
           scrollbar-width: none;
         }
       `}</style>
-    </main>
+    </div>
   );
 }

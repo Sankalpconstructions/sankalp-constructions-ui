@@ -9,11 +9,11 @@ import { useRouter, usePathname } from "next/navigation";
 import { useProjects } from "@/context/ProjectContext";
 
 const navLinks = [
-  { name: "About", href: "/#story" },
-  { name: "Our Projects", href: "/#projects" },
+  { name: "About", href: "/about" },
+  { name: "Our Projects", href: "/projects" },
   { name: "CSR", href: "/csr" },
   { name: "Blog", href: "/blog" },
-  { name: "Contact", href: "/#contact" },
+  { name: "Contact", href: "/contact" },
 ];
 
 export default function Header() {
@@ -43,7 +43,7 @@ export default function Header() {
         if (elem) {
           elem.scrollIntoView({ behavior: "smooth" });
         }
-      }, 800); 
+      }, 800);
       return () => clearTimeout(timer);
     }
   }, [pathname]);
@@ -57,7 +57,7 @@ export default function Header() {
     if (href.includes("#")) {
       const targetId = href.split("#")[1];
       const elem = document.getElementById(targetId);
-      
+
       // If the element exists on this page, scroll to it immediately
       if (elem) {
         e.preventDefault();
@@ -110,7 +110,7 @@ export default function Header() {
               {link.name === "Our Projects" && (
                 <div className="fixed top-[110px] left-0 w-full opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-500 pointer-events-none z-50 flex justify-center">
                   <div className="w-full max-w-[95vw] lg:max-w-[950px] bg-[#050505] text-white shadow-2xl rounded-sm p-10 border border-t-0 border-white/10 flex flex-col md:flex-row justify-between gap-12 cursor-default pointer-events-auto">
-                    
+
                     <div className="flex-1">
                       <h3 className="text-[#F5C33C] text-[10px] uppercase tracking-[0.3em] mb-6 border-b border-white/10 pb-3 whitespace-nowrap flex items-center gap-2">
                         Ongoing Projects {loadingProjects && <Loader2 size={12} className="animate-spin opacity-50" />}
@@ -159,8 +159,7 @@ export default function Header() {
           </button>
           <div className="w-[1px] h-4 bg-[#f5c33c] mx-4"></div>
           <Link
-            href="/#contact"
-            onClick={(e) => handleScrollTo(e as any, "/#contact")}
+            href="/contact"
             className="px-5 py-2 bg-transparent border border-white/30 hover:bg-white hover:text-black hover:border-white text-white font-medium text-[10px] uppercase tracking-[0.2em] rounded-sm transition-all duration-500 flex items-center justify-center cursor-pointer"
           >
             Inquire
@@ -231,7 +230,7 @@ export default function Header() {
                         {link.name} <ChevronDown size={18} />
                       </button>
                       <div id="mobile-projects" className="hidden w-full bg-gray-50/80 py-4 px-6 mt-2 rounded-lg text-left">
-                        
+
                         <div className="mb-4 text-center">
                           <h4 className="text-[#711113] font-bold text-xs uppercase tracking-widest border-b border-gray-200 pb-1 mb-2 inline-block">Ongoing</h4>
                           <div className="flex flex-col gap-2">

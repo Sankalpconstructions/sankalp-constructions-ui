@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Lock, X } from "lucide-react";
+import { submitLead } from "@/lib/leads";
 
 interface PricingRow {
   type: string;
@@ -16,12 +17,36 @@ interface Props {
 
 export default function ProjectPriceTable({ projectTitle, rows }: Props) {
   const [showForm, setShowForm] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  
+  const [formData, setFormData] = useState({
+    name: "",
+    phone: "",
+    email: ""
+  });
 
-  const handleFormSubmit = (e: React.FormEvent) => {
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
-    setTimeout(() => { setShowForm(false); setSubmitted(false); }, 2000);
+    setIsSubmitting(true);
+    try {
+      await submitLead({
+        ...formData,
+        project: projectTitle,
+        message: `Requested Pricing Details for ${projectTitle}`
+      });
+      setIsSuccess(true);
+      setTimeout(() => { 
+        setShowForm(false); 
+        setIsSubmitting(false);
+        setIsSuccess(false);
+        setFormData({ name: "", phone: "", email: "" });
+      }, 2500);
+    } catch (error) {
+      console.error(error);
+      setIsSubmitting(false);
+      alert("Failed to submit request. Please try again.");
+    }
   };
 
   return (
@@ -99,18 +124,43 @@ export default function ProjectPriceTable({ projectTitle, rows }: Props) {
                 <h3 className="text-2xl font-extrabold text-gray-900 mb-2">Get Pricing Details</h3>
                 <p className="text-gray-500 text-sm mb-6">Fill in your details and our team will share the latest pricing for {projectTitle}.</p>
 
-                {submitted ? (
+                {isSuccess ? (
                   <div className="text-center py-6">
                     <div className="text-4xl mb-3">✅</div>
                     <p className="text-green-700 font-bold">Request received! We'll get in touch shortly.</p>
                   </div>
                 ) : (
                   <form onSubmit={handleFormSubmit} className="flex flex-col gap-4">
-                    <input required type="text" placeholder="Full Name" className="p-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#711113]" />
-                    <input required type="tel" placeholder="Phone Number" className="p-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#711113]" />
-                    <input required type="email" placeholder="Email (optional)" className="p-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#711113]" />
-                    <button type="submit" className="mt-2 py-4 bg-[#711113] text-white font-bold uppercase tracking-widest rounded-xl shadow-lg hover:bg-[#520c0d] transition-colors">
-                      Get Pricing Now
+                    <input 
+                      required 
+                      type="text" 
+                      placeholder="Full Name" 
+                      value={formData.name}
+                      onChange={(e) => setFormData({...formData, name: e.target.value})}
+                      className="p-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#711113]" 
+                    />
+                    <input 
+                      required 
+                      type="tel" 
+                      placeholder="Phone Number" 
+                      value={formData.phone}
+                      onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                      className="p-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#711113]" 
+                    />
+                    <input 
+                      required 
+                      type="email" 
+                      placeholder="Email (optional)" 
+                      value={formData.email}
+                      onChange={(e) => setFormData({...formData, email: e.target.value})}
+                      className="p-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#711113]" 
+                    />
+                    <button 
+                      type="submit" 
+                      disabled={isSubmitting}
+                      className="mt-2 py-4 bg-[#711113] text-white font-bold uppercase tracking-widest rounded-xl shadow-lg hover:bg-[#520c0d] transition-colors disabled:opacity-70"
+                    >
+                      {isSubmitting ? "Sending Request..." : "Get Pricing Now"}
                     </button>
                   </form>
                 )}

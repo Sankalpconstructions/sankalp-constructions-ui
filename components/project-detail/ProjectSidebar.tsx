@@ -30,11 +30,12 @@ interface Props {
   totalUnits: string;
   rera: string;
   relatedProjects: RelatedProject[];
+  brochureUrl?: string;
 }
 
 // ─── Project Overview Card ─────────────────────────────────────────────────────
 function ProjectOverviewCard({
-  projectTitle, status, possessionDate, totalFloors, totalUnits, rera,
+  projectTitle, status, possessionDate, totalFloors, totalUnits, rera, brochureUrl
 }: Omit<Props, "relatedProjects">) {
   const items = [
     {
@@ -65,6 +66,27 @@ function ProjectOverviewCard({
       mono: true,
     },
   ];
+
+  const handleDownloadBrochure = async () => {
+    if (!brochureUrl) {
+      alert("Brochure is not available for this project yet.");
+      return;
+    }
+
+    try {
+      // Create a hidden link and trigger download
+      const link = document.createElement('a');
+      link.href = brochureUrl;
+      link.setAttribute('download', `${projectTitle.replace(/\s+/g, '_')}_Brochure.pdf`);
+      link.setAttribute('target', '_blank'); // Fallback for blob/external URLs
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error("Download failed:", error);
+      window.open(brochureUrl, '_blank');
+    }
+  };
 
   return (
     <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
@@ -126,15 +148,10 @@ function ProjectOverviewCard({
           <MessageCircle size={16} /> Enquire Now
         </button>
         <button
-          onClick={() => {
-            const el = document.createElement("a");
-            el.href = "#"; // Replace with actual brochure URL
-            el.download = `${projectTitle.replace(/\s+/g, "_")}_Brochure.pdf`;
-            el.click();
-          }}
+          onClick={handleDownloadBrochure}
           className="flex-1 py-3.5 bg-white border-2 border-gray-200 hover:border-[#711113] hover:text-[#711113] text-gray-700 font-bold uppercase tracking-widest text-[10px] md:text-xs rounded-xl transition-all duration-300 flex items-center justify-center gap-2"
         >
-          <FileDown size={16} /> Brochure
+          <FileDown size={16} /> Download Brochure
         </button>
       </div>
     </div>
@@ -294,6 +311,7 @@ export default function ProjectSidebar({
   totalUnits,
   rera,
   relatedProjects,
+  brochureUrl,
 }: Props) {
   return (
     <aside className="flex flex-col gap-6 w-full max-w-full overflow-hidden">
@@ -304,6 +322,7 @@ export default function ProjectSidebar({
         totalFloors={totalFloors}
         totalUnits={totalUnits}
         rera={rera}
+        brochureUrl={brochureUrl}
       />
       <RelatedCarousel projects={relatedProjects} />
     </aside>

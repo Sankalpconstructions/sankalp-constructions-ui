@@ -2,67 +2,97 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { ChevronLeft, ChevronRight, Phone, Mail } from "lucide-react";
+import { ChevronLeft, ChevronRight, Phone, Mail, Loader2 } from "lucide-react";
 
 const IMAGE_SLIDE_DURATION = 6000; // ms for image slides
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
-const sliderData: {
+interface SlideData {
   type: "video" | "image";
   src: string;
   title: string;
   subtitle: string;
   link: string;
   btnText: string;
-}[] = [
-    {
-      type: "video",
-      src: "/assets/Apartment.mp4",
-      title: "Experience Luxury Like Never Before",
-      subtitle: "A NEW ERA OF ELEGANCE",
-      link: "/#projects",
-      btnText: "Explore Projects",
-    },
-    {
-      type: "image",
-      src: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1600",
-      title: "Premium Living At Its Best",
-      subtitle: "Discover Spaces Designed For You",
-      link: "/#projects",
-      btnText: "Explore Projects",
-    },
-    {
-      type: "image",
-      src: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1600",
-      title: "Modern Architecture",
-      subtitle: "Built with elegance and innovation",
-      link: "/#story",
-      btnText: "Our Story",
-    },
-    {
-      type: "image",
-      src: "https://images.unsplash.com/photo-1628611225249-6c3c7c689552?w=1600",
-      title: "Luxury Amenities",
-      subtitle: "Elevate your lifestyle with world-class facilities",
-      link: "/#amenities",
-      btnText: "View Amenities",
-    },
-  ];
+}
 
 export default function HeroBanner() {
+  const [slides, setSlides] = useState<SlideData[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [index, setIndex] = useState(0);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const imageTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const advance = useCallback(() => {
-    setIndex((prev) => (prev + 1) % sliderData.length);
+  useEffect(() => {
+    const fetchSlides = async () => {
+      try {
+        const res = await fetch(`${API_BASE_URL}/api/herobanners`);
+        const data = await res.json();
+        
+        // Filter active slides and map to the format HeroBanner expects
+        const activeSlides = data
+          .filter((slide: any) => slide.isActive !== false)
+          .map((slide: any) => {
+            const isVideo = slide.image?.toLowerCase().match(/\.(mp4|webm|ogg)$/);
+            return {
+              type: isVideo ? "video" : "image",
+              src: slide.image,
+              title: slide.title,
+              subtitle: slide.subtitle,
+              link: "/#projects", // Default link, since it's not in the admin yet
+              btnText: slide.ctaText || "Explore Now"
+            };
+          });
+
+        if (activeSlides.length > 0) {
+          setSlides(activeSlides);
+        } else {
+          // Fallback if no active slides exist
+          setSlides([
+            {
+              type: "image",
+              src: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1600",
+              title: "Welcome to Sankalp",
+              subtitle: "Premium Living At Its Best",
+              link: "/#projects",
+              btnText: "Explore Projects",
+            }
+          ]);
+        }
+      } catch (error) {
+        console.error("Error fetching hero slides:", error);
+        // Fallback if fetch fails (e.g. CORS or server down)
+        setSlides([
+          {
+            type: "image",
+            src: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1600",
+            title: "Welcome to Sankalp",
+            subtitle: "Premium Living At Its Best",
+            link: "/#projects",
+            btnText: "Explore Projects",
+          }
+        ]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchSlides();
   }, []);
+
+  const advance = useCallback(() => {
+    if (slides.length > 0) {
+      setIndex((prev) => (prev + 1) % slides.length);
+    }
+  }, [slides]);
 
   // Clear any image timer on slide change
   useEffect(() => {
+    if (slides.length === 0) return;
+    
     if (imageTimerRef.current) clearTimeout(imageTimerRef.current);
 
-    const slide = sliderData[index];
-    if (slide.type === "image") {
+    const slide = slides[index];
+    if (slide && slide.type === "image") {
       imageTimerRef.current = setTimeout(advance, IMAGE_SLIDE_DURATION);
     }
     // For video slides, we listen to the `ended` event on the <video> element
@@ -70,17 +100,34 @@ export default function HeroBanner() {
     return () => {
       if (imageTimerRef.current) clearTimeout(imageTimerRef.current);
     };
-  }, [index, advance]);
+  }, [index, advance, slides]);
 
-  const nextSlide = () => setIndex((prev) => (prev + 1) % sliderData.length);
-  const prevSlide = () =>
-    setIndex((prev) => (prev === 0 ? sliderData.length - 1 : prev - 1));
+  const nextSlide = () => {
+    if (slides.length > 0) {
+      setIndex((prev) => (prev + 1) % slides.length);
+    }
+  };
+  
+  const prevSlide = () => {
+    if (slides.length > 0) {
+      setIndex((prev) => (prev === 0 ? slides.length - 1 : prev - 1));
+    }
+  };
 
   const handleScrollTo = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
   };
 
-  const current = sliderData[index];
+  if (isLoading) {
+    return (
+      <section className="relative w-full h-[50vh] md:h-screen min-h-[400px] md:min-h-[600px] overflow-hidden flex items-center justify-center bg-black">
+        <Loader2 className="animate-spin text-[#F5C33C]" size={40} />
+      </section>
+    );
+  }
+
+  const current = slides[index];
+  if (!current) return null;
 
   return (
     <section
@@ -114,16 +161,16 @@ export default function HeroBanner() {
             transition={{ duration: 1.4, ease: "easeOut" }}
             className="absolute inset-0 w-full h-full object-cover z-0"
             style={{ width: "100%", height: "100%", objectFit: "cover" }}
-            alt="Sankalp Constructions"
+            alt={current.title}
           />
         )}
       </AnimatePresence>
 
       {/* Overlay */}
-      <div className="absolute inset-0 bg-black/25 z-0 pointer-events-none" />
+      <div className="absolute inset-0 bg-black/40 z-0 pointer-events-none" />
 
       {/* Slide Content */}
-      {/* <div className="relative z-10 w-full container mx-auto px-4 lg:px-8 flex flex-col items-center text-center mt-[-5vh]">
+      <div className="relative z-10 w-full container mx-auto px-4 lg:px-8 flex flex-col items-center text-center mt-[-5vh]">
         <AnimatePresence mode="wait">
           <motion.div
             key={index}
@@ -154,90 +201,42 @@ export default function HeroBanner() {
             </Link>
           </motion.div>
         </AnimatePresence>
-      </div> */}
-
-      {/* Navigation Arrows */}
-      <button
-        onClick={prevSlide}
-        className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 z-20 w-10 h-10 md:w-12 md:h-12 rounded-full border border-white/20 flex items-center justify-center hover:text-[#F5C33C] text-white hover:bg-white/10 hover:border-[#F5C33C] transition-all hidden sm:flex group"
-      >
-        <ChevronLeft size={20} strokeWidth={1} className="group-hover:-translate-x-1 transition-transform" />
-      </button>
-      <button
-        onClick={nextSlide}
-        className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 z-20 w-10 h-10 md:w-12 md:h-12 rounded-full border border-white/20 flex items-center justify-center hover:text-[#F5C33C] text-white hover:bg-white/10 hover:border-[#F5C33C] transition-all hidden sm:flex group"
-      >
-        <ChevronRight size={20} strokeWidth={1} className="group-hover:translate-x-1 transition-transform" />
-      </button>
-
-      {/* Dots */}
-      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-20 hidden md:flex gap-4">
-        {sliderData.map((_, i) => (
-          <button
-            key={i}
-            onClick={() => setIndex(i)}
-            className={`w-2 h-2 rounded-full transition-all duration-500 hover:scale-150 ${i === index
-              ? "bg-[#F5C33C] scale-150 shadow-[0_0_10px_rgba(245,195,60,0.8)]"
-              : "bg-white/30 hover:bg-white/70"
-              }`}
-            aria-label={`Go to slide ${i + 1}`}
-          />
-        ))}
       </div>
 
-      {/* Bottom Contact Bar */}
-      {/* <div className="absolute bottom-0 left-0 w-full z-20">
-        <div className="bg-[#050505]/95 backdrop-blur-2xl border-t border-white/10 shadow-[0_-10px_40px_rgba(0,0,0,0.3)] p-4 lg:p-0">
-          <div className="container mx-auto px-2 lg:px-8 flex flex-col xl:flex-row justify-between items-center py-2 lg:py-5 gap-4 lg:gap-0">
-            <div className="text-white hidden sm:flex items-center gap-4 lg:gap-10">
-              <div className="flex flex-col items-center xl:items-start text-center xl:text-left">
-                <p className="uppercase tracking-[0.2em] text-[8px] text-[#F5C33C] mb-1.5 flex items-center gap-1.5">
-                  <Phone size={10} /> Expert Consultation
-                </p>
-                <h4 className="text-[11px] lg:text-[13px] font-semibold tracking-widest text-white">
-                  +91 73307 70111
-                </h4>
-              </div>
-              <div className="w-px h-8 bg-white/10" />
-              <div className="flex flex-col items-center xl:items-start text-center xl:text-left">
-                <p className="uppercase tracking-[0.2em] text-[8px] text-[#F5C33C] mb-1.5 flex items-center gap-1.5">
-                  <Mail size={10} /> Direct Inquiry
-                </p>
-                <h4 className="text-[10px] lg:text-[11px] uppercase tracking-widest text-white">
-                  sales@sankalpconstructions.com
-                </h4>
-              </div>
-            </div>
+      {/* Navigation Arrows */}
+      {slides.length > 1 && (
+        <>
+          <button
+            onClick={prevSlide}
+            className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 z-20 w-10 h-10 md:w-12 md:h-12 rounded-full border border-white/20 flex items-center justify-center hover:text-[#F5C33C] text-white hover:bg-white/10 hover:border-[#F5C33C] transition-all hidden sm:flex group"
+          >
+            <ChevronLeft size={20} strokeWidth={1} className="group-hover:-translate-x-1 transition-transform" />
+          </button>
+          <button
+            onClick={nextSlide}
+            className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 z-20 w-10 h-10 md:w-12 md:h-12 rounded-full border border-white/20 flex items-center justify-center hover:text-[#F5C33C] text-white hover:bg-white/10 hover:border-[#F5C33C] transition-all hidden sm:flex group"
+          >
+            <ChevronRight size={20} strokeWidth={1} className="group-hover:translate-x-1 transition-transform" />
+          </button>
+        </>
+      )}
 
-            <form
-              className="flex flex-col sm:flex-row gap-2 sm:gap-4 items-center w-full sm:w-auto overflow-hidden"
-              onSubmit={(e) => {
-                e.preventDefault();
-                alert("Inquiry Sent Successfully");
-              }}
-            >
-              <input
-                required
-                type="text"
-                placeholder="Full Name"
-                className="bg-white/5 border border-white/10 px-4 py-2 lg:py-3 text-white w-full sm:w-36 md:w-40 lg:w-48 text-[10px] lg:text-[11px] uppercase tracking-widest focus:outline-none focus:border-[#F5C33C] focus:bg-white/15 transition-all placeholder:text-gray-500 rounded-sm"
-              />
-              <input
-                required
-                type="tel"
-                placeholder="Phone Number"
-                className="bg-white/5 border border-white/10 px-4 py-2 lg:py-3 text-white w-full sm:w-36 md:w-40 lg:w-48 text-[10px] lg:text-[11px] uppercase tracking-widest focus:outline-none focus:border-[#F5C33C] focus:bg-white/15 transition-all placeholder:text-gray-500 rounded-sm"
-              />
-              <button
-                type="submit"
-                className="bg-white text-black px-6 lg:px-10 py-2 lg:py-3 text-[10px] lg:text-[11px] uppercase tracking-[0.2em] font-bold hover:bg-[#F5C33C] transition-all shadow-lg rounded-sm border border-transparent hover:border-black/10 w-full sm:w-auto"
-              >
-                Enquire Now
-              </button>
-            </form>
-          </div>
+      {/* Dots */}
+      {slides.length > 1 && (
+        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-20 hidden md:flex gap-4">
+          {slides.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setIndex(i)}
+              className={`w-2 h-2 rounded-full transition-all duration-500 hover:scale-150 ${i === index
+                ? "bg-[#F5C33C] scale-150 shadow-[0_0_10px_rgba(245,195,60,0.8)]"
+                : "bg-white/30 hover:bg-white/70"
+                }`}
+              aria-label={`Go to slide ${i + 1}`}
+            />
+          ))}
         </div>
-      </div> */}
+      )}
 
       {/* Mobile Scroll Indicator */}
       <motion.div

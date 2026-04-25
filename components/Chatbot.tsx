@@ -1,7 +1,11 @@
 "use client";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Send, Bot, User } from "lucide-react";
+import { X, Send, Bot, User, Loader2, ArrowRight, CheckCircle } from "lucide-react";
+import Link from "next/link";
+import { useProjects } from "@/context/ProjectContext";
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
 type Message = {
   id: string;
@@ -10,11 +14,14 @@ type Message = {
   options?: string[];
 };
 
-let messageIdCounter = 100;
+let messageIdCounter = 1000;
 
 export default function Chatbot() {
   const [isOpen, setIsOpen] = useState(false);
   const [isHoverToggleHovered, setIsHoverToggleHovered] = useState(false);
+  const { projects, loading } = useProjects();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "1",
@@ -23,85 +30,139 @@ export default function Chatbot() {
       options: ["Find projects", "View amenities", "Check unit details", "Contact form"],
     },
   ]);
+  
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  const handleLeadSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    
+    const formData = new FormData(e.currentTarget);
+    const data = {
+      name: formData.get("name"),
+      phone: formData.get("phone"),
+      source: "Chatbot",
+      status: "New"
+    };
+
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/leads`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+
+      if (res.ok) {
+        setMessages(prev => [...prev, {
+          id: String(messageIdCounter++) + "_thanks",
+          sender: "bot",
+          text: (
+            <div className="flex items-center gap-2 text-green-600 font-bold">
+              <CheckCircle size={16} />
+              <span>Thank you! Our sales team will get in touch shortly.</span>
+            </div>
+          )
+        }]);
+      }
+    } catch (error) {
+      console.error("Error submitting lead from chatbot:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   const handleOptionClick = (option: string) => {
-    // Add User Message
     const userMsg: Message = { id: String(messageIdCounter++), sender: "user", text: option };
     setMessages((prev) => [...prev, userMsg]);
 
-    // Bot Response Logic
     setTimeout(() => {
       let botMsg: Message;
-
-      switch (option) {
-        case "Find projects":
-          botMsg = {
-            id: String(messageIdCounter++),
-            sender: "bot",
-            text: "We have ongoing premium projects in Pune West, East & Lonavala. Would you like to check specific configurations?",
-            options: ["Check unit details", "Back to start"],
-          };
-          break;
-        case "View amenities":
-          botMsg = {
-            id: String(messageIdCounter++),
-            sender: "bot",
-            text: "Our projects feature 5-star amenities like infinity pools, ultra-modern gyms, 24/7 security, and lush gardens.",
-            options: ["Back to start", "Contact form"],
-          };
-          break;
-        case "Check unit details":
-          botMsg = {
-            id: String(messageIdCounter++),
-            sender: "bot",
-            text: "We offer 2, 3, 4, and 5 BHK premium apartments and villas starting from 1,150 sq.ft. Let our experts provide a detailed floor plan.",
-            options: ["Contact form", "Back to start"],
-          };
-          break;
-        case "Contact form":
-          botMsg = {
-            id: String(messageIdCounter++),
-            sender: "bot",
-            text: (
-              <div className="bg-gray-50 rounded p-4 border border-gray-200 shadow-inner w-full mt-2">
-                <p className="font-bold text-[#711113] mb-2 uppercase text-xs">Fill to Connect</p>
-                <form 
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    setMessages(prev => [...prev, {
-                      id: String(messageIdCounter++) + "_thanks",
-                      sender: "bot",
-                      text: "Thank you! Our sales team will get in touch shortly."
-                    }]);
-                  }}
-                  className="flex flex-col gap-2 relative z-[9999]"
-                >
-                  <input required placeholder="Name" className="p-2 border rounded text-sm w-full" />
-                  <input required placeholder="Phone" type="tel" className="p-2 border rounded text-sm w-full" />
-                  <button type="submit" className="bg-[#29B1D2] text-white p-2 rounded font-bold uppercase text-xs tracking-wider">
-                    Submit
-                  </button>
-                </form>
-              </div>
-            ),
-          };
-          break;
-        case "Back to start":
-        default:
-          botMsg = {
-            id: String(messageIdCounter++),
-            sender: "bot",
-            text: "What else can I help you with?",
-            options: ["Find projects", "View amenities", "Check unit details", "Contact form"],
-          };
-          break;
+      const selectedProject = projects.find(p => p.title === option);
+      
+      if (selectedProject) {
+        botMsg = {
+          id: String(messageIdCounter++),
+          sender: "bot",
+          text: (
+            <div className="space-y-3">
+              <p><strong>{selectedProject.title}</strong> is one of our premium <strong>{selectedProject.status}</strong> developments.</p>
+              <Link 
+                href={`/projects/${selectedProject._id}`} 
+                className="inline-flex items-center gap-2 text-[#711113] font-bold text-xs uppercase tracking-widest hover:underline"
+                onClick={() => setIsOpen(false)}
+              >
+                View Project Details <ArrowRight size={12} />
+              </Link>
+            </div>
+          ),
+          options: ["Find projects", "Contact form", "Back to start"]
+        };
+      } else {
+        switch (option) {
+          case "Find projects":
+            botMsg = {
+              id: String(messageIdCounter++),
+              sender: "bot",
+              text: projects.length > 0 
+                ? "We have several premium developments ongoing. Which one would you like to explore?" 
+                : "We are currently planning some exciting new projects. Stay tuned!",
+              options: projects.length > 0 ? projects.map(p => p.title).slice(0, 5).concat(["Back to start"]) : ["Back to start"],
+            };
+            break;
+          case "View amenities":
+            botMsg = {
+              id: String(messageIdCounter++),
+              sender: "bot",
+              text: "Our projects feature 5-star amenities like infinity pools, ultra-modern gyms, 24/7 security, and lush gardens.",
+              options: ["Contact form", "Back to start"],
+            };
+            break;
+          case "Check unit details":
+            botMsg = {
+              id: String(messageIdCounter++),
+              sender: "bot",
+              text: "We offer 2, 3, 4, and 5 BHK premium apartments and villas starting from 1,150 sq.ft. Would you like a detailed floor plan?",
+              options: ["Contact form", "Back to start"],
+            };
+            break;
+          case "Contact form":
+            botMsg = {
+              id: String(messageIdCounter++),
+              sender: "bot",
+              text: (
+                <div className="bg-gray-50 rounded p-4 border border-gray-200 shadow-inner w-full mt-2">
+                  <p className="font-bold text-[#711113] mb-2 uppercase text-xs">Fill to Connect</p>
+                  <form onSubmit={handleLeadSubmit} className="flex flex-col gap-2 relative z-[9999]">
+                    <input name="name" required placeholder="Name" className="p-2 border rounded text-sm w-full" disabled={isSubmitting} />
+                    <input name="phone" required placeholder="Phone" type="tel" className="p-2 border rounded text-sm w-full" disabled={isSubmitting} />
+                    <button 
+                      type="submit" 
+                      disabled={isSubmitting}
+                      className="bg-[#29B1D2] text-white p-2 rounded font-bold uppercase text-xs tracking-wider flex items-center justify-center gap-2 hover:bg-[#711113] transition-colors"
+                    >
+                      {isSubmitting ? <Loader2 size={14} className="animate-spin" /> : "Submit"}
+                    </button>
+                  </form>
+                </div>
+              ),
+            };
+            break;
+          case "Back to start":
+          case "Restart Chat":
+          default:
+            botMsg = {
+              id: String(messageIdCounter++),
+              sender: "bot",
+              text: "What else can I help you with today?",
+              options: ["Find projects", "View amenities", "Check unit details", "Contact form"],
+            };
+            break;
+        }
       }
-
       setMessages((prev) => [...prev, botMsg]);
     }, 600);
   };

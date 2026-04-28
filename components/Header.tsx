@@ -12,7 +12,7 @@ const navLinks = [
   { name: "About", href: "/about" },
   { name: "Our Projects", href: "/projects" },
   { name: "CSR", href: "/csr" },
-  { name: "Blog", href: "/blog" },
+  { name: "Rent", href: "#" },
   { name: "Contact", href: "/contact" },
 ];
 
@@ -100,11 +100,11 @@ export default function Header() {
             <div key={link.name} className="relative group">
               <Link
                 href={link.href}
-                onClick={(e) => link.name !== "Our Projects" && handleScrollTo(e, link.href)}
+                onClick={(e) => link.name !== "Our Projects" && link.name !== "Rent" && handleScrollTo(e, link.href)}
                 className="relative text-white/80 hover:text-white text-[11px] uppercase tracking-[0.2em] font-medium transition-colors flex items-center gap-1.5 py-2 group-hover:after:scale-x-100 after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-[1px] after:bottom-0 after:left-0 after:bg-white after:origin-bottom-right after:transition-transform after:duration-500 hover:after:origin-bottom-left"
               >
                 {link.name}
-                {link.name === "Our Projects" && <ChevronDown size={14} className="transition-transform duration-300 group-hover:rotate-180" />}
+                {(link.name === "Our Projects" || link.name === "Rent") && <ChevronDown size={14} className="transition-transform duration-300 group-hover:rotate-180" />}
               </Link>
 
               {link.name === "Our Projects" && (
@@ -146,6 +146,15 @@ export default function Header() {
                         {completedProjects.length === 0 && !loadingProjects && <li className="text-[11px] text-white/30 italic uppercase tracking-widest">No completed projects</li>}
                       </ul>
                     </div>
+                  </div>
+                </div>
+              )}
+
+              {link.name === "Rent" && (
+                <div className="absolute top-[100%] left-1/2 -translate-x-1/2 mt-4 w-48 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 pointer-events-none z-50">
+                  <div className="bg-[#050505] text-white shadow-2xl rounded-sm p-5 border border-white/10 flex flex-col gap-4 pointer-events-auto">
+                    <Link href="/rent/residential" className="text-[12px] text-white/60 hover:text-white transition-colors uppercase tracking-[0.2em] border-b border-white/5 pb-2">Residential</Link>
+                    <Link href="/rent/commercial" className="text-[12px] text-white/60 hover:text-white transition-colors uppercase tracking-[0.2em]">Commercial</Link>
                   </div>
                 </div>
               )}
@@ -257,6 +266,22 @@ export default function Header() {
                             ))}
                           </div>
                         </div>
+                      </div>
+                    </div>
+                  ) : link.name === "Rent" ? (
+                    <div className="w-full">
+                      <button
+                        className="text-gray-800 font-medium text-lg uppercase tracking-wide flex items-center justify-center gap-2 w-full pb-2 hover:text-[#711113]"
+                        onClick={() => {
+                          const el = document.getElementById('mobile-rent');
+                          if (el) el.classList.toggle('hidden');
+                        }}
+                      >
+                        {link.name} <ChevronDown size={18} />
+                      </button>
+                      <div id="mobile-rent" className="hidden w-full bg-gray-50/80 py-4 px-6 mt-2 rounded-lg text-center flex flex-col gap-3">
+                        <Link href="/rent/residential" onClick={() => setIsOpen(false)} className="text-[#711113] font-bold text-sm uppercase tracking-widest">Residential</Link>
+                        <Link href="/rent/commercial" onClick={() => setIsOpen(false)} className="text-[#711113] font-bold text-sm uppercase tracking-widest">Commercial</Link>
                       </div>
                     </div>
                   ) : (

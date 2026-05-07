@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { MapPin, Phone, Mail, Clock, Send, MessageSquare } from "lucide-react";
 
 import { submitLead } from "@/lib/leads";
+import PageBanner from "@/components/PageBanner";
 
 export default function ContactPage() {
   const [formStatus, setFormStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
@@ -39,35 +40,12 @@ export default function ContactPage() {
   return (
     <div className="bg-white">
       {/* Hero Banner */}
-      <section className="relative w-full h-[50vh] md:h-[60vh] flex items-center justify-center pt-20 bg-gray-900">
-        <div className="absolute inset-0">
-          <img
-            src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=1600"
-            alt="Contact Us Office"
-            className="w-full h-full object-cover opacity-30 block"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/60 to-transparent"></div>
-        </div>
-
-        <div className="relative z-10 text-center px-4">
-          <motion.h1
-            id="contact"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-4xl md:text-6xl font-extrabold text-white uppercase tracking-widest drop-shadow-lg mb-4"
-          >
-            Get In <span className="text-[#29B1D2]">Touch</span>
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="text-gray-300 text-lg md:text-xl font-light max-w-2xl mx-auto"
-          >
-            Whether you&apos;re looking to invest in a dream home or a premium commercial property, our tailored advisors are here to help.
-          </motion.p>
-        </div>
-      </section>
+      <PageBanner 
+        title={<>Get In <span className="text-[#29B1D2]">Touch</span></>}
+        subtitle="Whether you're looking to invest in a dream home or a premium commercial property, our tailored advisors are here to help."
+        image="https://images.unsplash.com/photo-1497366216548-37526070297c?w=1600"
+        breadcrumbs={[{ label: "Contact Us" }]}
+      />
 
       {/* Main Contact Section */}
       <section className="py-20 bg-gray-50">

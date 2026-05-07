@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { ChevronRight, MapPin, Loader2, Building2 } from "lucide-react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
+import PageBanner from "@/components/PageBanner";
 
 type ProjectStatus = "ongoing" | "upcoming" | "completed";
 
@@ -76,39 +77,15 @@ export default function RentClient({ rentType }: { rentType: "residential" | "co
 
   return (
     <div className="bg-[#f8f5f0] text-gray-900 min-h-screen">
-      <div
-        className="relative w-full bg-[#050505] flex items-end"
-        style={{ minHeight: "280px", paddingTop: "120px" }}
-      >
-        <div
-          className="absolute inset-0 opacity-10"
-          style={{
-            backgroundImage: `url("https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1600")`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/80 to-[#050505]/40" />
-
-        <div className="relative z-10 container mx-auto px-4 lg:px-8 pb-14">
-          <span className="text-[#F5C33C] text-[10px] uppercase tracking-[0.4em] font-semibold mb-4 block">
-            Rent / {rentType}
-          </span>
-          <h1 className="text-4xl md:text-6xl font-extrabold text-white uppercase tracking-wide leading-tight mb-4">
-            {title}
-          </h1>
-          <p className="text-white/50 text-sm md:text-base max-w-xl leading-relaxed">
-            {desc}
-          </p>
-          <div className="flex items-center gap-2 mt-6 text-white/30 text-xs uppercase tracking-widest">
-            <Link href="/" className="hover:text-[#F5C33C] transition">Home</Link>
-            <span>/</span>
-            <span className="text-white/60">Rent</span>
-            <span>/</span>
-            <span className="text-white/60 capitalize">{rentType}</span>
-          </div>
-        </div>
-      </div>
+      <PageBanner
+        title={<>{title.split(' ')[0]} <span className="text-[#29B1D2]">Rentals</span></>}
+        subtitle={desc}
+        image="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1600"
+        breadcrumbs={[
+          { label: "Rent" },
+          { label: title.split(' ')[0] }
+        ]}
+      />
 
       <div className="container mx-auto px-4 lg:px-8 py-14">
         {loading ? (

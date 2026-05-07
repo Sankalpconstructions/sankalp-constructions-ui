@@ -3,6 +3,7 @@ import { useState, useEffect, useMemo, useRef } from "react";
 import { Search, ChevronRight, Loader2, ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
+import PageBanner from "@/components/PageBanner";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
@@ -54,32 +55,12 @@ export default function BlogPage() {
   return (
     <div className="bg-gray-50 text-gray-900 override">
 
-      <div 
-        className="relative w-full bg-[#050505] flex items-end mb-12"
-        style={{ minHeight: "280px", paddingTop: "120px" }}
-      >
-        <div
-          className="absolute inset-0 opacity-10"
-          style={{
-            backgroundImage: `url("https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1600")`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/80 to-[#050505]/40" />
-
-        <div className="relative z-10 container mx-auto px-4 lg:px-8 pb-14 text-center">
-           <span className="text-[#F5C33C] text-[10px] uppercase tracking-[0.4em] font-semibold mb-4 block drop-shadow-md">
-             Sankalp Constructions
-           </span>
-           <h1 className="text-4xl md:text-6xl font-extrabold text-white uppercase tracking-wide leading-tight mb-4 drop-shadow-lg">
-             Blog & Insights
-           </h1>
-           <p className="text-white/50 text-sm md:text-base max-w-xl mx-auto leading-relaxed">
-             Read our latest articles, market trends, guides, and insights on the real estate industry, premium homes, and urban living.
-           </p>
-        </div>
-      </div>
+      <PageBanner
+        title={<>Blog & <span className="text-[#29B1D2]">Insights</span></>}
+        subtitle="Read our latest articles, market trends, guides, and insights on the real estate industry, premium homes, and urban living."
+        image="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1600"
+        breadcrumbs={[{ label: "Blog" }]}
+      />
 
       <div className="container mx-auto px-4 lg:px-8 py-4">
         <div className="text-center mb-16">

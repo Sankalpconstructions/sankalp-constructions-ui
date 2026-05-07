@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import Preloader from "@/components/Preloader";
 import { motion, AnimatePresence } from "framer-motion";
 import { Calendar, Clock, X, ChevronRight, Image as ImageIcon, Users, Loader2 } from "lucide-react";
+import PageBanner from "@/components/PageBanner";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
@@ -35,38 +36,12 @@ export default function CSRClient() {
     <div className="relative bg-white text-gray-900">
       <Preloader />
 
-      {/* Hero Section */}
-      <section className="relative pt-40 pb-20 lg:pt-52 lg:pb-32 px-4 lg:px-8 overflow-hidden z-10 bg-[#050505]">
-        <div
-          className="absolute inset-0 opacity-20"
-          style={{
-            backgroundImage: `url("https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=1600")`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-        />
-        <div className="absolute inset-x-0 top-0 h-full bg-gradient-to-b from-[#050505] via-[#050505]/90 to-[#050505]/40 z-0"></div>
-
-        <div className="container mx-auto relative z-10 text-center max-w-4xl">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1 }}
-          >
-            <div className="inline-flex items-center justify-center gap-2 px-4 py-1.5 border border-[#F5C33C]/20 bg-[#F5C33C]/10 rounded-full mb-6 relative backdrop-blur-sm">
-              <Users className="w-4 h-4 text-[#F5C33C]" />
-              <span className="text-[10px] uppercase tracking-widest text-[#F5C33C] font-semibold">Life at Sankalp</span>
-            </div>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold uppercase tracking-wide mb-8 leading-tight text-white">
-              Company Events <br />
-              <span className="text-[#F5C33C]">& Activities</span>
-            </h1>
-            <p className="text-white/60 text-sm md:text-base leading-relaxed tracking-wide mb-10 mx-auto max-w-2xl font-light">
-              Explore the culture, milestones, and celebrations that shape our organization. From annual strategy meetings to festive gatherings and team retreats.
-            </p>
-          </motion.div>
-        </div>
-      </section>
+      <PageBanner
+        title={<>Company <span className="text-[#29B1D2]">Events</span></>}
+        subtitle="Explore the culture, milestones, and celebrations that shape our organization. From annual strategy meetings to festive gatherings and team retreats."
+        image="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=1600"
+        breadcrumbs={[{ label: "Life at Sankalp" }]}
+      />
 
       {/* Events Grid */}
       <section className="py-20 lg:py-32 px-4 lg:px-8 relative z-10 border-t border-gray-100 bg-gray-50/50 min-h-[400px]">

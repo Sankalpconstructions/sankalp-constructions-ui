@@ -36,7 +36,7 @@ export default function ContactSection() {
   };
 
   return (
-    <section className="py-8 md:py-24 bg-gray-50 text-gray-900 overflow-hidden border-t border-gray-200">
+    <section className="py-8 md:py-15 bg-gray-50 text-gray-900 overflow-hidden border-t border-gray-200">
       <div className="container mx-auto px-4 lg:px-8">
 
         <div id="contact" className="text-center max-w-2xl mx-auto mb-8 md:mb-16">

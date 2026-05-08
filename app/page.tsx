@@ -20,7 +20,7 @@ export default function Home() {
   return (
     <>
       <Preloader />
-      
+
       <HeroBanner />
       <StorySection />
       <ProjectsShowcase />
@@ -28,10 +28,7 @@ export default function Home() {
       <TeamSection />
       <FAQSection />
       <ContactSection />
-      
-      <div id="filter" className="bg-white py-12" />
-      
-      {/* Utility components */}
+
       <PopupLeadForm />
       <Chatbot />
     </>

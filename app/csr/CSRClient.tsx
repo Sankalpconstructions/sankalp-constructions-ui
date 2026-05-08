@@ -81,7 +81,7 @@ export default function CSRClient() {
       />
 
       {/* Events Grid */}
-      <section className="py-20 lg:py-32 px-4 lg:px-8 relative z-10 border-t border-gray-100 bg-gray-50/50 min-h-[400px]">
+      <section className="py-15 px-4 lg:px-8 relative z-10 border-t border-gray-100 bg-gray-50/50 min-h-[400px]">
         <div className="container mx-auto">
           <div className="text-center mb-16 ">
             <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-[#711113] mb-3">

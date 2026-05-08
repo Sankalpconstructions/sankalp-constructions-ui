@@ -1,5 +1,6 @@
 "use client";
 import { useParams } from "next/navigation";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import AmenitiesSection from "@/components/AmenitiesSection";
 import FloorPlansSection from "@/components/FloorPlansSection";
@@ -10,108 +11,88 @@ import ProjectGallery from "@/components/project-detail/ProjectGallery";
 import ProjectLocation from "@/components/project-detail/ProjectLocation";
 import ProjectSidebar from "@/components/project-detail/ProjectSidebar";
 
-// ─── Static Project Data ─────────────────────────────────────────────────────
-const projects = [
-  {
-    id: "1",
-    title: "Sankalp Heights",
-    location: "Banjara Hills, Hyderabad",
-    address: "Road No. 12, Banjara Hills, Hyderabad",
-    type: "Luxury Apartments",
-    status: "Ongoing",
-    possessionDate: "Dec 2026",
-    totalFloors: "15",
-    totalUnits: "120",
-    rera: "P02400001234",
-    description:
-      "Sankalp Heights is a premium residential development designed for modern urban living with luxury amenities and elegant architecture.",
-    highlights: [
-      "Premium Clubhouse",
-      "Swimming Pool",
-      "Children Play Area",
-      "24/7 Security",
-    ],
-    slides: [
-      {
-        image:
-          "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1600",
-      },
-      {
-        image:
-          "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=1600",
-      },
-    ],
-    gallery: [
-      "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1600",
-      "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=1600",
-      "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=1600",
-    ],
-    amenities: [
-      "Gym",
-      "Swimming Pool",
-      "Clubhouse",
-      "Indoor Games",
-      "Landscaped Gardens",
-    ],
-    amenitiesCount: "25+",
-    floorPlansCount: 4,
-    configurations: [
-      {
-        configuration: "2 BHK",
-        carpetArea: "1250 Sq.ft",
-      },
-      {
-        configuration: "3 BHK",
-        carpetArea: "1850 Sq.ft",
-      },
-    ],
-    pricingRows: [
-      {
-        type: "2 BHK",
-        area: "1250 Sq.ft",
-        facing: "East",
-      },
-      {
-        type: "3 BHK",
-        area: "1850 Sq.ft",
-        facing: "West",
-      },
-    ],
-    nearbyLocations: [
-      {
-        name: "Metro Station",
-        distance: "2 Km",
-        category: "Transport",
-      },
-      {
-        name: "International School",
-        distance: "1.5 Km",
-        category: "Education",
-      },
-    ],
-    mapSrc: "Banjara Hills Hyderabad",
-    brochureUrl: "/brochure.pdf",
-  },
-];
-
 // ─── Page ─────────────────────────────────────────────────────────────────────
 export default function ProjectDetailsPage() {
   const params = useParams();
   const id = params?.id as string;
 
-  const project = projects.find((p) => p.id === id);
+  const [project, setProject] = useState<any>(null);
+  const [relatedProjects, setRelatedProjects] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
-  const relatedProjects = projects
-    .filter((p) => p.id !== id)
-    .map((p) => ({
-      id: p.id,
-      title: p.title,
-      location: p.location,
-      type: p.type,
-      image: p.slides[0]?.image,
-    }));
+  useEffect(() => {
+    const fetchProjectData = async () => {
+      try {
+        const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+        // Fetch specific project
+        const res = await fetch(`${baseUrl}/api/projects/${id}`);
+        if (!res.ok) throw new Error("Project not found");
+        const data = await res.json();
+        
+        // Format to match frontend structure
+        const formattedProject = {
+          ...data,
+          id: data._id,
+          slides: data.banners?.map((b: string) => ({ image: b })) || [{ image: data.image || "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1600" }],
+          gallery: data.gallery || [],
+          pricingRows: data.priceConfigurations?.map((pc: any) => ({
+            type: pc.configuration,
+            area: pc.carpetArea,
+            facing: pc.price // or adjust this mapping as necessary
+          })) || [],
+          configurations: data.priceConfigurations || [],
+          nearbyLocations: data.landmarks?.map((lm: any) => ({
+            name: lm.text,
+            distance: "",
+            category: lm.type
+          })) || [],
+          floorPlansCount: data.floorPlans?.length || 0,
+          brochureUrl: data.brochures?.[0]?.url || "",
+          address: data.address || data.location
+        };
+        
+        setProject(formattedProject);
 
-  if (!project) {
+        // Fetch all projects for related
+        const allRes = await fetch(`${baseUrl}/api/projects`);
+        if (allRes.ok) {
+          const allData = await allRes.json();
+          const related = allData
+            .filter((p: any) => p._id !== id)
+            .slice(0, 3)
+            .map((p: any) => ({
+              id: p._id,
+              title: p.title,
+              location: p.location,
+              type: p.type,
+              image: p.banners?.[0] || p.image || "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1600",
+            }));
+          setRelatedProjects(related);
+        }
+      } catch (err) {
+        console.error(err);
+        setError(true);
+      } finally {
+        setLoading(false);
+      }
+    };
+    if (id) {
+      fetchProjectData();
+    }
+  }, [id]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-white flex flex-col items-center justify-center">
+        <p className="text-gray-500 font-bold uppercase tracking-widest text-xs">
+          Loading Project...
+        </p>
+      </div>
+    );
+  }
+
+  if (error || !project) {
     return (
       <div className="min-h-screen bg-white flex flex-col items-center justify-center">
         <p className="text-red-500 font-bold uppercase tracking-widest text-xs">
@@ -165,7 +146,7 @@ export default function ProjectDetailsPage() {
 
             <FloorPlansSection
               projectTitle={project.title}
-              overviewImg={project.slides[0]?.image}
+              overviewImg={project.slides?.[0]?.image}
               floorPlansCount={project.floorPlansCount}
               configurations={project.configurations}
             />

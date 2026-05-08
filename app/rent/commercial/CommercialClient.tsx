@@ -16,54 +16,28 @@ interface RentalProperty {
   status: "available" | "rented";
 }
 
-const COMMERCIAL_DATA: RentalProperty[] = [
-  {
-    id: "c1",
-    title: "Premium Office Space in IT Park",
-    location: "HITEC City, Hyderabad",
-    image: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=800",
-    sqft: "5,000 Sq.ft",
-    facing: "North-East",
-    phone: "+919876543210",
-    whatsapp: "+919876543210",
-    status: "available",
-  },
-  {
-    id: "c2",
-    title: "Retail Shop - Main Road Facing",
-    location: "Jubilee Hills, Hyderabad",
-    image: "https://images.unsplash.com/photo-1556912173-3bb406ef7e77?w=800",
-    sqft: "1,200 Sq.ft",
-    facing: "East",
-    phone: "+919876543210",
-    whatsapp: "+919876543210",
-    status: "available",
-  },
-  {
-    id: "c3",
-    title: "Co-working Space Setup",
-    location: "Banjara Hills, Hyderabad",
-    image: "https://images.unsplash.com/photo-1497215842964-222b430dc094?w=800",
-    sqft: "2,500 Sq.ft",
-    facing: "South",
-    phone: "+919876543210",
-    whatsapp: "+919876543210",
-    status: "available",
-  }
-];
 
 export default function CommercialClient() {
   const [properties, setProperties] = useState<RentalProperty[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Simulate API fetch delay
-    const fetchProperties = () => {
+    const fetchProperties = async () => {
       setLoading(true);
-      setTimeout(() => {
-        setProperties(COMMERCIAL_DATA);
+      try {
+        const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+        const res = await fetch(`${baseUrl}/api/rentals?type=commercial`);
+        const data = await res.json();
+        const formattedData = Array.isArray(data) ? data.map(item => ({
+          ...item,
+          id: item._id || item.id
+        })) : [];
+        setProperties(formattedData);
+      } catch (error) {
+        console.error("Failed to fetch commercial rentals:", error);
+      } finally {
         setLoading(false);
-      }, 800);
+      }
     };
 
     fetchProperties();

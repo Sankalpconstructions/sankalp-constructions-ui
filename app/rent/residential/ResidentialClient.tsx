@@ -17,57 +17,29 @@ interface RentalProperty {
   status: "available" | "rented";
 }
 
-const RESIDENTIAL_DATA: RentalProperty[] = [
-  {
-    id: "r1",
-    title: "Sankalp Residency 3BHK",
-    location: "Madhapur, Hyderabad",
-    image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800",
-    sqft: "1,850 Sq.ft",
-    facing: "East",
-    bhk: "3 BHK",
-    phone: "+919876543210",
-    whatsapp: "+919876543210",
-    status: "available",
-  },
-  {
-    id: "r2",
-    title: "Luxury Villa at Sankalp Greens",
-    location: "Gachibowli, Hyderabad",
-    image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800",
-    sqft: "3,200 Sq.ft",
-    facing: "North",
-    bhk: "4 BHK",
-    phone: "+919876543210",
-    whatsapp: "+919876543210",
-    status: "available",
-  },
-  {
-    id: "r3",
-    title: "Sankalp Heights 2BHK Apartment",
-    location: "Kondapur, Hyderabad",
-    image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800",
-    sqft: "1,250 Sq.ft",
-    facing: "West",
-    bhk: "2 BHK",
-    phone: "+919876543210",
-    whatsapp: "+919876543210",
-    status: "available",
-  }
-];
 
 export default function ResidentialClient() {
   const [properties, setProperties] = useState<RentalProperty[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Simulate API fetch delay
-    const fetchProperties = () => {
+    const fetchProperties = async () => {
       setLoading(true);
-      setTimeout(() => {
-        setProperties(RESIDENTIAL_DATA);
+      try {
+        const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+        const res = await fetch(`${baseUrl}/api/rentals?type=residential`);
+        const data = await res.json();
+        // The API returns MongoDB models with _id, mapping it to id for the frontend
+        const formattedData = Array.isArray(data) ? data.map(item => ({
+          ...item,
+          id: item._id || item.id
+        })) : [];
+        setProperties(formattedData);
+      } catch (error) {
+        console.error("Failed to fetch residential rentals:", error);
+      } finally {
         setLoading(false);
-      }, 800);
+      }
     };
 
     fetchProperties();

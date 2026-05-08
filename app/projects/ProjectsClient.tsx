@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import React, { useState } from "react";
 import {
   ChevronRight,
   MapPin,
@@ -25,42 +25,36 @@ interface Project {
   type: string;
 }
 
-// ─── Static Projects Data ────────────────────────────────────────────────────
-const projects: Project[] = [
-  {
-    id: "1",
-    title: "Sankalp Heights",
-    category: "Residential",
-    location: "Banjara Hills, Hyderabad",
-    image:
-      "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1600",
-    status: "ongoing",
-    possessionDate: "Dec 2026",
-    type: "Luxury Apartments",
-  },
-  {
-    id: "2",
-    title: "Sankalp Elite Villas",
-    category: "Villa",
-    location: "Kokapet, Hyderabad",
-    image:
-      "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=1600",
-    status: "upcoming",
-    possessionDate: "Mar 2027",
-    type: "Premium Villas",
-  },
-  {
-    id: "3",
-    title: "Sankalp Business Hub",
-    category: "Commercial",
-    location: "Hitech City, Hyderabad",
-    image:
-      "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1600",
-    status: "completed",
-    possessionDate: "Completed",
-    type: "Commercial Space",
-  },
-];
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  React.useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+        const res = await fetch(`${baseUrl}/api/projects`);
+        if (res.ok) {
+          const data = await res.json();
+          const formatted = data.map((p: any) => ({
+            id: p._id || p.id,
+            title: p.title,
+            category: p.type || "Residential", // Mapping type to category or fallback
+            location: p.location,
+            image: p.banners?.[0] || p.image || "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1600",
+            status: p.status?.toLowerCase() || "upcoming",
+            possessionDate: p.possessionDate || "TBA",
+            type: p.type
+          }));
+          setProjects(formatted);
+        }
+      } catch (error) {
+        console.error("Error fetching projects:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProjects();
+  }, []);
 
 const TABS: {
   key: ProjectStatus | "all";
@@ -141,14 +135,27 @@ export default function AllProjectsPage() {
           ))}
 
           <span className="ml-auto text-xs text-gray-400 font-medium">
-            {filteredProjects.length} project
-            {filteredProjects.length !== 1 ? "s" : ""}
+            {!loading && (
+              <>
+                {filteredProjects.length} project{filteredProjects.length !== 1 ? "s" : ""}
+              </>
+            )}
           </span>
         </div>
 
         {/* Projects Grid */}
         <AnimatePresence mode="popLayout">
-          {filteredProjects.length > 0 ? (
+          {loading ? (
+             <motion.div
+               key="loading"
+               initial={{ opacity: 0 }}
+               animate={{ opacity: 1 }}
+               exit={{ opacity: 0 }}
+               className="py-24 text-center text-gray-400 text-sm uppercase font-bold tracking-widest"
+             >
+               Loading Projects...
+             </motion.div>
+          ) : filteredProjects.length > 0 ? (
             <motion.div
               layout
               className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16"

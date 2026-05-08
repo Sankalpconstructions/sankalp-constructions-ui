@@ -6,11 +6,41 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 const IMAGE_SLIDE_DURATION = 6000;
 
 export default function HeroBanner() {
-  const slides = [
-    { type: "video", src: "/assets/Project-video.mp4" },
-    { type: "image", src: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1600" },
-    { type: "image", src: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1600" },
-  ];
+  const [slides, setSlides] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchBanners = async () => {
+      try {
+        const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+        const res = await fetch(`${baseUrl}/api/herobanners`);
+        if (res.ok) {
+          const data = await res.json();
+          const activeSlides = data.filter((s: any) => s.isActive);
+          if (activeSlides.length > 0) {
+            setSlides(activeSlides.map((s: any) => ({ type: s.type || 'image', src: s.url })));
+          } else {
+            // Fallback
+            setSlides([
+              { type: "video", src: "/assets/Project-video.mp4" },
+              { type: "image", src: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1600" },
+              { type: "image", src: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1600" }
+            ]);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching banners:", error);
+        setSlides([
+          { type: "video", src: "/assets/Project-video.mp4" },
+          { type: "image", src: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1600" },
+          { type: "image", src: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1600" }
+        ]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchBanners();
+  }, []);
 
   const [index, setIndex] = useState(0);
   const imageTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -24,8 +54,9 @@ export default function HeroBanner() {
       clearTimeout(imageTimerRef.current);
     }
 
+    if (slides.length === 0) return;
     const currentSlide = slides[index];
-    if (currentSlide.type === "image") {
+    if (currentSlide?.type === "image") {
       imageTimerRef.current = setTimeout(advance, IMAGE_SLIDE_DURATION);
     }
 
@@ -48,7 +79,9 @@ export default function HeroBanner() {
     });
   };
 
-  const current = slides[index];
+  if (loading || slides.length === 0) return null;
+
+  const current = slides[index] || slides[0];
 
   return (
     <section

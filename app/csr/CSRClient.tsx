@@ -12,56 +12,31 @@ import {
 } from "lucide-react";
 import PageBanner from "@/components/PageBanner";
 
-const events = [
-  {
-    id: "1",
-    title: "Annual Team Celebration",
-    date: "12 Feb 2026",
-    time: "06:00 PM",
-    shortDesc:
-      "A memorable evening celebrating milestones, teamwork, and company achievements.",
-    longDesc:
-      "Our annual celebration brought together employees, leadership teams, and partners for an unforgettable evening of appreciation and entertainment. The event included award ceremonies, cultural performances, networking sessions, and a gala dinner that highlighted our journey and future vision.",
-    images: [
-      "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=1200",
-      "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=1200",
-      "https://images.unsplash.com/photo-1505373877841-8d25f7d46678?w=1200",
-    ],
-  },
-  {
-    id: "2",
-    title: "CSR Plantation Drive",
-    date: "04 Mar 2026",
-    time: "09:30 AM",
-    shortDesc:
-      "Employees participated in a green initiative focused on sustainability and environmental awareness.",
-    longDesc:
-      "As part of our commitment to sustainability, the plantation drive encouraged employees and volunteers to plant trees across multiple locations. The initiative aimed to promote environmental responsibility and contribute positively to the community.",
-    images: [
-      "https://images.unsplash.com/photo-1492496913980-501348b61469?w=1200",
-      "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1200",
-      "https://images.unsplash.com/photo-1466611653911-95081537e5b7?w=1200",
-    ],
-  },
-  {
-    id: "3",
-    title: "Leadership Strategy Meet",
-    date: "28 Apr 2026",
-    time: "11:00 AM",
-    shortDesc:
-      "Senior leadership teams gathered to discuss growth strategies and future business plans.",
-    longDesc:
-      "The strategy meet focused on innovation, market expansion, operational excellence, and long-term company goals. Teams collaborated through presentations, workshops, and brainstorming sessions to align on the roadmap for the upcoming financial year.",
-    images: [
-      "https://images.unsplash.com/photo-1552664730-d307ca884978?w=1200",
-      "https://images.unsplash.com/photo-1515169067868-5387ec356754?w=1200",
-      "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=1200",
-    ],
-  },
-];
-
-export default function CSRClient() {
+  const [events, setEvents] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+
+  React.useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+        const res = await fetch(`${baseUrl}/api/csr`);
+        if (res.ok) {
+          const data = await res.json();
+          const formatted = data.map((item: any) => ({
+            ...item,
+            id: item._id || item.id,
+          }));
+          setEvents(formatted);
+        }
+      } catch (error) {
+        console.error("Error fetching CSR events:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchEvents();
+  }, []);
 
   const selectedEvent = events.find((item) => item.id === selectedId);
 
@@ -90,7 +65,12 @@ export default function CSRClient() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
-            {events.map((item, idx) => (
+            {loading ? (
+              <div className="col-span-full py-20 text-center text-gray-500 font-bold uppercase tracking-widest text-sm">
+                Loading Events...
+              </div>
+            ) : events.length > 0 ? (
+              events.map((item, idx) => (
               <motion.div
                 key={item.id}
                 initial={{ opacity: 0, y: 30 }}
@@ -102,7 +82,7 @@ export default function CSRClient() {
               >
                 <div className="w-full h-48 lg:h-56 relative overflow-hidden flex-shrink-0">
                   <img
-                    src={item.images[0]}
+                    src={item.images?.[0] || 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=1200'}
                     alt={item.title}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-in-out"
                   />
@@ -114,7 +94,7 @@ export default function CSRClient() {
                   </div>
 
                   <div className="absolute bottom-4 left-4 flex items-center gap-1.5 text-white text-[11px] font-medium tracking-wide">
-                    <ImageIcon size={14} /> {item.images.length} Photos
+                    <ImageIcon size={14} /> {item.images?.length || 0} Photos
                   </div>
                 </div>
 
@@ -140,7 +120,12 @@ export default function CSRClient() {
                   </div>
                 </div>
               </motion.div>
-            ))}
+            ))
+            ) : (
+              <div className="col-span-full py-20 text-center text-gray-500 font-bold uppercase tracking-widest text-sm">
+                No Events Found
+              </div>
+            )}
           </div>
         </div>
       </section>
@@ -174,7 +159,7 @@ export default function CSRClient() {
                 {/* Banner */}
                 <div className="w-full h-[300px] md:h-[450px] relative shrink-0">
                   <img
-                    src={selectedEvent.images[0]}
+                    src={selectedEvent.images?.[0] || 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=1200'}
                     alt={selectedEvent.title}
                     className="absolute inset-0 w-full h-full object-cover"
                   />
@@ -221,7 +206,7 @@ export default function CSRClient() {
                     </h4>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                      {selectedEvent.images.map((img, idx) => (
+                      {selectedEvent.images?.map((img: string, idx: number) => (
                         <motion.div
                           key={idx}
                           whileHover={{ y: -5 }}

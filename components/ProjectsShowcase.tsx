@@ -9,39 +9,38 @@ export default function ProjectsShowcase() {
   const [isHovered, setIsHovered] = useState(false);
   const [isManualScrolling, setIsManualScrolling] = useState(false);
 
-  // Static Data (No API)
-  const projects = [
-    {
-      id: "1",
-      title: "Skyline Heights",
-      location: "Hyderabad",
-      image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800",
-      type: "Apartments",
-    },
-    {
-      id: "2",
-      title: "Elite Villas",
-      location: "Bangalore",
-      image: "https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=800",
-      type: "Luxury Villas",
-    },
-    {
-      id: "3",
-      title: "Corporate Hub",
-      location: "Chennai",
-      image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800",
-      type: "Commercial",
-    },
-    {
-      id: "4",
-      title: "Green Residency",
-      location: "Vizag",
-      image: "https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?w=800",
-      type: "Gated Community",
-    },
-  ];
+  const [projects, setProjects] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const duplicatedProjects = [...projects, ...projects, ...projects, ...projects];
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+        const res = await fetch(`${baseUrl}/api/projects`);
+        if (res.ok) {
+          const data = await res.json();
+          // Format data to match expected props
+          const formatted = data.map((p: any) => ({
+            id: p._id || p.id,
+            title: p.title,
+            location: p.location,
+            image: p.image || p.banners?.[0] || "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800",
+            type: p.type
+          }));
+          setProjects(formatted);
+        }
+      } catch (error) {
+        console.error("Error fetching projects:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProjects();
+  }, []);
+
+  const duplicatedProjects = projects.length > 0 
+    ? [...projects, ...projects, ...projects, ...projects] 
+    : [];
 
   useEffect(() => {
     let animationId: number;
@@ -149,7 +148,12 @@ export default function ProjectsShowcase() {
             className="flex gap-4 md:gap-8 overflow-x-auto pb-8 scrollbar-hide [&::-webkit-scrollbar]:hidden"
             style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
           >
-            {duplicatedProjects.map((project, idx) => (
+            {loading ? (
+              <div className="w-full text-center py-20 text-gray-500 font-bold uppercase tracking-widest text-sm">
+                Loading Projects...
+              </div>
+            ) : duplicatedProjects.length > 0 ? (
+              duplicatedProjects.map((project, idx) => (
               <div
                 key={`${project.id}-${idx}`}
                 className="w-[85vw] md:w-[400px] shrink-0"
@@ -189,7 +193,12 @@ export default function ProjectsShowcase() {
 
                 </div>
               </div>
-            ))}
+            ))
+            ) : (
+              <div className="w-full text-center py-20 text-gray-500 font-bold uppercase tracking-widest text-sm">
+                No Projects Found
+              </div>
+            )}
           </div>
         </div>
 

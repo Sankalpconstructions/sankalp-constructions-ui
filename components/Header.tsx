@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter, usePathname } from "next/navigation";
+import { useProjects } from "@/context/ProjectContext";
 
 const navLinks = [
   { name: "About", href: "/about" },
@@ -21,29 +22,7 @@ const navLinks = [
   { name: "Contact", href: "/contact" },
 ];
 
-// Static Projects Data (No API / No Context)
-const projects = [
-  {
-    _id: "1",
-    title: "Skyline Heights",
-    status: "Ongoing",
-  },
-  {
-    _id: "2",
-    title: "Elite Villas",
-    status: "Upcoming",
-  },
-  {
-    _id: "3",
-    title: "Green Residency",
-    status: "Completed",
-  },
-  {
-    _id: "4",
-    title: "Corporate Hub",
-    status: "Ongoing",
-  },
-];
+
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -53,6 +32,8 @@ export default function Header() {
 
   const pathname = usePathname();
   const router = useRouter();
+
+  const { projects } = useProjects();
 
   // Scroll Effect
   useEffect(() => {
@@ -91,17 +72,17 @@ export default function Header() {
   // Filter Static Projects
   const ongoingProjects = useMemo(
     () => projects.filter((p) => p.status === "Ongoing"),
-    []
+    [projects]
   );
 
   const upcomingProjects = useMemo(
     () => projects.filter((p) => p.status === "Upcoming"),
-    []
+    [projects]
   );
 
   const completedProjects = useMemo(
     () => projects.filter((p) => p.status === "Completed"),
-    []
+    [projects]
   );
 
   const handleScrollTo = (

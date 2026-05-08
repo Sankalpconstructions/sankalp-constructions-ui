@@ -12,33 +12,27 @@ interface FAQ {
 export default function FAQSection() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
-  // Static FAQ Data (No API)
-  const faqs: FAQ[] = [
-    {
-      _id: "1",
-      question: "What is the booking process?",
-      answer:
-        "You can book a property by selecting your preferred project, filling out the booking form, and completing the payment process.",
-    },
-    {
-      _id: "2",
-      question: "Do you offer refunds?",
-      answer:
-        "Yes, refunds are processed based on our cancellation policy. Please refer to our policy page for full details.",
-    },
-    {
-      _id: "3",
-      question: "Can I visit the site before booking?",
-      answer:
-        "Absolutely. We encourage site visits before booking. You can schedule a visit through our contact page.",
-    },
-    {
-      _id: "4",
-      question: "What payment methods are accepted?",
-      answer:
-        "We accept UPI, credit/debit cards, net banking, and EMI options through supported providers.",
-    },
-  ];
+  const [faqs, setFaqs] = useState<FAQ[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  React.useEffect(() => {
+    const fetchFaqs = async () => {
+      try {
+        const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+        const res = await fetch(`${baseUrl}/api/faqs`);
+        if (res.ok) {
+          const data = await res.json();
+          // Assuming API returns { _id, question, answer }
+          setFaqs(data);
+        }
+      } catch (error) {
+        console.error("Error fetching FAQs:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchFaqs();
+  }, []);
 
   const toggleFAQ = (idx: number) => {
     setOpenIndex(openIndex === idx ? null : idx);
@@ -68,7 +62,12 @@ export default function FAQSection() {
 
         {/* FAQ List */}
         <div className="space-y-3">
-          {faqs.map((faq, idx) => (
+          {loading ? (
+             <div className="py-10 text-center text-gray-500 font-bold uppercase tracking-widest text-sm">
+               Loading FAQs...
+             </div>
+          ) : faqs.length > 0 ? (
+            faqs.map((faq, idx) => (
             <motion.div
               key={faq._id}
               initial={{ opacity: 0, y: 20 }}
@@ -112,7 +111,12 @@ export default function FAQSection() {
                 )}
               </AnimatePresence>
             </motion.div>
-          ))}
+          ))
+          ) : (
+            <div className="py-10 text-center text-gray-500 font-bold uppercase tracking-widest text-sm">
+               No FAQs Available
+            </div>
+          )}
         </div>
       </div>
     </section>

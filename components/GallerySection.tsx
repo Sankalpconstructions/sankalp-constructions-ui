@@ -3,15 +3,33 @@ import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-const galleryImages = [
-  { url: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800", title: "Lake Viewing Deck", desc: "Refreshing experiences by the lake" },
-  { url: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800", title: "Theme Gardens", desc: "Mesmerizing times with delightful greens" },
-  { url: "https://images.unsplash.com/photo-1628611225249-6c3c7c689552?w=800", title: "Kids' Play Area", desc: "Where tiny tots take turns and play fair" },
-  { url: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800", title: "Clubhouse", desc: "A place for community and joy" },
-  { url: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800", title: "Swimming Pool", desc: "Dive into luxury and relaxation" },
-];
-
 export default function GallerySection() {
+  const [galleryImages, setGalleryImages] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchGallery = async () => {
+      try {
+        const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+        const res = await fetch(`${baseUrl}/api/gallery`);
+        if (res.ok) {
+          const data = await res.json();
+          // Assuming API returns { _id, title, category, image, project }
+          const formatted = data.map((item: any) => ({
+            url: item.image,
+            title: item.title,
+            desc: item.project || item.category || ""
+          }));
+          setGalleryImages(formatted);
+        }
+      } catch (error) {
+        console.error("Error fetching gallery:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchGallery();
+  }, []);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
@@ -60,12 +78,18 @@ export default function GallerySection() {
         </div>
 
         <div className="relative group/carousel">
-          <div
-            ref={scrollRef}
-            onScroll={checkScroll}
-            className="flex gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-8"
-            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-          >
+          {loading ? (
+             <div className="py-20 text-center text-gray-500 font-bold uppercase tracking-widest text-sm">
+               Loading Gallery...
+             </div>
+          ) : galleryImages.length > 0 ? (
+            <>
+              <div
+                ref={scrollRef}
+                onScroll={checkScroll}
+                className="flex gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-8"
+                style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+              >
             {galleryImages.map((img, idx) => (
               <motion.div
                 key={idx}
@@ -93,29 +117,35 @@ export default function GallerySection() {
                 </div>
               </motion.div>
             ))}
-          </div>
+              </div>
 
-          {/* Navigation Arrows */}
-          <div className="absolute top-[40%] -translate-y-[50%] -left-4 md:-left-6 z-10 transition-opacity duration-300">
-            {canScrollLeft && (
-              <button
-                onClick={() => handleScrollClick("left")}
-                className="p-3 bg-white border border-gray-200 rounded-full shadow-lg hover:bg-[#711113] hover:text-white hover:border-[#711113] transition-all"
-              >
-                <ChevronLeft size={24} />
-              </button>
-            )}
-          </div>
-          <div className="absolute top-[40%] -translate-y-[50%] -right-4 md:-right-6 z-10 transition-opacity duration-300">
-            {canScrollRight && (
-              <button
-                onClick={() => handleScrollClick("right")}
-                className="p-3 bg-white border border-gray-200 rounded-full shadow-lg hover:bg-[#711113] hover:text-white hover:border-[#711113] transition-all"
-              >
-                <ChevronRight size={24} />
-              </button>
-            )}
-          </div>
+              {/* Navigation Arrows */}
+              <div className="absolute top-[40%] -translate-y-[50%] -left-4 md:-left-6 z-10 transition-opacity duration-300">
+                {canScrollLeft && (
+                  <button
+                    onClick={() => handleScrollClick("left")}
+                    className="p-3 bg-white border border-gray-200 rounded-full shadow-lg hover:bg-[#711113] hover:text-white hover:border-[#711113] transition-all"
+                  >
+                    <ChevronLeft size={24} />
+                  </button>
+                )}
+              </div>
+              <div className="absolute top-[40%] -translate-y-[50%] -right-4 md:-right-6 z-10 transition-opacity duration-300">
+                {canScrollRight && (
+                  <button
+                    onClick={() => handleScrollClick("right")}
+                    className="p-3 bg-white border border-gray-200 rounded-full shadow-lg hover:bg-[#711113] hover:text-white hover:border-[#711113] transition-all"
+                  >
+                    <ChevronRight size={24} />
+                  </button>
+                )}
+              </div>
+            </>
+          ) : (
+            <div className="py-20 text-center text-gray-500 font-bold uppercase tracking-widest text-sm">
+               No Images Found
+            </div>
+          )}
         </div>
 
       </div>

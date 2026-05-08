@@ -1,6 +1,6 @@
 import { constructMetadata } from "@/lib/seo";
-import StorySection from "@/components/StorySection";
 import PageBanner from "@/components/PageBanner";
+import StorySection from "@/components/StorySection";
 
 export const metadata = constructMetadata({
   title: "Our Story & Legacy | Sankalp Constructions",
@@ -16,7 +16,7 @@ export default function AboutPage() {
         image="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1600"
         breadcrumbs={[{ label: "About Us" }]}
       />
-      <StorySection />
+      <StorySection variant="full" />
     </div>
   );
 }

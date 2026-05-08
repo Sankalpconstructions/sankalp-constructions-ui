@@ -1,5 +1,5 @@
 import { constructMetadata } from "@/lib/seo";
-import RentClient from "../RentClient";
+import ResidentialClient from "./ResidentialClient";
 
 export const metadata = constructMetadata({
   title: "Residential Projects for Rent | Sankalp Constructions",
@@ -7,5 +7,5 @@ export const metadata = constructMetadata({
 });
 
 export default function ResidentialPage() {
-  return <RentClient rentType="residential" />;
+  return <ResidentialClient />;
 }

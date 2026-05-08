@@ -1,67 +1,25 @@
 "use client";
 import { useState, useEffect } from "react";
-import { MapPin, Phone, MessageCircle, Building2, Maximize, Compass, Home } from "lucide-react";
+import { MapPin, Phone, MessageCircle, Building2, Maximize, Compass } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import PageBanner from "@/components/PageBanner";
 
 interface RentalProperty {
   id: string;
   title: string;
-  category: "residential" | "commercial";
   location: string;
   image: string;
   sqft: string;
   facing: string;
-  bhk?: string;
   phone: string;
   whatsapp: string;
   status: "available" | "rented";
 }
 
-const DUMMY_DATA: RentalProperty[] = [
-  {
-    id: "r1",
-    title: "Sankalp Residency 3BHK",
-    category: "residential",
-    location: "Madhapur, Hyderabad",
-    image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800",
-    sqft: "1,850 Sq.ft",
-    facing: "East",
-    bhk: "3 BHK",
-    phone: "+919876543210",
-    whatsapp: "+919876543210",
-    status: "available",
-  },
-  {
-    id: "r2",
-    title: "Luxury Villa at Sankalp Greens",
-    category: "residential",
-    location: "Gachibowli, Hyderabad",
-    image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800",
-    sqft: "3,200 Sq.ft",
-    facing: "North",
-    bhk: "4 BHK",
-    phone: "+919876543210",
-    whatsapp: "+919876543210",
-    status: "available",
-  },
-  {
-    id: "r3",
-    title: "Sankalp Heights 2BHK Apartment",
-    category: "residential",
-    location: "Kondapur, Hyderabad",
-    image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800",
-    sqft: "1,250 Sq.ft",
-    facing: "West",
-    bhk: "2 BHK",
-    phone: "+919876543210",
-    whatsapp: "+919876543210",
-    status: "available",
-  },
+const COMMERCIAL_DATA: RentalProperty[] = [
   {
     id: "c1",
     title: "Premium Office Space in IT Park",
-    category: "commercial",
     location: "HITEC City, Hyderabad",
     image: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=800",
     sqft: "5,000 Sq.ft",
@@ -73,7 +31,6 @@ const DUMMY_DATA: RentalProperty[] = [
   {
     id: "c2",
     title: "Retail Shop - Main Road Facing",
-    category: "commercial",
     location: "Jubilee Hills, Hyderabad",
     image: "https://images.unsplash.com/photo-1556912173-3bb406ef7e77?w=800",
     sqft: "1,200 Sq.ft",
@@ -85,7 +42,6 @@ const DUMMY_DATA: RentalProperty[] = [
   {
     id: "c3",
     title: "Co-working Space Setup",
-    category: "commercial",
     location: "Banjara Hills, Hyderabad",
     image: "https://images.unsplash.com/photo-1497215842964-222b430dc094?w=800",
     sqft: "2,500 Sq.ft",
@@ -96,7 +52,7 @@ const DUMMY_DATA: RentalProperty[] = [
   }
 ];
 
-export default function RentClient({ rentType }: { rentType: "residential" | "commercial" }) {
+export default function CommercialClient() {
   const [properties, setProperties] = useState<RentalProperty[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -105,33 +61,23 @@ export default function RentClient({ rentType }: { rentType: "residential" | "co
     const fetchProperties = () => {
       setLoading(true);
       setTimeout(() => {
-        const filtered = DUMMY_DATA.filter(p => p.category === rentType);
-        setProperties(filtered);
+        setProperties(COMMERCIAL_DATA);
         setLoading(false);
       }, 800);
     };
 
     fetchProperties();
-  }, [rentType]);
-
-  const title = rentType === "residential" ? "Residential Rentals" : "Commercial Rentals";
-  const desc = rentType === "residential" 
-    ? "Discover premium residential properties available for rent, designed to elevate your everyday living with world-class amenities."
-    : "Explore prime commercial spaces available for rent, crafted for success, strategic growth, and business excellence.";
-
-  const bannerImage = rentType === "residential"
-    ? "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1600"
-    : "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1600";
+  }, []);
 
   return (
     <div className="bg-[#f8f5f0] text-gray-900 min-h-screen">
       <PageBanner
-        title={<>{title.split(' ')[0]} <span className="text-[#29B1D2]">Rentals</span></>}
-        subtitle={desc}
-        image={bannerImage}
+        title={<>Commercial <span className="text-[#29B1D2]">Rentals</span></>}
+        subtitle="Explore prime commercial spaces available for rent, crafted for success, strategic growth, and business excellence."
+        image="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1600"
         breadcrumbs={[
           { label: "Rent" },
-          { label: title.split(' ')[0] }
+          { label: "Commercial" }
         ]}
       />
 
@@ -139,7 +85,7 @@ export default function RentClient({ rentType }: { rentType: "residential" | "co
         {loading ? (
           <div className="py-24 flex flex-col items-center justify-center text-gray-400">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#711113] mb-4"></div>
-            <p className="uppercase tracking-[0.2em] font-bold text-xs text-[#711113]">Loading {rentType} rentals...</p>
+            <p className="uppercase tracking-[0.2em] font-bold text-xs text-[#711113]">Loading commercial rentals...</p>
           </div>
         ) : (
           <AnimatePresence mode="popLayout">
@@ -182,20 +128,14 @@ export default function RentClient({ rentType }: { rentType: "residential" | "co
                       </h3>
                       
                       <div className="grid grid-cols-2 gap-y-3 gap-x-2 mb-6 mt-auto">
-                        <div className="flex items-center text-sm text-gray-600 bg-gray-50 py-2 px-3 rounded-lg border border-gray-100">
+                        <div className="flex items-center text-sm text-gray-600 bg-gray-50 py-2 px-3 rounded-lg border border-gray-100 col-span-1">
                           <Maximize size={14} className="text-[#711113] mr-2 opacity-70 flex-shrink-0" />
                           <span className="font-semibold truncate">{property.sqft}</span>
                         </div>
-                        <div className="flex items-center text-sm text-gray-600 bg-gray-50 py-2 px-3 rounded-lg border border-gray-100">
+                        <div className="flex items-center text-sm text-gray-600 bg-gray-50 py-2 px-3 rounded-lg border border-gray-100 col-span-1">
                           <Compass size={14} className="text-[#711113] mr-2 opacity-70 flex-shrink-0" />
                           <span className="font-semibold truncate">{property.facing}</span>
                         </div>
-                        {property.bhk && (
-                          <div className="flex items-center text-sm text-gray-600 bg-gray-50 py-2 px-3 rounded-lg border border-gray-100 col-span-2">
-                            <Home size={14} className="text-[#711113] mr-2 opacity-70 flex-shrink-0" />
-                            <span className="font-semibold">{property.bhk} Type</span>
-                          </div>
-                        )}
                       </div>
 
                       <div className="grid grid-cols-2 gap-3 pt-4 border-t border-gray-100">
@@ -231,7 +171,7 @@ export default function RentClient({ rentType }: { rentType: "residential" | "co
                 <div>
                   <h3 className="text-2xl font-bold text-gray-800 mb-2">No Properties Available</h3>
                   <p className="text-gray-500 max-w-md mx-auto">
-                    There are currently no {rentType} properties listed for rent. Please check back later.
+                    There are currently no commercial properties listed for rent. Please check back later.
                   </p>
                 </div>
               </motion.div>

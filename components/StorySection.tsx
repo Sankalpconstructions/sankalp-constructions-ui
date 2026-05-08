@@ -1,14 +1,21 @@
 "use client";
 import React, { useRef, useEffect } from "react";
 import { motion, useInView, animate } from "framer-motion";
+import Link from "next/link";
+import { ArrowRight, Check, Target, Eye, ShieldCheck, Gem, Users, ArrowUpRight } from "lucide-react";
 
 interface BrandStoryData {
   title: string;
   subtitle: string;
-  description: string;
+  descriptionCompact: string;
+  descriptionFull: string;
   image: string;
   yearsOfExcellence: string;
   stats: { label: string; value: string }[];
+}
+
+interface StorySectionProps {
+  variant?: "compact" | "full";
 }
 
 // Animated Counter
@@ -42,12 +49,27 @@ function AnimatedCounter({ value, className }: { value: string; className?: stri
   );
 }
 
-export default function StorySection() {
-  // Static Data (No API)
+export default function StorySection({ variant = "compact" }: StorySectionProps) {
+  // --- EXTRA SECTIONS ANIMATIONS ---
+  const fadeUp = {
+    hidden: { opacity: 0, y: 40 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } },
+  };
+
+  const staggerContainer = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.15 },
+    },
+  };
+
+  // --- DATA ---
   const story: BrandStoryData = {
     title: "About Sankalp Constructions",
     subtitle: "Building Dreams Into Reality",
-    description: "Since 2001, Sankalp Constructions has been shaping the skyline of Hyderabad with a vision rooted in excellence and refined living. What began as a single villa project has evolved into a legacy of over 3 million square feet of thoughtfully crafted developments across the city.\n\nOur diverse portfolio includes luxury residential apartments, premium villas, sophisticated commercial spaces, and well-planned open plot layouts, all strategically located in the most sought-after locations of Hyderabad.",
+    descriptionCompact: "Since 2001, Sankalp Constructions has been shaping the skyline of Hyderabad with a vision rooted in excellence and refined living. What began as a single villa project has evolved into a legacy of over 3 million square feet of thoughtfully crafted developments across the city.",
+    descriptionFull: "Since 2001, Sankalp Constructions has been shaping the skyline of Hyderabad with a vision rooted in excellence and refined living. What began as a single villa project has evolved into a legacy of over 3 million square feet of thoughtfully crafted developments across the city.\n\nOur diverse portfolio includes luxury residential apartments, premium villas, sophisticated commercial spaces, and well-planned open plot layouts, all strategically located in the most sought-after locations of Hyderabad.",
     image: "/assets/about-us-dummy.png",
     yearsOfExcellence: "15+",
     stats: [
@@ -60,70 +82,144 @@ export default function StorySection() {
     ],
   };
 
+  const descriptionToUse = variant === "full" ? story.descriptionFull : story.descriptionCompact;
+
   return (
-    <section id="story" className="py-8 md:py-24 bg-white relative overflow-hidden">
-      <div className="container mx-auto px-4 lg:px-8 z-10 relative">
-        <div className="text-center mb-12">
-          <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-[#711113] mb-3">
-            {story.title}
-          </h2>
-        </div>
-        <div className="flex flex-col md:flex-row items-start gap-8 md:gap-12 lg:gap-20 text-gray-900">
+    <div className={variant === "full" ? "bg-[#FAF9F6] selection:bg-[#711113] selection:text-white" : ""}>
 
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="md:w-1/2 w-full relative"
-          >
-            <img
-              src={story.image}
-              alt={story.subtitle}
-              className="rounded-lg shadow-2xl w-full object-cover h-[280px] md:h-[500px]"
-            />
-            <div className="absolute -bottom-10 -right-10 bg-[#711113] p-6 text-white rounded-lg hidden lg:block">
-              <h4 className="text-3xl font-bold">
-                <AnimatedCounter value={story.yearsOfExcellence} />
-              </h4>
-              <p className="text-xs uppercase tracking-widest">
-                Years of Excellence
+      {/* BASE SHARED SECTION */}
+      <section id="story" className="py-8 md:py-24 bg-white relative overflow-hidden">
+        <div className="container mx-auto px-4 lg:px-8 z-10 relative">
+          <div className="text-center mb-12">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-[#711113] mb-3">
+              {story.title}
+            </h2>
+          </div>
+          <div className="flex flex-col md:flex-row items-start gap-8 md:gap-12 lg:gap-20 text-gray-900">
+
+            <motion.div
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="md:w-1/2 w-full relative"
+            >
+              <img
+                src={story.image}
+                alt={story.subtitle}
+                className="rounded-lg shadow-2xl w-full object-cover h-[280px] md:h-[500px]"
+              />
+              <div className="absolute -bottom-10 -right-10 bg-[#711113] p-6 text-white rounded-lg hidden lg:block">
+                <h4 className="text-3xl font-bold">
+                  <AnimatedCounter value={story.yearsOfExcellence} />
+                </h4>
+                <p className="text-xs uppercase tracking-widest">
+                  Years of Excellence
+                </p>
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="md:w-1/2 flex flex-col h-full justify-center"
+            >
+
+              <h3 className="text-[#711113] uppercase text-md md:text-xl font-extrabold mb-4">
+                {story.subtitle}
+              </h3>
+
+              <p className="text-gray-600 mb-8 whitespace-pre-line text-lg leading-relaxed">
+                {descriptionToUse}
               </p>
-            </div>
-          </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="md:w-1/2"
-          >
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-6 mb-10">
+                {story.stats.map((stat, idx) => (
+                  <div key={idx}>
+                    <h4 className="text-2xl font-bold text-gray-900">
+                      <AnimatedCounter value={stat.value} />
+                    </h4>
+                    <p className="text-sm text-gray-500 font-medium">{stat.label}</p>
+                  </div>
+                ))}
+              </div>
 
-            <h3 className="text-[#711113] uppercase text-md md:text-xl font-extrabold mb-4">
-              {story.subtitle}
-            </h3>
+              {/* Show "Explore More" only in compact variant */}
+              {variant === "compact" && (
+                <Link href="/about" className="inline-flex items-center gap-2 bg-[#711113] text-white px-8 py-3 rounded-md font-semibold hover:bg-black transition-colors w-max group shadow-lg">
+                  Explore More
+                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </Link>
+              )}
+            </motion.div>
 
-            <p className="text-gray-600 mb-8 whitespace-pre-line">
-              {story.description}
-            </p>
-
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
-              {story.stats.map((stat, idx) => (
-                <div key={idx}>
-                  <h4 className="text-2xl font-bold">
-                    <AnimatedCounter value={stat.value} />
-                  </h4>
-                  <p className="text-sm text-gray-500">{stat.label}</p>
-                </div>
-              ))}
-            </div>
-          </motion.div>
-
+          </div>
         </div>
-      </div>
 
-      <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[60vw] h-[60vw] max-w-[800px] bg-gray-50 rounded-full translate-x-1/2 -z-10"></div>
-    </section>
+        <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[60vw] h-[60vw] max-w-[800px] bg-gray-50 rounded-full translate-x-1/2 -z-10"></div>
+      </section>
+
+      {variant === "full" && (
+        <>
+          <section className="py-12 md:py-16 bg-gray-50 relative">
+            <div className="container mx-auto px-4 lg:px-8 max-w-5xl">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
+
+                {/* Vision Card */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5 }}
+                  className="bg-white p-6 md:p-8 rounded-xl shadow-lg shadow-gray-200/40 border border-gray-100 flex flex-col"
+                >
+                  <div className="w-12 h-12 bg-[#711113]/10 rounded-xl flex items-center justify-center mb-4">
+                    <Eye className="w-6 h-6 text-[#711113]" />
+                  </div>
+                  <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-4">Our Vision</h3>
+                  <p className="text-gray-600 leading-relaxed text-sm md:text-base font-medium italic border-l-4 border-[#711113] pl-4">
+                    "To craft iconic landmarks that elevate lifestyles and redefine luxury living—establishing
+                    Sankalp Constructions as a symbol of legacy, prestige, and excellence in Hyderabad’s real
+                    estate landscape."
+                  </p>
+                </motion.div>
+
+                {/* Mission Card */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: 0.15 }}
+                  className="bg-white p-6 md:p-8 rounded-xl shadow-lg shadow-gray-200/40 border border-gray-100 flex flex-col"
+                >
+                  <div className="w-12 h-12 bg-[#711113]/10 rounded-xl flex items-center justify-center mb-4">
+                    <Target className="w-6 h-6 text-[#711113]" />
+                  </div>
+                  <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-4">Our Mission</h3>
+                  <ul className="space-y-3">
+                    {[
+                      "To deliver exceptional quality that sets new benchmarks in the industry",
+                      "To create architecturally distinctive and aesthetically superior developments",
+                      "To ensure seamless experiences through transparency, trust, and timely execution",
+                      "To build lasting relationships with clients, landowners, and partners",
+                      "To continuously innovate and shape the future of modern urban living"
+                    ].map((item, idx) => (
+                      <li key={idx} className="flex items-start gap-3">
+                        <Check className="w-5 h-5 text-[#711113] shrink-0 mt-0.5" />
+                        <span className="text-gray-600 text-sm md:text-base leading-relaxed">{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </motion.div>
+
+              </div>
+            </div>
+          </section>
+        </>
+      )}
+
+    </div>
   );
 }

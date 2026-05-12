@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect,useState } from "react";
 import { motion, useInView, animate } from "framer-motion";
 import Link from "next/link";
 import { ArrowRight, Check, Target, Eye, ShieldCheck, Gem, Users, ArrowUpRight } from "lucide-react";

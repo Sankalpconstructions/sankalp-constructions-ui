@@ -3,6 +3,7 @@ import { useRef, useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { MapPin, ChevronRight, ChevronLeft } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function ProjectsShowcase() {
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -38,9 +39,9 @@ export default function ProjectsShowcase() {
     fetchProjects();
   }, []);
 
-  const duplicatedProjects = projects.length > 0 
-    ? [...projects, ...projects, ...projects, ...projects] 
-    : [];
+  // Use the fetched projects directly; avoid duplicating the array which
+  // caused the same project to appear multiple times on the UI.
+  const duplicatedProjects = projects;
 
   useEffect(() => {
     let animationId: number;
@@ -162,10 +163,13 @@ export default function ProjectsShowcase() {
 
                   <Link href={`/projects/${project.id}`} className="absolute inset-0 z-20" />
 
-                  <img
+                  <Image
                     src={project.image}
                     alt={project.title}
-                    className="w-full h-full object-cover group-hover/card:scale-110 transition duration-700"
+                    fill
+                    sizes="(max-width: 768px) 85vw, 400px"
+                    priority={idx < 3}
+                    className="object-cover group-hover/card:scale-110 transition duration-700"
                   />
 
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent pointer-events-none"></div>

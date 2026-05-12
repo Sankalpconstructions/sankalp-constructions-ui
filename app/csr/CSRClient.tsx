@@ -12,6 +12,8 @@ import {
 } from "lucide-react";
 import PageBanner from "@/components/PageBanner";
 
+export default function CSRClient() {
+
   const [events, setEvents] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedId, setSelectedId] = useState<string | null>(null);

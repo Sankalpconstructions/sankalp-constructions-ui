@@ -6,8 +6,14 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 const IMAGE_SLIDE_DURATION = 6000;
 
 export default function HeroBanner() {
-  const [slides, setSlides] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+  const FALLBACK_SLIDES = [
+    { type: "video", src: "/assets/Project-video.mp4" },
+    { type: "image", src: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1600" },
+    { type: "image", src: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1600" }
+  ];
+
+  const [slides, setSlides] = useState<any[]>(FALLBACK_SLIDES);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchBanners = async () => {
@@ -18,14 +24,9 @@ export default function HeroBanner() {
           const data = await res.json();
           const activeSlides = data.filter((s: any) => s.isActive);
           if (activeSlides.length > 0) {
-            setSlides(activeSlides.map((s: any) => ({ type: s.type || 'image', src: s.url })));
+            setSlides(activeSlides.map((s: any) => ({ type: s.type || 'image', src: s.image || s.url || s.src })));
           } else {
-            // Fallback
-            setSlides([
-              { type: "video", src: "/assets/Project-video.mp4" },
-              { type: "image", src: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1600" },
-              { type: "image", src: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1600" }
-            ]);
+            // keep FALLBACK_SLIDES (already set)
           }
         }
       } catch (error) {

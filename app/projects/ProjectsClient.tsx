@@ -25,36 +25,6 @@ interface Project {
   type: string;
 }
 
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  React.useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
-        const res = await fetch(`${baseUrl}/api/projects`);
-        if (res.ok) {
-          const data = await res.json();
-          const formatted = data.map((p: any) => ({
-            id: p._id || p.id,
-            title: p.title,
-            category: p.type || "Residential", // Mapping type to category or fallback
-            location: p.location,
-            image: p.banners?.[0] || p.image || "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1600",
-            status: p.status?.toLowerCase() || "upcoming",
-            possessionDate: p.possessionDate || "TBA",
-            type: p.type
-          }));
-          setProjects(formatted);
-        }
-      } catch (error) {
-        console.error("Error fetching projects:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchProjects();
-  }, []);
 
 const TABS: {
   key: ProjectStatus | "all";
@@ -94,6 +64,36 @@ const STATUS_BADGE: Record<
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 export default function AllProjectsPage() {
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  React.useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+        const res = await fetch(`${baseUrl}/api/projects`);
+        if (res.ok) {
+          const data = await res.json();
+          const formatted = data.map((p: any) => ({
+            id: p._id || p.id,
+            title: p.title,
+            category: p.type || "Residential",
+            location: p.location,
+            image: p.banners?.[0] || p.image || "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1600",
+            status: (p.status || "upcoming").toLowerCase(),
+            possessionDate: p.possessionDate || "TBA",
+            type: p.type
+          }));
+          setProjects(formatted);
+        }
+      } catch (error) {
+        console.error("Error fetching projects:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProjects();
+  }, []);
   const [activeTab, setActiveTab] =
     useState<ProjectStatus | "all">("all");
 

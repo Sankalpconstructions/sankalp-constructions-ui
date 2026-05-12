@@ -285,7 +285,7 @@ export default function Chatbot() {
             </div>
 
             {/* Chat Body */}
-            <div className="flex-1 overflow-y-auto p-5 space-y-6 bg-gray-50">
+            <div className="flex-1 overflow-y-auto p-5 space-y-6 bg-gray-50 chat-scroll">
               {messages.map((msg) => (
                 <motion.div key={msg.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"}`}>
                   {msg.isTyping ? (
@@ -320,6 +320,9 @@ export default function Chatbot() {
                 </motion.div>
               ))}
               <div ref={messagesEndRef} />
+            </div>
+             <div className="p-4 border-t bg-white text-center text-xs text-gray-500">
+              Select an option above to continue
             </div>
           </motion.div>
         )}

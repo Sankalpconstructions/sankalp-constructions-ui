@@ -31,3 +31,29 @@ body {
     @apply bg-black/60 backdrop-blur-md border border-white/10 shadow-lg;
   }
 }
+
+/* Thin Scrollbar for Chatbot */
+.chat-scroll::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+.chat-scroll::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.chat-scroll::-webkit-scrollbar-thumb {
+  background: #711113;
+  border-radius: 10px;
+}
+
+.chat-scroll::-webkit-scrollbar-thumb:hover {
+  background: #9a1a1f;
+}
+
+/* For Firefox */
+.chat-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #711113 #f1f1f1;
+}

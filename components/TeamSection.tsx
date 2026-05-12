@@ -45,7 +45,7 @@ export default function TeamSection() {
   if (members.length === 0) return null;
 
   return (
-    <section id="team" className="py-8 md:py-24 bg-white text-gray-900 overflow-hidden">
+    <section id="team" className="py-8 md:py-10 bg-white text-gray-900 overflow-hidden">
       <div className="container mx-auto px-4 lg:px-8">
 
         <div className="text-center max-w-2xl mx-auto mb-8 md:mb-16">

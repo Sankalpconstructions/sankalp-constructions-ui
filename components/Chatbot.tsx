@@ -1,9 +1,7 @@
 "use client";
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Send, Bot, User, Loader2, ArrowRight, CheckCircle } from "lucide-react";
-import Link from "next/link";
-import { useProjects } from "@/context/ProjectContext";
+import { X, Bot, Loader2, CheckCircle } from "lucide-react";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
@@ -12,6 +10,7 @@ type Message = {
   sender: "bot" | "user";
   text: React.ReactNode;
   options?: string[];
+  isTyping?: boolean;
 };
 
 let messageIdCounter = 1000;
@@ -19,153 +18,234 @@ let messageIdCounter = 1000;
 export default function Chatbot() {
   const [isOpen, setIsOpen] = useState(false);
   const [isHoverToggleHovered, setIsHoverToggleHovered] = useState(false);
-  const { projects, loading } = useProjects();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
+
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "1",
       sender: "bot",
       text: "Hello! Welcome to Sankalp Constructions. How can I help you today?",
-      options: ["Find projects", "View amenities", "Check unit details", "Contact form"],
+      options: ["Browse Apartments", "Browse Villas", "Browse Commercial", "Contact Us"],
     },
   ]);
-  
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const handleLeadSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const fetchFilteredProjects = async (type: string, filter?: string) => {
+    let url = `${API_BASE_URL}/api/chatbot/projects?type=${type.toLowerCase()}`;
+
+    if (type.toLowerCase() === "apartment" && filter) {
+      url += `&bhk=${encodeURIComponent(filter)}`;
+    } else if (filter) {
+      const rangeMap: Record<string, string> = {
+        "Under 1.5 CR - 2.0 CR": "1.5-2.0",
+        "Under 2.0 CR - 2.5 CR": "2.0-2.5",
+        "Under 2.5 CR - 3.0 CR": "2.5-3.0",
+        "Under 1.5 CR - 2.5 CR": "1.5-2.5",
+        "Under 2.5 CR - 3.5 CR": "2.5-3.5",
+        "Under 3.5 CR - 5.0 CR": "3.5-5.0",
+        "Under 5.0 CR - 10.0 CR": "5.0-10.0",
+      };
+      if (rangeMap[filter]) url += `&priceRange=${rangeMap[filter]}`;
+    }
+
+    const res = await fetch(url);
+    const data = await res.json();
+    return data.projects || [];
+  };
+
+  const fetchAvailableBHKs = async () => {
+    const res = await fetch(`${API_BASE_URL}/api/chatbot/projects?type=apartment&getConfigs=true`);
+    const data = await res.json();
+    return data.configurations || ["2 BHK", "3 BHK", "4 BHK"];
+  };
+
+  const addTyping = () => {
+    const id = String(messageIdCounter++);
+    setMessages(prev => [...prev, { id, sender: "bot", text: "", isTyping: true }]);
+    return id;
+  };
+
+  const removeTyping = (id: string) => {
+    setMessages(prev => prev.filter(m => m.id !== id));
+  };
+
+  const goToMainMenu = () => {
+    const botMsg: Message = {
+      id: String(messageIdCounter++),
+      sender: "bot",
+      text: "What would you like to explore?",
+      options: ["Browse Apartments", "Browse Villas", "Browse Commercial", "Contact Us"],
+    };
+    setMessages(prev => [...prev, botMsg]);
+  };
+
+  const handleLeadSubmit = async (e: React.FormEvent<HTMLFormElement>, context: string) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
+
     const formData = new FormData(e.currentTarget);
     const data = {
       name: formData.get("name"),
       phone: formData.get("phone"),
-      source: "Chatbot",
-      status: "New"
+      source: `Chatbot - ${context}`,
+      status: "New",
     };
 
     try {
-      const res = await fetch(`${API_BASE_URL}/api/leads`, {
+      await fetch(`${API_BASE_URL}/api/leads`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
 
-      if (res.ok) {
-        setMessages(prev => [...prev, {
-          id: String(messageIdCounter++) + "_thanks",
-          sender: "bot",
-          text: (
-            <div className="flex items-center gap-2 text-green-600 font-bold">
-              <CheckCircle size={16} />
-              <span>Thank you! Our sales team will get in touch shortly.</span>
-            </div>
-          )
-        }]);
-      }
+      setMessages(prev => [...prev, {
+        id: String(messageIdCounter++),
+        sender: "bot",
+        text: (
+          <div className="flex items-center gap-2 text-green-600 font-bold">
+            <CheckCircle size={16} />
+            <span>Thank you! Our team will contact you soon for site visit.</span>
+          </div>
+        ),
+      }]);
     } catch (error) {
-      console.error("Error submitting lead from chatbot:", error);
+      console.error(error);
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const handleOptionClick = (option: string) => {
-    const userMsg: Message = { id: String(messageIdCounter++), sender: "user", text: option };
-    setMessages((prev) => [...prev, userMsg]);
+  const handleOptionClick = async (option: string) => {
+    // Add user message
+    setMessages(prev => [...prev, { id: String(messageIdCounter++), sender: "user", text: option }]);
 
-    setTimeout(() => {
+    const typingId = addTyping();
+
+    setTimeout(async () => {
       let botMsg: Message;
-      const selectedProject = projects.find(p => p.title === option);
-      
-      if (selectedProject) {
+
+      // Navigation Options
+      if (option === "Back to Main Menu" || option === "Browse More Projects") {
+        removeTyping(typingId);
+        goToMainMenu();
+        return;
+      }
+
+      // Browse Categories
+      if (option === "Browse Apartments") {
+        const bhkOptions = await fetchAvailableBHKs();
+        botMsg = {
+          id: String(messageIdCounter++),
+          sender: "bot",
+          text: "Which configuration would you like?",
+          options: [...bhkOptions, "Back to Main Menu"]
+        };
+      } 
+      else if (option === "Browse Villas") {
+        botMsg = {
+          id: String(messageIdCounter++),
+          sender: "bot",
+          text: "Choose your budget range for Villas:",
+          options: ["Under 1.5 CR - 2.0 CR", "Under 2.0 CR - 2.5 CR", "Under 2.5 CR - 3.0 CR", "Back to Main Menu"]
+        };
+      } 
+      else if (option === "Browse Commercial") {
+        botMsg = {
+          id: String(messageIdCounter++),
+          sender: "bot",
+          text: "Choose your budget range for Commercial:",
+          options: ["Under 1.5 CR - 2.5 CR", "Under 2.5 CR - 3.5 CR", "Under 3.5 CR - 5.0 CR", "Under 5.0 CR - 10.0 CR", "Back to Main Menu"]
+        };
+      } 
+      // BHK Selection
+      else if (option.includes("BHK") || option.includes("Studio") || option.includes("Penthouse")) {
+        const projects = await fetchFilteredProjects("apartment", option);
+        botMsg = {
+          id: String(messageIdCounter++),
+          sender: "bot",
+          text: projects.length > 0 ? `Here are our ${option} projects:` : `No ${option} projects available currently.`,
+          options: projects.length > 0 ? projects.map((p: any) => p.title) : ["Back to Main Menu"]
+        };
+      } 
+      // Price Range Selection
+      else if (option.includes("CR")) {
+        const type = option.toLowerCase().includes("villa") ? "villa" : "commercial";
+        const projects = await fetchFilteredProjects(type, option);
+
+        botMsg = {
+          id: String(messageIdCounter++),
+          sender: "bot",
+          text: projects.length > 0 ? "Here are matching projects in your budget:" : "No projects found in this range.",
+          options: projects.length > 0 ? projects.map((p: any) => p.title) : ["Back to Main Menu"]
+        };
+      } 
+      // Project Selected
+      else if (option !== "Contact Us" && option !== "Book Site Visit") {
+        botMsg = {
+          id: String(messageIdCounter++),
+          sender: "bot",
+          text: `You selected **${option}**.`,
+          options: ["Book Site Visit", "Browse More Projects", "Back to Main Menu"]
+        };
+      } 
+      // Lead Form
+      else if (option === "Book Site Visit" || option === "Contact Us") {
         botMsg = {
           id: String(messageIdCounter++),
           sender: "bot",
           text: (
-            <div className="space-y-3">
-              <p><strong>{selectedProject.title}</strong> is one of our premium <strong>{selectedProject.status}</strong> developments.</p>
-              <Link 
-                href={`/projects/${selectedProject._id}`} 
-                className="inline-flex items-center gap-2 text-[#711113] font-bold text-xs uppercase tracking-widest hover:underline"
-                onClick={() => setIsOpen(false)}
-              >
-                View Project Details <ArrowRight size={12} />
-              </Link>
+            <div className="bg-gray-50 rounded-xl p-5 border">
+              <p className="font-bold text-[#711113] mb-4">Please share your details</p>
+              <form onSubmit={(e) => handleLeadSubmit(e, option)} className="space-y-3">
+                <input name="name" required placeholder="Full Name" className="w-full p-3 border rounded-lg text-sm" disabled={isSubmitting} />
+                <input name="phone" required placeholder="Phone Number" type="tel" className="w-full p-3 border rounded-lg text-sm" disabled={isSubmitting} />
+                <button 
+                  type="submit" 
+                  disabled={isSubmitting}
+                  className="w-full bg-[#29B1D2] hover:bg-[#711113] text-white py-3 rounded-lg font-bold text-sm"
+                >
+                  {isSubmitting ? <Loader2 className="animate-spin mx-auto" size={18} /> : "Book Site Visit"}
+                </button>
+              </form>
             </div>
-          ),
-          options: ["Find projects", "Contact form", "Back to start"]
+          )
         };
-      } else {
-        switch (option) {
-          case "Find projects":
-            botMsg = {
-              id: String(messageIdCounter++),
-              sender: "bot",
-              text: projects.length > 0 
-                ? "We have several premium developments ongoing. Which one would you like to explore?" 
-                : "We are currently planning some exciting new projects. Stay tuned!",
-              options: projects.length > 0 ? projects.map(p => p.title).slice(0, 5).concat(["Back to start"]) : ["Back to start"],
-            };
-            break;
-          case "View amenities":
-            botMsg = {
-              id: String(messageIdCounter++),
-              sender: "bot",
-              text: "Our projects feature 5-star amenities like infinity pools, ultra-modern gyms, 24/7 security, and lush gardens.",
-              options: ["Contact form", "Back to start"],
-            };
-            break;
-          case "Check unit details":
-            botMsg = {
-              id: String(messageIdCounter++),
-              sender: "bot",
-              text: "We offer 2, 3, 4, and 5 BHK premium apartments and villas starting from 1,150 sq.ft. Would you like a detailed floor plan?",
-              options: ["Contact form", "Back to start"],
-            };
-            break;
-          case "Contact form":
-            botMsg = {
-              id: String(messageIdCounter++),
-              sender: "bot",
-              text: (
-                <div className="bg-gray-50 rounded p-4 border border-gray-200 shadow-inner w-full mt-2">
-                  <p className="font-bold text-[#711113] mb-2 uppercase text-xs">Fill to Connect</p>
-                  <form onSubmit={handleLeadSubmit} className="flex flex-col gap-2 relative z-[9999]">
-                    <input name="name" required placeholder="Name" className="p-2 border rounded text-sm w-full" disabled={isSubmitting} />
-                    <input name="phone" required placeholder="Phone" type="tel" className="p-2 border rounded text-sm w-full" disabled={isSubmitting} />
-                    <button 
-                      type="submit" 
-                      disabled={isSubmitting}
-                      className="bg-[#29B1D2] text-white p-2 rounded font-bold uppercase text-xs tracking-wider flex items-center justify-center gap-2 hover:bg-[#711113] transition-colors"
-                    >
-                      {isSubmitting ? <Loader2 size={14} className="animate-spin" /> : "Submit"}
-                    </button>
-                  </form>
-                </div>
-              ),
-            };
-            break;
-          case "Back to start":
-          case "Restart Chat":
-          default:
-            botMsg = {
-              id: String(messageIdCounter++),
-              sender: "bot",
-              text: "What else can I help you with today?",
-              options: ["Find projects", "View amenities", "Check unit details", "Contact form"],
-            };
-            break;
-        }
+      } 
+      else {
+        botMsg = {
+          id: String(messageIdCounter++),
+          sender: "bot",
+          text: "How else can I help you?",
+          options: ["Browse Apartments", "Browse Villas", "Browse Commercial", "Contact Us"]
+        };
       }
-      setMessages((prev) => [...prev, botMsg]);
-    }, 600);
+
+      removeTyping(typingId);
+      setMessages(prev => [...prev, botMsg]);
+    }, 700);
   };
+
+  // Typing Indicator Component
+  const TypingIndicator = () => (
+    <div className="flex items-center gap-3">
+      <div className="w-8 h-8 rounded-full bg-[#711113]/10 flex items-center justify-center">
+        <Bot size={16} className="text-[#711113]" />
+      </div>
+      <div className="bg-white border px-4 py-3 rounded-2xl flex items-center gap-1.5">
+        <div className="flex gap-1">
+          {[0, 1, 2].map((i) => (
+            <div key={i} className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: `${i * 150}ms` }} />
+          ))}
+        </div>
+        <span className="text-xs text-gray-500">Thinking...</span>
+      </div>
+    </div>
+  );
 
   return (
     <>
@@ -176,20 +256,8 @@ export default function Chatbot() {
             onClick={() => setIsOpen(true)}
             onMouseEnter={() => setIsHoverToggleHovered(true)}
             onMouseLeave={() => setIsHoverToggleHovered(false)}
-            className="group relative flex items-center justify-center bg-[#1E1E1E] text-[#F5C33C] rounded-full shadow-2xl border border-white/10 hover:shadow-xl hover:scale-105 transition-all overflow-visible w-14 h-14"
+            className="w-14 h-14 bg-[#1E1E1E] text-[#F5C33C] rounded-full shadow-2xl flex items-center justify-center hover:scale-105 transition-all"
           >
-            <AnimatePresence>
-              {isHoverToggleHovered && (
-                <motion.div
-                  initial={{ x: 10, opacity: 0 }}
-                  animate={{ x: 0, opacity: 1 }}
-                  exit={{ x: 10, opacity: 0 }}
-                  className="absolute right-[120%] top-1/2 -translate-y-1/2 bg-white text-gray-800 px-4 py-2 rounded-lg shadow-xl whitespace-nowrap hidden md:block border border-gray-100 pointer-events-none"
-                >
-                  <span className="font-bold uppercase tracking-wider text-xs">Ask Assistant</span>
-                </motion.div>
-              )}
-            </AnimatePresence>
             <Bot size={28} />
           </button>
         )}
@@ -198,87 +266,61 @@ export default function Chatbot() {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, scale: 0.9, y: 20, transformOrigin: 'bottom right' }}
+            initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className="fixed bottom-[5.5rem] right-6 z-[160] w-80 sm:w-[380px] bg-white/95 backdrop-blur-3xl rounded-3xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.3)] overflow-hidden border border-gray-200/60 flex flex-col"
+            className="fixed bottom-[5.5rem] right-6 z-[160] w-80 sm:w-[380px] bg-white rounded-3xl shadow-2xl overflow-hidden border flex flex-col"
             style={{ maxHeight: "650px", height: "75vh" }}
           >
             {/* Header */}
-            <div className="bg-gradient-to-r from-gray-900 to-[#4a0b0d] p-5 flex justify-between items-center text-white relative overflow-hidden">
-              <div className="absolute -right-4 -top-10 w-32 h-32 bg-white/5 rounded-full blur-2xl"></div>
-              <div className="flex items-center gap-3 relative z-10">
-                <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center border border-white/20 shadow-inner">
-                  <Bot size={22} className="text-[#F5C33C]" />
-                </div>
+            <div className="bg-gradient-to-r from-gray-900 to-[#4a0b0d] p-5 text-white flex justify-between items-center">
+              <div className="flex items-center gap-3">
+                <Bot size={24} className="text-[#F5C33C]" />
                 <div>
-                  <h4 className="font-extrabold uppercase tracking-widest text-[11px] text-white/90 mb-0.5">Sankalp Assistant</h4>
-                  <div className="flex items-center gap-1.5">
-                    <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.6)]"></div>
-                    <p className="text-[10px] text-gray-300 uppercase tracking-wider font-semibold">Online & Ready</p>
-                  </div>
+                  <h4 className="font-bold">Sankalp Assistant</h4>
+                  <p className="text-xs text-green-400">● Online</p>
                 </div>
               </div>
-              <button onClick={() => setIsOpen(false)} className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors relative z-10">
-                <X size={16} />
-              </button>
+              <button onClick={() => setIsOpen(false)}><X size={22} /></button>
             </div>
 
             {/* Chat Body */}
-            <div className="flex-1 overflow-y-auto p-5 flex flex-col gap-5 bg-gradient-to-b from-gray-50/50 to-white">
+            <div className="flex-1 overflow-y-auto p-5 space-y-6 bg-gray-50">
               {messages.map((msg) => (
-                <motion.div 
-                  initial={{ opacity: 0, y: 10 }} 
-                  animate={{ opacity: 1, y: 0 }}
-                  key={msg.id} 
-                  className={`flex w-full ${msg.sender === "user" ? "justify-end" : "justify-start"}`}
-                >
-                  <div className={`flex max-w-[85%] ${msg.sender === "user" ? "flex-row-reverse" : ""}`}>
-                    {msg.sender === "bot" && (
-                      <div className="w-7 h-7 rounded-full bg-[#711113]/10 flex items-center justify-center shrink-0 mr-3 mt-1">
-                        <Bot size={14} className="text-[#711113]" />
-                      </div>
-                    )}
-                    
-                    <div className={`flex flex-col gap-3 items-start`}>
-                      <div className={`p-4 rounded-2xl shadow-sm text-[14px] leading-relaxed relative ${
-                        msg.sender === "user" 
-                          ? "bg-[#1E1E1E] text-white rounded-tr-sm shadow-[0_4px_15px_rgba(0,0,0,0.1)]" 
-                          : "bg-white border text-gray-700 rounded-tl-sm border-gray-100/80 shadow-[0_4px_20px_rgba(0,0,0,0.03)]"
-                      }`}>
-                        {msg.text}
-                      </div>
-                      
-                      {msg.options && (
-                        <div className="flex flex-wrap gap-2 mt-1">
-                          {msg.options.map((opt, i) => (
-                            <button
-                              key={i}
-                              onClick={() => handleOptionClick(opt)}
-                              className="bg-white border border-[#711113]/20 text-[#711113] text-[11px] px-4 py-2 rounded-full hover:bg-[#711113] hover:text-white hover:border-[#711113] hover:shadow-lg transition-all transform hover:-translate-y-0.5 uppercase font-bold tracking-wider"
-                            >
-                              {opt}
-                            </button>
-                          ))}
+                <motion.div key={msg.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"}`}>
+                  {msg.isTyping ? (
+                    <TypingIndicator />
+                  ) : (
+                    <div className={`max-w-[85%] ${msg.sender === "user" ? "flex-row-reverse" : ""} flex gap-3`}>
+                      {msg.sender === "bot" && (
+                        <div className="w-8 h-8 rounded-full bg-[#711113]/10 flex-shrink-0 mt-1 flex items-center justify-center">
+                          <Bot size={16} className="text-[#711113]" />
                         </div>
                       )}
+                      <div>
+                        <div className={`p-4 rounded-2xl text-[14.5px] leading-relaxed ${msg.sender === "user" ? "bg-[#1E1E1E] text-white" : "bg-white border"}`}>
+                          {msg.text}
+                        </div>
+                        {msg.options && (
+                          <div className="flex flex-wrap gap-2 mt-3">
+                            {msg.options.map((opt, i) => (
+                              <button
+                                key={i}
+                                onClick={() => handleOptionClick(opt)}
+                                className="text-xs border border-[#711113]/30 hover:bg-[#711113] hover:text-white px-4 py-2.5 rounded-full transition-all"
+                              >
+                                {opt}
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </motion.div>
               ))}
               <div ref={messagesEndRef} />
             </div>
-            
-            <div className="p-4 bg-white border-t border-gray-100 flex items-center gap-3">
-               <div className="flex-1 bg-gray-50 border border-gray-200 rounded-full flex items-center px-4 py-2.5 opacity-60 cursor-not-allowed">
-                 <input disabled placeholder="Select options above..." className="flex-1 text-[13px] bg-transparent outline-none disabled:bg-transparent" />
-               </div>
-               <div className="w-10 h-10 rounded-full bg-[#1E1E1E] opacity-50 flex items-center justify-center shrink-0">
-                 <Send size={16} className="text-white ml-0.5" />
-               </div>
-            </div>
-
           </motion.div>
         )}
       </AnimatePresence>

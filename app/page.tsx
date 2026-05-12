@@ -24,7 +24,7 @@ export default function Home() {
       <HeroBanner />
       <StorySection />
       <ProjectsShowcase />
-      <TestimonialsSection />
+    
       <TeamSection />
       <FAQSection />
       <ContactSection />

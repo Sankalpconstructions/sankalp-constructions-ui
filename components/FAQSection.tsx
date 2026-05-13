@@ -19,7 +19,7 @@ export default function FAQSection() {
     const fetchFaqs = async () => {
       try {
         const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
-        const res = await fetch(`${baseUrl}/api/faqs`);
+        const res = await fetch(`/api/faqs`);
         if (res.ok) {
           const data = await res.json();
           // Assuming API returns { _id, question, answer }

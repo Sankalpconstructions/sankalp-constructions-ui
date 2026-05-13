@@ -7,6 +7,7 @@ import { submitLead } from "@/lib/leads";
 interface PricingRow {
   type: string;
   area: string;
+  superBuiltUpArea?: string;
   facing?: string;
 }
 
@@ -59,12 +60,13 @@ export default function ProjectPriceTable({ projectTitle, rows }: Props) {
           <p className="text-gray-500 text-sm md:text-base max-w-xl mx-auto px-4">Find the configuration that fits your lifestyle. Contact us for detailed pricing & offers.</p>
         </div>
 
-        <div className="max-w-4xl mx-auto px-2 sm:px-0">
+        <div className="max-w-5xl mx-auto px-2 sm:px-0">
           <div className="bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden">
             {/* Table header */}
-            <div className="grid grid-cols-3 bg-[#711113] text-white text-[9px] md:text-xs font-bold uppercase tracking-widest px-4 md:px-6 py-4">
+            <div className="grid grid-cols-4 bg-[#711113] text-white text-[9px] md:text-xs font-bold uppercase tracking-widest px-4 md:px-6 py-4">
               <span>Type</span>
               <span className="text-center">Carpet Area</span>
+              <span className="text-center">Super Built-up</span>
               <span className="text-right">Price</span>
             </div>
 
@@ -72,12 +74,13 @@ export default function ProjectPriceTable({ projectTitle, rows }: Props) {
             {rows.map((row, i) => (
               <div
                 key={i}
-                className={`grid grid-cols-3 px-4 md:px-6 py-4 md:py-5 border-b border-gray-50 items-center ${i % 2 === 0 ? "bg-white" : "bg-gray-50/50"}`}
+                className={`grid grid-cols-4 px-4 md:px-6 py-4 md:py-5 border-b border-gray-50 items-center ${i % 2 === 0 ? "bg-white" : "bg-gray-50/50"}`}
               >
                 <div className="flex flex-col">
                   <span className="text-xs md:text-sm font-bold text-gray-900">{row.type}</span>
                 </div>
                 <span className="text-[11px] md:text-sm text-gray-600 text-center">{row.area}</span>
+                <span className="text-[11px] md:text-sm text-gray-600 text-center">{row.superBuiltUpArea || "-"}</span>
                 <div className="flex justify-end">
                   <button
                     onClick={() => setShowForm(true)}

@@ -39,6 +39,7 @@ export default function ProjectDetailsPage() {
           pricingRows: data.priceConfigurations?.map((pc: any) => ({
             type: pc.configuration,
             area: pc.carpetArea,
+            superBuiltUpArea: pc.superBuiltUpArea,
             facing: pc.price // or adjust this mapping as necessary
           })) || [],
           configurations: data.priceConfigurations || [],

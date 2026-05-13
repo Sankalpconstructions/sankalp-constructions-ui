@@ -104,6 +104,36 @@ export default function StorySection({ variant = "compact" }: StorySectionProps)
     fetchData();
   }, [variant]);
 
+useEffect(() => {
+  const fetchAboutSections = async () => {
+    try {
+      const baseUrl =
+        process.env.NEXT_PUBLIC_API_URL ||
+        "http://localhost:3001";
+
+      const aboutRes = await fetch(
+        `${baseUrl}/api/about`
+      );
+
+      if (aboutRes.ok) {
+        const aboutData = await aboutRes.json();
+
+        setAboutSections(
+          aboutData.filter(
+            (a: any) => a.status === "Published"
+          )
+        );
+      }
+    } catch (error) {
+      console.error(
+        "Failed to fetch about sections:",
+        error
+      );
+    }
+  };
+
+  fetchAboutSections();
+}, []);
   if (isLoading || !story) return null;
 
   const descriptionToUse = story.description;
@@ -185,84 +215,50 @@ export default function StorySection({ variant = "compact" }: StorySectionProps)
         <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[60vw] h-[60vw] max-w-[800px] bg-gray-50 rounded-full translate-x-1/2 -z-10"></div>
       </section>
 
-      {variant === "full" && (
-        <>
-          <section className="py-12 md:py-16 bg-gray-50 relative">
-            <div className="container mx-auto px-4 lg:px-8 max-w-5xl">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
+     {variant === "full" && (
+  <section className="py-12 md:py-16 bg-gray-50 relative">
+    <div className="container mx-auto px-4 lg:px-8 max-w-5xl">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
 
-                {aboutSections.length > 0 ? (
-                  aboutSections.map((section, index) => (
-                    <motion.div
-                      key={section._id}
-                      initial={{ opacity: 0, y: 20 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.5, delay: index * 0.15 }}
-                      className="bg-white p-6 md:p-8 rounded-xl shadow-lg shadow-gray-200/40 border border-gray-100 flex flex-col"
-                    >
-                      <div className="w-12 h-12 bg-[#711113]/10 rounded-xl flex items-center justify-center mb-4">
-                        {index % 2 === 0 ? <Eye className="w-6 h-6 text-[#711113]" /> : <Target className="w-6 h-6 text-[#711113]" />}
-                      </div>
-                      <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-4">{section.title}</h3>
-                      <div className="text-gray-600 leading-relaxed text-sm md:text-base font-medium whitespace-pre-wrap">
-                        {section.content}
-                      </div>
-                    </motion.div>
-                  ))
-                ) : (
-                  <>
-                    {/* Fallback Vision Card */}
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.5 }}
-                      className="bg-white p-6 md:p-8 rounded-xl shadow-lg shadow-gray-200/40 border border-gray-100 flex flex-col"
-                    >
-                      <div className="w-12 h-12 bg-[#711113]/10 rounded-xl flex items-center justify-center mb-4">
-                        <Eye className="w-6 h-6 text-[#711113]" />
-                      </div>
-                      <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-4">Our Vision</h3>
-                      <p className="text-gray-600 leading-relaxed text-sm md:text-base font-medium italic border-l-4 border-[#711113] pl-4">
-                        "To craft iconic landmarks that elevate lifestyles and redefine luxury living—establishing
-                        Sankalp Constructions as a symbol of legacy, prestige, and excellence in Hyderabad’s real
-                        estate landscape."
-                      </p>
-                    </motion.div>
-                    {/* Fallback Mission Card */}
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.5, delay: 0.15 }}
-                      className="bg-white p-6 md:p-8 rounded-xl shadow-lg shadow-gray-200/40 border border-gray-100 flex flex-col"
-                    >
-                      <div className="w-12 h-12 bg-[#711113]/10 rounded-xl flex items-center justify-center mb-4">
-                        <Target className="w-6 h-6 text-[#711113]" />
-                      </div>
-                      <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-4">Our Mission</h3>
-                      <ul className="space-y-3">
-                        {[
-                          "To deliver exceptional quality that sets new benchmarks in the industry",
-                          "To create architecturally distinctive and aesthetically superior developments",
-                          "To ensure seamless experiences through transparency, trust, and timely execution"
-                        ].map((item, idx) => (
-                          <li key={idx} className="flex items-start gap-3">
-                            <Check className="w-5 h-5 text-[#711113] shrink-0 mt-0.5" />
-                            <span className="text-gray-600 text-sm md:text-base leading-relaxed">{item}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </motion.div>
-                  </>
-                )}
-
-              </div>
+        {aboutSections.map((section, index) => (
+          <motion.div
+            key={section._id}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: index * 0.15 }}
+            className="bg-white p-6 md:p-8 rounded-xl shadow-lg shadow-gray-200/40 border border-gray-100 flex flex-col"
+          >
+            <div className="w-12 h-12 bg-[#711113]/10 rounded-xl flex items-center justify-center mb-4">
+              {index % 2 === 0 ? (
+                <Eye className="w-6 h-6 text-[#711113]" />
+              ) : (
+                <Target className="w-6 h-6 text-[#711113]" />
+              )}
             </div>
-          </section>
-        </>
+
+            <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-4">
+              {section.title}
+            </h3>
+
+            <div className="text-gray-600 leading-relaxed text-sm md:text-base font-medium whitespace-pre-wrap">
+              {section.content}
+            </div>
+          </motion.div>
+        ))}
+
+      </div>
+
+      {aboutSections.length === 0 && (
+        <div className="text-center py-20">
+          <p className="text-gray-400 text-lg">
+            No About sections available
+          </p>
+        </div>
       )}
+    </div>
+  </section>
+)}
 
     </div>
   );

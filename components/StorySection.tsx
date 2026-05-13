@@ -27,7 +27,7 @@ interface StorySectionProps {
 // Animated Counter
 function AnimatedCounter({ value, className }: { value: string; className?: string }) {
   const ref = useRef<HTMLSpanElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-50px" });
+  const isInView = useInView(ref, { once: true });
 
   const numericValue = parseInt(value.replace(/[^0-9]/g, "")) || 0;
   const suffix = value.replace(/[0-9,]/g, "");
@@ -74,7 +74,7 @@ export default function StorySection({ variant = "compact" }: StorySectionProps)
   const [story, setStory] = useState<BrandStoryData | null>(null);
   const [aboutSections, setAboutSections] = useState<AboutSection[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-
+console.log("story",story)
   useEffect(() => {
     const fetchData = async () => {
       try {

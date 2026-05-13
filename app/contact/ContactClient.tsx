@@ -169,8 +169,8 @@ export default function ContactPage() {
       {/* Embedded Map Section */}
       <section className="w-full h-96 relative bg-gray-200 border-t border-gray-300">
         <iframe
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3806.2215286576!2d78.5684347758364!3d17.473010100344583!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb9bca88929947%3A0x647492c30076a596!2sECIL%20Cross%20Roads!5e0!3m2!1sen!2sin!4v1711200000000!5m2!1sen!2sin"
-          width="100%"
+       src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d121795.54401845207!2d78.3585938!3d17.4544125!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb9bad6903b619%3A0x694c0f2553278fdd!2sSankalp%20constructions!5e0!3m2!1sen!2sin!4v1778676386966!5m2!1sen!2sin"
+            width="100%"
           height="100%"
           style={{ border: 0 }}
           allowFullScreen

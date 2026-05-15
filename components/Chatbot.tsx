@@ -121,7 +121,6 @@ export default function Chatbot() {
   };
 
   const handleOptionClick = async (option: string) => {
-    // Add user message
     setMessages(prev => [...prev, { id: String(messageIdCounter++), sender: "user", text: option }]);
 
     const typingId = addTyping();
@@ -129,7 +128,6 @@ export default function Chatbot() {
     setTimeout(async () => {
       let botMsg: Message;
 
-      // Navigation Options
       if (option === "Back to Main Menu" || option === "Browse More Projects") {
         removeTyping(typingId);
         goToMainMenu();
@@ -145,7 +143,7 @@ export default function Chatbot() {
           text: "Which configuration would you like?",
           options: [...bhkOptions, "Back to Main Menu"]
         };
-      } 
+      }
       else if (option === "Browse Villas") {
         botMsg = {
           id: String(messageIdCounter++),
@@ -153,7 +151,7 @@ export default function Chatbot() {
           text: "Choose your budget range for Villas:",
           options: ["Under 1.5 CR - 2.0 CR", "Under 2.0 CR - 2.5 CR", "Under 2.5 CR - 3.0 CR", "Back to Main Menu"]
         };
-      } 
+      }
       else if (option === "Browse Commercial") {
         botMsg = {
           id: String(messageIdCounter++),
@@ -161,7 +159,7 @@ export default function Chatbot() {
           text: "Choose your budget range for Commercial:",
           options: ["Under 1.5 CR - 2.5 CR", "Under 2.5 CR - 3.5 CR", "Under 3.5 CR - 5.0 CR", "Under 5.0 CR - 10.0 CR", "Back to Main Menu"]
         };
-      } 
+      }
       // BHK Selection
       else if (option.includes("BHK") || option.includes("Studio") || option.includes("Penthouse")) {
         const projects = await fetchFilteredProjects("apartment", option);
@@ -171,7 +169,7 @@ export default function Chatbot() {
           text: projects.length > 0 ? `Here are our ${option} projects:` : `No ${option} projects available currently.`,
           options: projects.length > 0 ? projects.map((p: any) => p.title) : ["Back to Main Menu"]
         };
-      } 
+      }
       // Price Range Selection
       else if (option.includes("CR")) {
         const type = option.toLowerCase().includes("villa") ? "villa" : "commercial";
@@ -183,7 +181,7 @@ export default function Chatbot() {
           text: projects.length > 0 ? "Here are matching projects in your budget:" : "No projects found in this range.",
           options: projects.length > 0 ? projects.map((p: any) => p.title) : ["Back to Main Menu"]
         };
-      } 
+      }
       // Project Selected
       else if (option !== "Contact Us" && option !== "Book Site Visit") {
         botMsg = {
@@ -192,7 +190,7 @@ export default function Chatbot() {
           text: `You selected **${option}**.`,
           options: ["Book Site Visit", "Browse More Projects", "Back to Main Menu"]
         };
-      } 
+      }
       // Lead Form
       else if (option === "Book Site Visit" || option === "Contact Us") {
         botMsg = {
@@ -204,8 +202,8 @@ export default function Chatbot() {
               <form onSubmit={(e) => handleLeadSubmit(e, option)} className="space-y-3">
                 <input name="name" required placeholder="Full Name" className="w-full p-3 border rounded-lg text-sm" disabled={isSubmitting} />
                 <input name="phone" required placeholder="Phone Number" type="tel" className="w-full p-3 border rounded-lg text-sm" disabled={isSubmitting} />
-                <button 
-                  type="submit" 
+                <button
+                  type="submit"
                   disabled={isSubmitting}
                   className="w-full bg-[#29B1D2] hover:bg-[#711113] text-white py-3 rounded-lg font-bold text-sm"
                 >
@@ -215,7 +213,7 @@ export default function Chatbot() {
             </div>
           )
         };
-      } 
+      }
       else {
         botMsg = {
           id: String(messageIdCounter++),
@@ -321,7 +319,7 @@ export default function Chatbot() {
               ))}
               <div ref={messagesEndRef} />
             </div>
-             <div className="p-4 border-t bg-white text-center text-xs text-gray-500">
+            <div className="p-4 border-t bg-white text-center text-xs text-gray-500">
               Select an option above to continue
             </div>
           </motion.div>

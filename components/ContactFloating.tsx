@@ -33,7 +33,7 @@ export default function ContactFloating() {
         >
           <Phone className="w-4 h-4 md:w-[22px] md:h-[22px]" />
         </a>
-        
+
         <div className="w-6 md:w-8 h-[1px] bg-white/40 my-0.5 md:my-1" />
 
         <a

@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef, useEffect,useState } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { motion, useInView, animate } from "framer-motion";
 import Link from "next/link";
 import { ArrowRight, Check, Target, Eye, ShieldCheck, Gem, Users, ArrowUpRight } from "lucide-react";
@@ -74,12 +74,12 @@ export default function StorySection({ variant = "compact" }: StorySectionProps)
   const [story, setStory] = useState<BrandStoryData | null>(null);
   const [aboutSections, setAboutSections] = useState<AboutSection[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-console.log("story",story)
+  console.log("story", story)
   useEffect(() => {
     const fetchData = async () => {
       try {
         const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
-        
+
         // Fetch Brand Story
         const storyRes = await fetch(`${baseUrl}/api/brand-story`);
         if (storyRes.ok) {
@@ -104,36 +104,36 @@ console.log("story",story)
     fetchData();
   }, [variant]);
 
-useEffect(() => {
-  const fetchAboutSections = async () => {
-    try {
-      const baseUrl =
-        process.env.NEXT_PUBLIC_API_URL ||
-        "http://localhost:3001";
+  useEffect(() => {
+    const fetchAboutSections = async () => {
+      try {
+        const baseUrl =
+          process.env.NEXT_PUBLIC_API_URL ||
+          "http://localhost:3001";
 
-      const aboutRes = await fetch(
-        `${baseUrl}/api/about`
-      );
+        const aboutRes = await fetch(
+          `${baseUrl}/api/about`
+        );
 
-      if (aboutRes.ok) {
-        const aboutData = await aboutRes.json();
+        if (aboutRes.ok) {
+          const aboutData = await aboutRes.json();
 
-        setAboutSections(
-          aboutData.filter(
-            (a: any) => a.status === "Published"
-          )
+          setAboutSections(
+            aboutData.filter(
+              (a: any) => a.status === "Published"
+            )
+          );
+        }
+      } catch (error) {
+        console.error(
+          "Failed to fetch about sections:",
+          error
         );
       }
-    } catch (error) {
-      console.error(
-        "Failed to fetch about sections:",
-        error
-      );
-    }
-  };
+    };
 
-  fetchAboutSections();
-}, []);
+    fetchAboutSections();
+  }, []);
   if (isLoading || !story) return null;
 
   const descriptionToUse = story.description;
@@ -142,9 +142,9 @@ useEffect(() => {
     <div className={variant === "full" ? "bg-[#FAF9F6] selection:bg-[#711113] selection:text-white" : ""}>
 
       {/* BASE SHARED SECTION */}
-      <section id="story" className="py-8 md:py-16 bg-white relative overflow-hidden">
+      <section id="story" className="py-10 md:py-16 bg-white relative overflow-hidden">
         <div className="container mx-auto px-4 lg:px-8 z-10 relative">
-          <div className="text-center mb-12">
+          <div className="text-center mb-6 md:mb-12">
             <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-[#711113] mb-3">
               {story.title}
             </h2>
@@ -215,50 +215,50 @@ useEffect(() => {
         <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[60vw] h-[60vw] max-w-[800px] bg-gray-50 rounded-full translate-x-1/2 -z-10"></div>
       </section>
 
-     {variant === "full" && (
-  <section className="py-12 md:py-16 bg-gray-50 relative">
-    <div className="container mx-auto px-4 lg:px-8 max-w-5xl">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
+      {variant === "full" && (
+        <section className="py-12 md:py-16 bg-gray-50 relative">
+          <div className="container mx-auto px-4 lg:px-8 max-w-5xl">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
 
-        {aboutSections.map((section, index) => (
-          <motion.div
-            key={section._id}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: index * 0.15 }}
-            className="bg-white p-6 md:p-8 rounded-xl shadow-lg shadow-gray-200/40 border border-gray-100 flex flex-col"
-          >
-            <div className="w-12 h-12 bg-[#711113]/10 rounded-xl flex items-center justify-center mb-4">
-              {index % 2 === 0 ? (
-                <Eye className="w-6 h-6 text-[#711113]" />
-              ) : (
-                <Target className="w-6 h-6 text-[#711113]" />
-              )}
+              {aboutSections.map((section, index) => (
+                <motion.div
+                  key={section._id}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: index * 0.15 }}
+                  className="bg-white p-6 md:p-8 rounded-xl shadow-lg shadow-gray-200/40 border border-gray-100 flex flex-col"
+                >
+                  <div className="w-12 h-12 bg-[#711113]/10 rounded-xl flex items-center justify-center mb-4">
+                    {index % 2 === 0 ? (
+                      <Eye className="w-6 h-6 text-[#711113]" />
+                    ) : (
+                      <Target className="w-6 h-6 text-[#711113]" />
+                    )}
+                  </div>
+
+                  <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-4">
+                    {section.title}
+                  </h3>
+
+                  <div className="text-gray-600 leading-relaxed text-sm md:text-base font-medium whitespace-pre-wrap">
+                    {section.content}
+                  </div>
+                </motion.div>
+              ))}
+
             </div>
 
-            <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-4">
-              {section.title}
-            </h3>
-
-            <div className="text-gray-600 leading-relaxed text-sm md:text-base font-medium whitespace-pre-wrap">
-              {section.content}
-            </div>
-          </motion.div>
-        ))}
-
-      </div>
-
-      {aboutSections.length === 0 && (
-        <div className="text-center py-20">
-          <p className="text-gray-400 text-lg">
-            No About sections available
-          </p>
-        </div>
+            {aboutSections.length === 0 && (
+              <div className="text-center py-20">
+                <p className="text-gray-400 text-lg">
+                  No About sections available
+                </p>
+              </div>
+            )}
+          </div>
+        </section>
       )}
-    </div>
-  </section>
-)}
 
     </div>
   );

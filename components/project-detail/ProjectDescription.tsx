@@ -15,7 +15,7 @@ interface Props {
 
 export default function ProjectDescription({ description, highlights }: Props) {
   return (
-    <section className="py-10 md:py-24 bg-white border-b border-gray-100">
+    <section className="py-10 md:py-16 bg-white border-b border-gray-100">
       <div className="container mx-auto px-0">
         <span className="uppercase tracking-[0.25em] text-[10px] md:text-xs text-[#711113] font-bold mb-3 block">About the project</span>
         <h2 className="text-2xl md:text-4xl font-extrabold text-gray-900 mb-6 leading-tight">Overview</h2>

@@ -51,7 +51,7 @@ export default function ProjectPriceTable({ projectTitle, rows }: Props) {
   };
 
   return (
-    <section className="py-10 md:py-24 bg-gray-50 border-t border-gray-100">
+    <section className="py-10 md:py-16 bg-gray-50 border-t border-gray-100">
       <div className="container mx-auto px-0 md:px-4">
         <div className="text-center mb-8">
           <span className="uppercase tracking-[0.25em] text-[10px] md:text-xs text-[#711113] font-bold mb-3 block">Pricing</span>

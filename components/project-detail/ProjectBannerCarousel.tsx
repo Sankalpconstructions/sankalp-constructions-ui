@@ -52,7 +52,7 @@ export default function ProjectBannerCarousel({ slides, title, location, type }:
           <span className="inline-block bg-[#F5C33C] text-[#711113] px-3 py-1 font-bold text-xs uppercase tracking-widest rounded mb-4">
             {type}
           </span>
-          <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold uppercase tracking-wide drop-shadow-xl mb-2">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold uppercase tracking-wide drop-shadow-xl mb-2">
             {title}
           </h1>
           <p className="text-gray-300 text-lg">{location}</p>

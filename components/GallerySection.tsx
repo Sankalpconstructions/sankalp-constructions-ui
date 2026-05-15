@@ -59,7 +59,7 @@ export default function GallerySection() {
   };
 
   return (
-    <section id="gallery" className="py-24 bg-white text-gray-900 overflow-hidden">
+    <section id="gallery" className="py-10 md:py-16 bg-white text-gray-900 overflow-hidden">
       <div className="container mx-auto px-4 lg:px-8 relative">
         
         <div className="text-center max-w-2xl mx-auto mb-16">

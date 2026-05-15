@@ -72,7 +72,7 @@ export default function FloorPlansSection({ projectTitle, overviewImg, floorPlan
   if (floorPlansCount === 0 && !overviewImg) return null;
 
   return (
-    <section id="floorplans" className="py-10 md:py-24 bg-gray-50 border-t border-gray-100">
+    <section id="floorplans" className="py-10 md:py-16 bg-gray-50 border-t border-gray-100">
       <div className="container mx-auto px-4 lg:px-8">
 
         {/* Header */}

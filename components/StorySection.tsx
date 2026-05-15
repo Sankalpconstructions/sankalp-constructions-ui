@@ -112,7 +112,7 @@ export default function StorySection({ variant = "compact" }: StorySectionProps)
     <div className={variant === "full" ? "bg-[#FAF9F6] selection:bg-[#711113] selection:text-white" : ""}>
 
       {/* BASE SHARED SECTION */}
-      <section id="story" className="py-8 md:py-24 bg-white relative overflow-hidden">
+      <section id="story" className="py-8 md:py-16 bg-white relative overflow-hidden">
         <div className="container mx-auto px-4 lg:px-8 z-10 relative">
           <div className="text-center mb-12">
             <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-[#711113] mb-3">
@@ -155,7 +155,7 @@ export default function StorySection({ variant = "compact" }: StorySectionProps)
                 {story.subtitle}
               </h3>
 
-              <p className="text-gray-600 mb-8 whitespace-pre-line text-lg leading-relaxed">
+              <p className="text-gray-600 mb-8 whitespace-pre-line text-sm md:text-base leading-relaxed">
                 {descriptionToUse}
               </p>
 

@@ -19,7 +19,7 @@ export default function RelatedProjects({ projects }: Props) {
   if (!projects.length) return null;
 
   return (
-    <section className="py-16 md:py-24 bg-white border-t border-gray-100">
+    <section className="py-10 md:py-16 bg-white border-t border-gray-100">
       <div className="container mx-auto px-4 lg:px-8">
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-12">
           <div>

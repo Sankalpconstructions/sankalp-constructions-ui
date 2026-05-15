@@ -44,9 +44,11 @@ export default function HeroBanner() {
   }, []);
 
   const [index, setIndex] = useState(0);
+  const [direction, setDirection] = useState(1); // 1 = forward, -1 = backward
   const imageTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const advance = useCallback(() => {
+    setDirection(1);
     setIndex((prev) => (prev + 1) % slides.length);
   }, [slides.length]);
 
@@ -68,10 +70,19 @@ export default function HeroBanner() {
     };
   }, [index, advance, slides]);
 
-  const nextSlide = () => advance();
+  const nextSlide = () => {
+    setDirection(1);
+    setIndex((prev) => (prev + 1) % slides.length);
+  };
 
   const prevSlide = () => {
+    setDirection(-1);
     setIndex((prev) => (prev === 0 ? slides.length - 1 : prev - 1));
+  };
+
+  const goToSlide = (i: number) => {
+    setDirection(i > index ? 1 : -1);
+    setIndex(i);
   };
 
   const handleScrollTo = (id: string) => {
@@ -84,12 +95,28 @@ export default function HeroBanner() {
 
   const current = slides[index] || slides[0];
 
+  const slideVariants = {
+    enter: (dir: number) => ({ opacity: 0, x: dir > 0 ? 80 : -80 }),
+    center: { opacity: 1, x: 0 },
+    exit: (dir: number) => ({ opacity: 0, x: dir > 0 ? -80 : 80 }),
+  };
+
   return (
     <section
       id="hero"
-      className="relative w-full h-[50vh] md:h-screen min-h-[400px] md:min-h-[600px] overflow-hidden flex items-center justify-center bg-black"
+      className="relative w-full overflow-hidden flex items-center justify-center bg-black"
+      style={{ height: "450px" }}
     >
-      <AnimatePresence mode="wait">
+      <style>{`
+        @media (min-width: 768px) {
+          #hero {
+            height: 100vh !important;
+            min-height: 600px !important;
+          }
+        }
+      `}</style>
+
+      <AnimatePresence mode="wait" custom={direction}>
         {current.type === "video" ? (
           <motion.video
             key={`video-${index}`}
@@ -101,52 +128,59 @@ export default function HeroBanner() {
             onError={() => {
               setTimeout(advance, 3000);
             }}
-            initial={{ opacity: 0, scale: 1.05 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 1.2 }}
-            className="absolute inset-0 w-full h-full object-cover"
+            custom={direction}
+            variants={slideVariants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{ duration: 0.45, ease: [0.25, 0.46, 0.45, 0.94] }}
+            className="absolute inset-0 w-full h-full object-contain md:object-cover"
           />
         ) : (
           <motion.img
             key={`image-${index}`}
             src={current.src}
             alt="Hero Background"
-            initial={{ opacity: 0, scale: 1.05 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 1.2 }}
-            className="absolute inset-0 w-full h-full object-cover"
+            custom={direction}
+            variants={slideVariants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{ duration: 0.45, ease: [0.25, 0.46, 0.45, 0.94] }}
+            className="absolute inset-0 w-full h-full object-contain md:object-cover"
           />
         )}
       </AnimatePresence>
 
       <div className="absolute inset-0 bg-black/30 z-0 pointer-events-none" />
 
+      {/* Prev Button */}
       <button
         onClick={prevSlide}
-        className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-white hover:bg-white/10 hover:border-[#F5C33C] hover:text-[#F5C33C] transition-all hidden sm:flex"
+        className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-white hover:bg-white/10 hover:border-[#F5C33C] hover:text-[#F5C33C] transition-all"
       >
         <ChevronLeft size={20} />
       </button>
 
+      {/* Next Button */}
       <button
         onClick={nextSlide}
-        className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-white hover:bg-white/10 hover:border-[#F5C33C] hover:text-[#F5C33C] transition-all hidden sm:flex"
+        className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-white hover:bg-white/10 hover:border-[#F5C33C] hover:text-[#F5C33C] transition-all"
       >
         <ChevronRight size={20} />
       </button>
 
       {/* Dots */}
-      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-20 hidden md:flex gap-3">
+      <div className="absolute bottom-6 md:bottom-10 left-1/2 -translate-x-1/2 z-20 flex gap-2 items-center">
         {slides.map((_, i) => (
           <button
             key={i}
-            onClick={() => setIndex(i)}
-            className={`w-2 h-2 rounded-full transition-all duration-300 ${i === index
-              ? "bg-[#F5C33C] scale-150 shadow-[0_0_10px_rgba(245,195,60,0.5)]"
-              : "bg-white/40 hover:bg-white"
-              }`}
+            onClick={() => goToSlide(i)}
+            className={`h-2 rounded-full transition-all duration-300 ${
+              i === index
+                ? "bg-[#F5C33C] w-8 shadow-[0_0_10px_rgba(245,195,60,0.6)]"
+                : "bg-white/40 hover:bg-white w-2"
+            }`}
           />
         ))}
       </div>
@@ -154,7 +188,7 @@ export default function HeroBanner() {
       <motion.div
         animate={{ y: [0, 8, 0] }}
         transition={{ repeat: Infinity, duration: 2 }}
-        className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center text-white/60 cursor-pointer lg:hidden z-20"
+        className="absolute bottom-16 md:bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center text-white/60 cursor-pointer lg:hidden z-20"
         onClick={() => handleScrollTo("story")}
       >
         <span className="text-[9px] uppercase tracking-[0.3em]">

@@ -1,5 +1,5 @@
 "use client";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import { MapPin, ChevronRight, ChevronLeft } from "lucide-react";
 import Link from "next/link";
@@ -39,68 +39,80 @@ export default function ProjectsShowcase() {
     fetchProjects();
   }, []);
 
-  // Use the fetched projects directly; avoid duplicating the array which
-  // caused the same project to appear multiple times on the UI.
-  const duplicatedProjects = projects;
+  // Duplicate projects to create an infinite scroll illusion
+  // Using 4 sets ensures we have enough items for very wide screens and seamless wrapping
+  const duplicatedProjects = projects.length > 0 ? [...projects, ...projects, ...projects, ...projects] : [];
 
-  useEffect(() => {
-    let animationId: number;
-    const scroll = () => {
-      if (scrollRef.current && !isHovered && !isManualScrolling) {
-        scrollRef.current.scrollLeft += 1;
+  const handleScrollClick = useCallback((direction: "left" | "right") => {
+    if (!scrollRef.current || projects.length === 0) return;
+    setIsManualScrolling(true);
 
-        const { scrollLeft, scrollWidth } = scrollRef.current;
-        if (scrollLeft >= scrollWidth / 2) {
-          scrollRef.current.scrollLeft -= scrollWidth / 2;
-        }
-      }
-      animationId = requestAnimationFrame(scroll);
-    };
-
-    animationId = requestAnimationFrame(scroll);
-    return () => cancelAnimationFrame(animationId);
-  }, [isHovered, isManualScrolling]);
-
-  useEffect(() => {
-    if (scrollRef.current) {
-      const { scrollWidth } = scrollRef.current;
-      scrollRef.current.scrollLeft = scrollWidth / 4;
+    const container = scrollRef.current;
+    const firstCard = container.firstElementChild as HTMLElement;
+    if (!firstCard) {
+      setIsManualScrolling(false);
+      return;
     }
-  }, []);
 
-  const handleScrollClick = (direction: "left" | "right") => {
-    if (scrollRef.current) {
-      const { scrollLeft, scrollWidth } = scrollRef.current;
+    const gap = parseFloat(window.getComputedStyle(container).gap) || 0;
+    const cardWidth = firstCard.offsetWidth + gap;
+    const singleSetWidth = cardWidth * projects.length;
 
-      if (direction === "left" && scrollLeft <= 0) {
-        scrollRef.current.scrollLeft += scrollWidth / 2;
-      } else if (direction === "right" && scrollLeft >= scrollWidth / 2) {
-        scrollRef.current.scrollLeft -= scrollWidth / 2;
-      }
+    // Wrap around logic to keep scroll in the middle sets invisibly
+    if (direction === "right" && container.scrollLeft >= singleSetWidth * 2 - 10) {
+      container.scrollLeft -= singleSetWidth;
+    } else if (direction === "left" && container.scrollLeft <= 10) {
+      container.scrollLeft += singleSetWidth;
+    }
 
-      setIsManualScrolling(true);
-
-      let scrollAmount = 400;
-      if (scrollRef.current.firstElementChild) {
-        const firstCard = scrollRef.current.firstElementChild as HTMLElement;
-        const parentStyle = window.getComputedStyle(scrollRef.current);
-        const gap = parseFloat(parentStyle.gap) || 0;
-        scrollAmount = firstCard.offsetWidth + gap;
-      }
-
-      scrollRef.current.scrollBy({
-        left: direction === "right" ? scrollAmount : -scrollAmount,
+    requestAnimationFrame(() => {
+      container.scrollBy({
+        left: direction === "right" ? cardWidth : -cardWidth,
         behavior: "smooth",
       });
 
       setTimeout(() => {
         setIsManualScrolling(false);
-      }, 600);
+      }, 600); // Wait for smooth scroll to finish
+    });
+  }, [projects.length]);
+
+  // Set initial scroll position to the second set to allow immediate left scrolling
+  useEffect(() => {
+    if (scrollRef.current && projects.length > 0) {
+      const container = scrollRef.current;
+      const firstCard = container.firstElementChild as HTMLElement;
+      if (firstCard) {
+        const gap = parseFloat(window.getComputedStyle(container).gap) || 0;
+        const cardWidth = firstCard.offsetWidth + gap;
+        container.scrollLeft = cardWidth * projects.length;
+      }
     }
-  };
+  }, [projects]);
+
+  // Infinite loop Slide -> Stop -> Slide -> Stop
+  useEffect(() => {
+    if (projects.length === 0 || loading) return;
+
+    let intervalId: ReturnType<typeof setInterval>;
+
+    const startCarousel = () => {
+      intervalId = setInterval(() => {
+        handleScrollClick("right");
+      }, 3500); // 3.5 seconds pause between transitions
+    };
+
+    if (!isHovered && !isManualScrolling) {
+      startCarousel();
+    }
+
+    return () => {
+      if (intervalId) clearInterval(intervalId);
+    };
+  }, [projects.length, loading, isHovered, isManualScrolling, handleScrollClick]);
 
   return (
-    <section id="projects" className="py-8 md:py-24 bg-gray-50 text-gray-900 overflow-hidden">
+    <section id="projects" className="py-8 md:py-16 bg-gray-50 text-gray-900 overflow-hidden">
       <div className="container mx-auto px-4 lg:px-8">
 
         <div className="flex flex-col md:flex-row justify-between md:items-end gap-6 mb-6 md:mb-12">
@@ -146,7 +158,7 @@ export default function ProjectsShowcase() {
         >
           <div
             ref={scrollRef}
-            className="flex gap-4 md:gap-8 overflow-x-auto pb-8 scrollbar-hide [&::-webkit-scrollbar]:hidden"
+            className="flex gap-4 md:gap-8 overflow-x-auto pb-8 scrollbar-hide snap-x snap-mandatory [&::-webkit-scrollbar]:hidden"
             style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
           >
             {loading ? (
@@ -157,7 +169,7 @@ export default function ProjectsShowcase() {
               duplicatedProjects.map((project, idx) => (
               <div
                 key={`${project.id}-${idx}`}
-                className="w-[85vw] md:w-[400px] shrink-0"
+                className="w-[85vw] md:w-[400px] shrink-0 snap-start"
               >
                 <div className="relative h-[300px] md:h-[400px] rounded-lg overflow-hidden shadow-xl group/card">
 

@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Plus, Minus } from "lucide-react";
+import { Plus, Minus, ChevronDown, ChevronUp } from "lucide-react";
 
 interface FAQ {
   _id: string;
@@ -9,8 +9,11 @@ interface FAQ {
   answer: string;
 }
 
+const INITIAL_VISIBLE = 6;
+
 export default function FAQSection() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
+  const [showAll, setShowAll] = useState(false);
 
   const [faqs, setFaqs] = useState<FAQ[]>([]);
   const [loading, setLoading] = useState(true);
@@ -38,10 +41,13 @@ export default function FAQSection() {
     setOpenIndex(openIndex === idx ? null : idx);
   };
 
+  const visibleFaqs = showAll ? faqs : faqs.slice(0, INITIAL_VISIBLE);
+  const hasMore = faqs.length > INITIAL_VISIBLE;
+
   return (
     <section
       id="faq"
-      className="py-12 md:py-24 bg-white text-gray-900 overflow-hidden border-t border-gray-200"
+      className="py-12 md:py-16 bg-white text-gray-900 overflow-hidden border-t border-gray-200"
     >
       <div className="container mx-auto px-4 lg:px-8 max-w-6xl">
         {/* Heading */}
@@ -67,51 +73,79 @@ export default function FAQSection() {
                Loading FAQs...
              </div>
           ) : faqs.length > 0 ? (
-            faqs.map((faq, idx) => (
-            <motion.div
-              key={faq._id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: idx * 0.05 }}
-              className={`rounded-lg transition-all duration-300 ${openIndex === idx
-                ? "bg-white border border-[#29B1D2]"
-                : "bg-gray-100 border border-transparent"
-                }`}
-            >
-              <button
-                onClick={() => toggleFAQ(idx)}
-                className="w-full p-5 md:p-6 flex items-center justify-between text-left"
+            <>
+              {visibleFaqs.map((faq, idx) => (
+              <motion.div
+                key={faq._id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.05 }}
+                className={`rounded-lg transition-all duration-300 ${openIndex === idx
+                  ? "bg-white border border-[#29B1D2]"
+                  : "bg-gray-100 border border-transparent"
+                  }`}
               >
-                <h3 className="text-base md:text-lg font-semibold text-gray-900 pr-4">
-                  {faq.question}
-                </h3>
+                <button
+                  onClick={() => toggleFAQ(idx)}
+                  className="w-full p-5 md:p-6 flex items-center justify-between text-left"
+                >
+                  <h3 className="text-base md:text-lg font-semibold text-gray-900 pr-4">
+                    {faq.question}
+                  </h3>
 
-                <div className="shrink-0 text-gray-900">
-                  {openIndex === idx ? (
-                    <Minus size={20} strokeWidth={2} />
-                  ) : (
-                    <Plus size={20} strokeWidth={2} />
+                  <div className="shrink-0 text-gray-900">
+                    {openIndex === idx ? (
+                      <Minus size={20} strokeWidth={2} />
+                    ) : (
+                      <Plus size={20} strokeWidth={2} />
+                    )}
+                  </div>
+                </button>
+
+                <AnimatePresence>
+                  {openIndex === idx && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <div className="px-5 md:px-6 pb-6 text-gray-600 text-sm md:text-base leading-relaxed">
+                        {faq.answer}
+                      </div>
+                    </motion.div>
                   )}
-                </div>
-              </button>
+                </AnimatePresence>
+              </motion.div>
+            ))}
 
-              <AnimatePresence>
-                {openIndex === idx && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.3 }}
+              {/* View More / View Less Button */}
+              {hasMore && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="flex justify-center pt-4"
+                >
+                  <button
+                    onClick={() => setShowAll((prev) => !prev)}
+                    className="inline-flex items-center gap-2 px-8 py-3 rounded-md border-2 border-[#711113] text-[#711113] font-semibold text-sm md:text-base hover:bg-[#711113] hover:text-white transition-all duration-300 group"
                   >
-                    <div className="px-5 md:px-6 pb-6 text-gray-600 text-sm md:text-base leading-relaxed">
-                      {faq.answer}
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.div>
-          ))
+                    {showAll ? (
+                      <>
+                        View Less
+                        <ChevronUp size={18} className="group-hover:-translate-y-0.5 transition-transform" />
+                      </>
+                    ) : (
+                      <>
+                        View More
+                        <ChevronDown size={18} className="group-hover:translate-y-0.5 transition-transform" />
+                      </>
+                    )}
+                  </button>
+                </motion.div>
+              )}
+            </>
           ) : (
             <div className="py-10 text-center text-gray-500 font-bold uppercase tracking-widest text-sm">
                No FAQs Available

@@ -30,7 +30,7 @@ export default function ProjectGallery({ images = [], projectTitle }: Props) {
   }).filter(img => !!img.src);
 
   return (
-    <section id="gallery" className="py-16 md:py-24 bg-white border-t border-gray-100">
+    <section id="gallery" className="py-10 md:py-16 bg-white border-t border-gray-100">
       <div className="container mx-auto px-4 lg:px-8">
         <div className="text-center mb-12">
           <span className="uppercase tracking-[0.25em] text-[10px] md:text-xs text-[#711113] font-bold mb-3 block flex items-center justify-center gap-2">

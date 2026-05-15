@@ -64,6 +64,7 @@ function ProjectOverviewCard({
       label: "RERA ID",
       value: rera,
       mono: true,
+      blur: true,
     },
   ];
 
@@ -99,7 +100,7 @@ function ProjectOverviewCard({
 
       {/* Rows */}
       <div className="px-5 py-2 divide-y divide-gray-50 bg-white">
-        {items.map(({ icon, label, value, badge, mono }) => (
+        {items.map(({ icon, label, value, badge, mono, blur }) => (
           <div
             key={label}
             className="flex items-center justify-between gap-3 py-3.5"
@@ -125,7 +126,8 @@ function ProjectOverviewCard({
                   className={`text-right font-bold text-gray-900 line-clamp-1 ${mono
                     ? "font-mono text-[10px] text-[#711113] bg-[#711113]/5 px-2 py-1 rounded-md"
                     : "text-sm"
-                    }`}
+                    } ${blur ? "blur-[4px] select-none hover:blur-none transition-all duration-300 cursor-pointer" : ""}`}
+                  title={blur ? "Hover to reveal" : undefined}
                 >
                   {value}
                 </span>

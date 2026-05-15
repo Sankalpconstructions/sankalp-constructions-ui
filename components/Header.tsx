@@ -137,12 +137,12 @@ export default function Header() {
           <Image
             src={sankalpLogo}
             alt="Sankalp Logo"
-            width={200}
-            height={200}
+            width={160}
+            height={160}
             priority
             className={`w-auto object-contain transition-all duration-700 ${isScrolled
-              ? "h-15 md:h-18"
-              : "h-15 md:h-18"
+              ? "h-12 md:h-14"
+              : "h-12 md:h-14"
               }`}
           />
         </Link>

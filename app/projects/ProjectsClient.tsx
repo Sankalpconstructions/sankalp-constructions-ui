@@ -146,15 +146,30 @@ export default function AllProjectsPage() {
         {/* Projects Grid */}
         <AnimatePresence mode="popLayout">
           {loading ? (
-             <motion.div
-               key="loading"
-               initial={{ opacity: 0 }}
-               animate={{ opacity: 1 }}
-               exit={{ opacity: 0 }}
-               className="py-24 text-center text-gray-400 text-sm uppercase font-bold tracking-widest"
-             >
-               Loading Projects...
-             </motion.div>
+            <motion.div
+              key="loading"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16"
+            >
+              {[1, 2, 3, 4, 5, 6].map((index) => (
+                <div
+                  key={index}
+                  className="bg-white rounded-2xl shadow-md overflow-hidden flex flex-col border border-gray-100 animate-pulse"
+                >
+                  <div className="h-60 bg-gray-200" />
+                  <div className="p-6 flex-1 flex flex-col justify-between">
+                    <div>
+                      <div className="h-3 bg-gray-200 rounded w-1/3 mb-4" />
+                      <div className="h-5 bg-gray-200 rounded w-3/4 mb-3" />
+                      <div className="h-3 bg-gray-200 rounded w-1/2" />
+                    </div>
+                    <div className="mt-5 h-10 bg-gray-200 rounded-xl" />
+                  </div>
+                </div>
+              ))}
+            </motion.div>
           ) : filteredProjects.length > 0 ? (
             <motion.div
               layout

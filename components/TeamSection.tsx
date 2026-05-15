@@ -57,7 +57,6 @@ export default function TeamSection() {
           >
             Meet Our Team
           </motion.h2>
-          <div className="w-16 md:w-24 h-1 bg-[#29B1D2] mx-auto mt-3 md:mt-4 mb-5 md:mb-6"></div>
           <p className="text-gray-500 text-xs md:text-base px-2 leading-relaxed">
             The visionary leaders and dedicated experts behind Sankalp Constructions&apos; success.
           </p>

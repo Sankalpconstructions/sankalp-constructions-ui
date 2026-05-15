@@ -21,7 +21,7 @@ export default function ProjectDescription({ description, highlights }: Props) {
     <section className="pt-6 md:pt-0 py-10 lg:py-12">
       <div className="container mx-auto px-0">
         <h2 className="text-2xl md:text-3xl font-extrabold text-gray-900 mb-4 leading-tight">Property Description</h2>
-        <div className="max-w-3xl mb-10">
+        <div className="mb-10">
           <p
             className="text-gray-600 text-[15px] md:text-md leading-relaxed transition-all duration-300"
             style={

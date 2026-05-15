@@ -17,7 +17,6 @@ interface Props {
 export default function ProjectGallery({ images = [], projectTitle }: Props) {
   const [activeIndex, setActiveIndex] = useState(0);
 
-  // Map raw strings or objects to the required format
   const formattedImages: GalleryImage[] = images.map((img, i) => {
     if (typeof img === 'string') {
       return { src: img, title: `${projectTitle || "Project"} View ${i + 1}`, description: "" };
@@ -29,7 +28,6 @@ export default function ProjectGallery({ images = [], projectTitle }: Props) {
     };
   }).filter(img => !!img.src);
 
-  // Reset to 0 if images change
   useEffect(() => {
     if (activeIndex >= formattedImages.length) {
       setActiveIndex(0);
@@ -41,14 +39,13 @@ export default function ProjectGallery({ images = [], projectTitle }: Props) {
       <div className="container mx-auto px-0">
 
         {formattedImages.length > 0 ? (
-          <div className="flex flex-col-reverse lg:flex-row gap-4 h-[400px] sm:h-[500px] lg:h-[600px]">
-            {/* Left side: Thumbnails */}
-            <div className="w-full lg:w-48 xl:w-56 flex flex-row lg:flex-col gap-3 overflow-x-auto lg:overflow-y-auto no-scrollbar pt-2 pb-2 lg:pt-0 lg:pb-0 pr-0 lg:pr-2">
+          <div className="flex flex-col-reverse lg:flex-row gap-2 sm:gap-4 h-[280px] sm:h-[400px] md:h-[500px] lg:h-[600px]">
+            <div className="w-full lg:w-48 xl:w-56 flex flex-row lg:flex-col gap-2 sm:gap-3 overflow-x-auto lg:overflow-y-auto no-scrollbar pt-2 pb-2 lg:pt-0 lg:pb-0 pr-0 lg:pr-2">
               {formattedImages.map((img, i) => (
                 <button
                   key={i}
                   onClick={() => setActiveIndex(i)}
-                  className={`relative flex-shrink-0 w-28 lg:w-full aspect-[4/3] rounded-lg overflow-hidden border-2 transition-all duration-300 ${activeIndex === i
+                  className={`relative flex-shrink-0 w-20 sm:w-28 lg:w-full aspect-[4/3] rounded-lg overflow-hidden border-2 transition-all duration-300 ${activeIndex === i
                     ? "border-[#29B1D2] ring-4 ring-[#29B1D2]/10 shadow-md"
                     : "border-gray-200 opacity-70 hover:opacity-100 hover:border-gray-300"
                     }`}
@@ -62,7 +59,6 @@ export default function ProjectGallery({ images = [], projectTitle }: Props) {
               ))}
             </div>
 
-            {/* Right side: Active Image */}
             <div className="flex-1 relative rounded-2xl overflow-hidden bg-gray-100 border border-gray-200 shadow-sm">
               <AnimatePresence mode="wait">
                 <motion.img
@@ -77,7 +73,6 @@ export default function ProjectGallery({ images = [], projectTitle }: Props) {
                 />
               </AnimatePresence>
 
-              {/* Optional overlay for text */}
               <div className="absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
                 <h3 className="text-white text-xl font-bold tracking-wide">
                   {formattedImages[activeIndex]?.title}

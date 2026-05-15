@@ -133,19 +133,29 @@ export default function FloorPlansSection({ projectTitle, overviewImg, floorPlan
                 animate="center"
                 exit="exit"
                 transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-              >
-                <div className="bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden p-4 md:p-8">
-                  {overviewImg ? (
+              >{!hasUnlocked && (
+  <div className="absolute inset-0 bg-black/50 backdrop-blur-[4px] z-20 flex flex-col items-center justify-center">
+    <Lock size={30} className="text-[#F5C33C] mb-3" />
+    <p className="text-white text-[10px] font-black uppercase tracking-widest text-center px-6">
+      Fill form to view master plan
+    </p>
+  </div>
+)}
+<div className="relative bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden p-4 md:p-8">    
+  <div className={hasUnlocked ? "" : "filter blur-[6px] grayscale"}>             
+    {overviewImg ? (
                     <img
                       src={overviewImg}
                       alt="Master Plan"
                       className="w-full max-h-[520px] object-contain rounded-xl bg-gray-50"
                     />
+                   
                   ) : (
                     <div className="py-20 text-center text-gray-400">
                       <p className="text-xs font-black uppercase tracking-widest">Master Plan arriving soon</p>
                     </div>
                   )}
+                   </div> 
                 </div>
               </motion.div>
             ) : (

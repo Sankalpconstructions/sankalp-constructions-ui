@@ -56,7 +56,7 @@ export default function Footer() {
                       <MapPin size={18} className="text-gray-400" />
                     </div>
                     <span className="text-sm text-gray-400 mt-2">
-                      123, Premium Tower, Senapati Bapat Road, Pune - 411016
+                     S S Arcade, Sainikpuri 1st Main Rd, SGKS United Residency, Hill Top Colony, Sainikpuri, Secunderabad, Telangana 500094
                     </span>
                   </li>
                   <li className="flex items-center gap-4">

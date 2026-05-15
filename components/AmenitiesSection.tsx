@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import {
   Dumbbell, Waves, TreePine, ShieldCheck, Car, Coffee, Play, Sun,
   Activity, Smile, Users, Video, UserMinus, Gamepad2, Book, Trophy,
-  Clapperboard, ShoppingCart, Cross, Wifi, Flame, Zap, Droplet, HelpCircle
+  Clapperboard, ShoppingCart, Cross, Wifi, Flame, Zap, Droplet, HelpCircle, TentTree
 } from "lucide-react";
 
 // Mapping of amenity names to Lucide icons
@@ -80,7 +80,7 @@ export default function AmenitiesSection({ items = [], amenitiesCount }: Props) 
               className="p-3 md:p-4 rounded-xl flex flex-col items-center justify-center text-center group border border-gray-100 shadow-sm hover:shadow-xl transition-all cursor-pointer h-full min-h-[112px] md:min-h-[128px] bg-white"
             >
               <div className="w-10 h-10 bg-[#711113]/10 text-[#711113] rounded-full flex justify-center items-center mb-3 group-hover:bg-[#711113] group-hover:text-white transition-colors flex-shrink-0">
-                {iconMap[title] || <HelpCircle size={20} />}
+                {iconMap[title] || <TentTree size={20} />}
               </div>
               <h3 className="text-[10px] md:text-xs font-bold uppercase text-gray-700 group-hover:text-[#711113] transition-colors leading-tight">
                 {title}

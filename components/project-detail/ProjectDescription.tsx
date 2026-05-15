@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { CheckCircle2 } from "lucide-react";
+import { HousePlus } from "lucide-react";
 
 interface Props {
   description: string;
@@ -56,7 +56,7 @@ export default function ProjectDescription({ description, highlights }: Props) {
               transition={{ delay: i * 0.06 }}
               className="flex items-start gap-3 bg-gray-50 rounded-xl p-3 md:p-4 border border-gray-100"
             >
-              <CheckCircle2 size={18} className="text-[#711113] flex-shrink-0 mt-0.5" />
+              <HousePlus size={18} className="text-[#711113] flex-shrink-0 mt-0.5" />
               <span className="text-sm text-gray-700 font-medium">{h}</span>
             </motion.div>
           ))}

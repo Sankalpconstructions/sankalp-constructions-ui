@@ -124,6 +124,8 @@ export default function ProjectDetailsPage() {
       <div className="container mx-auto px-4 lg:px-8 py-8 md:py-12">
         <div className="flex flex-col lg:grid lg:grid-cols-[1fr_320px] xl:grid-cols-[1fr_360px] gap-10 items-start">
           <div className="min-w-0 w-full order-1">
+            <ProjectGallery images={project.gallery} projectTitle={project.title} />
+
             <ProjectDescription
               description={project.description}
               highlights={project.highlights}
@@ -151,8 +153,6 @@ export default function ProjectDetailsPage() {
               floorPlansCount={project.floorPlansCount}
               configurations={project.configurations}
             />
-
-            <ProjectGallery images={project.gallery} />
 
             <ProjectLocation
               mapSrc={project.mapSrc}

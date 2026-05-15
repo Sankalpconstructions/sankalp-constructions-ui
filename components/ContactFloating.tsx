@@ -7,11 +7,11 @@ export default function ContactFloating() {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <div className="fixed bottom-[5.5rem] right-6 z-[150] flex flex-col items-end gap-4">
+    <div className="fixed bottom-[4.5rem] right-3 md:bottom-[5.5rem] md:right-6 z-[150] flex flex-col items-end gap-4">
       <motion.div
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
-        className="group relative flex flex-col items-center bg-[#25D366] text-white rounded-full shadow-2xl hover:shadow-green-500/30 transition-all overflow-visible w-14 py-2"
+        className="group relative flex flex-col items-center bg-[#25D366] text-white rounded-full shadow-2xl hover:shadow-green-500/30 transition-all overflow-visible w-10 md:w-14 py-1 md:py-2"
       >
         <AnimatePresence>
           {isHovered && (
@@ -28,22 +28,22 @@ export default function ContactFloating() {
 
         <a
           href="tel:+917330770111"
-          className="w-full h-12 flex flex-shrink-0 items-center justify-center hover:bg-black/10 transition-colors rounded-t-full relative z-10"
+          className="w-full h-9 md:h-12 flex flex-shrink-0 items-center justify-center hover:bg-black/10 transition-colors rounded-t-full relative z-10"
           title="Call Us"
         >
-          <Phone size={22} />
+          <Phone className="w-4 h-4 md:w-[22px] md:h-[22px]" />
         </a>
         
-        <div className="w-8 h-[1px] bg-white/40 my-1" />
+        <div className="w-6 md:w-8 h-[1px] bg-white/40 my-0.5 md:my-1" />
 
         <a
           href="https://wa.me/917330770111?text=Hello%20Sankalp%20Constructions,%20I%20would%20like%20to%20know%20more%20about%20your%20projects."
           target="_blank"
           rel="noreferrer"
-          className="w-full h-12 flex flex-shrink-0 items-center justify-center hover:bg-black/10 transition-colors rounded-b-full relative z-10"
+          className="w-full h-9 md:h-12 flex flex-shrink-0 items-center justify-center hover:bg-black/10 transition-colors rounded-b-full relative z-10"
           title="WhatsApp Us"
         >
-          <MessageCircle size={26} />
+          <MessageCircle className="w-4 h-4 md:w-[26px] md:h-[26px]" />
         </a>
       </motion.div>
     </div>

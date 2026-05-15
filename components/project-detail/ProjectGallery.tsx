@@ -1,7 +1,7 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, ZoomIn, ImageIcon, Camera } from "lucide-react";
+import { Camera, ImageIcon } from "lucide-react";
 
 interface GalleryImage {
   src: string;
@@ -10,124 +10,96 @@ interface GalleryImage {
 }
 
 interface Props {
-  images: any[]; 
+  images: any[];
   projectTitle?: string;
 }
 
 export default function ProjectGallery({ images = [], projectTitle }: Props) {
-  const [selected, setSelected] = useState<GalleryImage | null>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
 
   // Map raw strings or objects to the required format
   const formattedImages: GalleryImage[] = images.map((img, i) => {
     if (typeof img === 'string') {
       return { src: img, title: `${projectTitle || "Project"} View ${i + 1}`, description: "" };
     }
-    return { 
-      src: img.src || img.url || "", 
-      title: img.title || `${projectTitle || "Project"} Image ${i + 1}`, 
-      description: img.description || "" 
+    return {
+      src: img.src || img.url || "",
+      title: img.title || `${projectTitle || "Project"} Image ${i + 1}`,
+      description: img.description || ""
     };
   }).filter(img => !!img.src);
 
+  // Reset to 0 if images change
+  useEffect(() => {
+    if (activeIndex >= formattedImages.length) {
+      setActiveIndex(0);
+    }
+  }, [images, formattedImages.length, activeIndex]);
+
   return (
-    <section id="gallery" className="py-10 md:py-16 bg-white border-t border-gray-100">
-      <div className="container mx-auto px-4 lg:px-8">
-        <div className="text-center mb-12">
-          <span className="uppercase tracking-[0.25em] text-[10px] md:text-xs text-[#711113] font-bold mb-3 block flex items-center justify-center gap-2">
-            <Camera size={14} /> Visual Tour
-          </span>
-          <h2 className="text-2xl md:text-4xl font-extrabold text-gray-900 mb-4 uppercase tracking-widest">
-            Project Gallery
-          </h2>
-          <div className="w-16 h-1 bg-[#29B1D2] mx-auto rounded-full" />
-        </div>
+    <section id="gallery" className="pt-4 sm:pt-0 pb-6 md:pb-16 bg-white">
+      <div className="container mx-auto px-0">
 
         {formattedImages.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-            {formattedImages.map((img, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, scale: 0.95 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true, margin: "-50px" }}
-                transition={{ delay: i * 0.07 }}
-                onClick={() => setSelected(img)}
-                className="group relative rounded-xl overflow-hidden cursor-pointer shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 bg-gray-50"
-              >
-                <div className="aspect-[4/3] overflow-hidden">
+          <div className="flex flex-col-reverse lg:flex-row gap-4 h-[400px] sm:h-[500px] lg:h-[600px]">
+            {/* Left side: Thumbnails */}
+            <div className="w-full lg:w-48 xl:w-56 flex flex-row lg:flex-col gap-3 overflow-x-auto lg:overflow-y-auto no-scrollbar pt-2 pb-2 lg:pt-0 lg:pb-0 pr-0 lg:pr-2">
+              {formattedImages.map((img, i) => (
+                <button
+                  key={i}
+                  onClick={() => setActiveIndex(i)}
+                  className={`relative flex-shrink-0 w-28 lg:w-full aspect-[4/3] rounded-lg overflow-hidden border-2 transition-all duration-300 ${activeIndex === i
+                    ? "border-[#29B1D2] ring-4 ring-[#29B1D2]/10 shadow-md"
+                    : "border-gray-200 opacity-70 hover:opacity-100 hover:border-gray-300"
+                    }`}
+                >
                   <img
                     src={img.src}
                     alt={img.title}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                    className="w-full h-full object-cover"
                   />
-                </div>
-                {/* Overlay */}
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors duration-500 flex flex-col justify-end p-5">
-                  <div className="translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-400">
-                    <ZoomIn className="text-white mb-2" size={22} />
-                    <h4 className="text-white font-bold text-sm">{img.title}</h4>
-                    {img.description && <p className="text-white/80 text-xs mt-1 line-clamp-2">{img.description}</p>}
-                  </div>
-                </div>
-                {/* Label at bottom */}
-                <div className="p-4 bg-white border-t border-gray-50">
-                  <h4 className="text-[10px] font-black uppercase tracking-widest text-gray-400 truncate">{img.title}</h4>
-                </div>
-              </motion.div>
-            ))}
+                </button>
+              ))}
+            </div>
+
+            {/* Right side: Active Image */}
+            <div className="flex-1 relative rounded-2xl overflow-hidden bg-gray-100 border border-gray-200 shadow-sm">
+              <AnimatePresence mode="wait">
+                <motion.img
+                  key={activeIndex}
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ duration: 0.3 }}
+                  src={formattedImages[activeIndex]?.src}
+                  alt={formattedImages[activeIndex]?.title}
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+              </AnimatePresence>
+
+              {/* Optional overlay for text */}
+              <div className="absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
+                <h3 className="text-white text-xl font-bold tracking-wide">
+                  {formattedImages[activeIndex]?.title}
+                </h3>
+                {formattedImages[activeIndex]?.description && (
+                  <p className="text-white/80 mt-1 text-sm">
+                    {formattedImages[activeIndex].description}
+                  </p>
+                )}
+              </div>
+            </div>
           </div>
         ) : (
-          <div className="bg-gray-50 rounded-2xl p-12 text-center border-2 border-dashed border-gray-200">
-             <div className="w-16 h-16 bg-white rounded-full shadow-md flex items-center justify-center mx-auto mb-4 text-gray-300">
-                <ImageIcon size={32} />
-             </div>
-             <h3 className="text-gray-400 font-black uppercase tracking-[0.2em] text-sm">Visual Tour Arriving Soon</h3>
-             <p className="text-gray-400 text-xs mt-2">We are currently capturing the beauty of this project.</p>
+          <div className="bg-gray-50 rounded-2xl p-12 text-center border border-gray-200 shadow-sm">
+            <div className="w-16 h-16 bg-white rounded-full shadow-md flex items-center justify-center mx-auto mb-4 text-gray-300">
+              <ImageIcon size={32} />
+            </div>
+            <h3 className="text-gray-400 font-bold uppercase tracking-widest text-sm">Images Arriving Soon</h3>
+            <p className="text-gray-400 text-xs mt-2">We are currently capturing the beauty of this project.</p>
           </div>
         )}
       </div>
-
-      {/* Lightbox */}
-      <AnimatePresence>
-        {selected && (
-          <>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setSelected(null)}
-              className="fixed inset-0 bg-black/95 z-[200] backdrop-blur-md"
-            />
-            <div className="fixed inset-0 z-[201] flex items-center justify-center p-4 pointer-events-none">
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                className="pointer-events-auto max-w-5xl w-full relative"
-              >
-                <button
-                  onClick={() => setSelected(null)}
-                  className="absolute -top-12 right-0 w-10 h-10 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-white hover:bg-[#711113] hover:border-[#711113] transition-all z-10"
-                  aria-label="Close"
-                >
-                  <X size={20} />
-                </button>
-                <div className="bg-white p-2 rounded-2xl shadow-2xl overflow-hidden">
-                  <img
-                    src={selected.src}
-                    alt={selected.title}
-                    className="w-full max-h-[75vh] object-contain rounded-xl"
-                  />
-                  <div className="py-4 px-6 text-center">
-                    <h4 className="text-gray-900 font-black uppercase tracking-[0.2em] text-sm">{selected.title}</h4>
-                    {selected.description && <p className="text-gray-500 text-xs mt-1">{selected.description}</p>}
-                  </div>
-                </div>
-              </motion.div>
-            </div>
-          </>
-        )}
-      </AnimatePresence>
     </section>
   );
 }

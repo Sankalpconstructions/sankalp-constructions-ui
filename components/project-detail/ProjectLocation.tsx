@@ -24,13 +24,12 @@ const categoryColors: Record<string, string> = {
 };
 
 export default function ProjectLocation({ mapSrc, address, nearbyLocations }: Props) {
-  // Helper to determine if mapSrc is an iframe or a raw coordinate/query
+
   const renderMap = () => {
     if (!mapSrc) return null;
 
-    // If it's already an iframe string (contains <iframe)
     if (mapSrc.includes("<iframe")) {
-      // Extract src from iframe string if possible, or just dangerouslySet
+
       const srcMatch = mapSrc.match(/src="([^"]+)"/);
       const actualSrc = srcMatch ? srcMatch[1] : "";
 
@@ -50,12 +49,9 @@ export default function ProjectLocation({ mapSrc, address, nearbyLocations }: Pr
       }
     }
 
-    // If it's just a URL or a search query
     const finalSrc = mapSrc.startsWith("http")
       ? mapSrc
       : `https://www.google.com/maps/embed/v1/place?key=REPLACE_WITH_API_KEY&q=${encodeURIComponent(mapSrc)}`;
-
-    // Fallback if no API key is provided for v1/place - use generic embed
     const embedUrl = mapSrc.startsWith("http")
       ? mapSrc
       : `https://maps.google.com/maps?q=${encodeURIComponent(mapSrc)}&t=&z=13&ie=UTF8&iwloc=&output=embed`;
@@ -78,16 +74,13 @@ export default function ProjectLocation({ mapSrc, address, nearbyLocations }: Pr
     <section className="py-10 md:py-16 bg-gray-50 border-t border-gray-100">
       <div className="container mx-auto px-4 lg:px-8">
         <div className="text-center mb-12">
-          <span className="uppercase tracking-[0.25em] text-xs text-[#711113] font-bold mb-3 block">Location</span>
-          <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4">Where We Are</h2>
-          <div className="w-12 h-1 bg-[#711113] mx-auto rounded-full mb-4" />
+          <h2 className="text-3xl md:text-3xl font-extrabold text-gray-900 mb-4">Where We Are</h2>
           <p className="text-gray-500 text-sm flex items-center justify-center gap-2">
             <MapPin size={14} className="text-[#711113]" /> {address}
           </p>
         </div>
 
         <div className="flex flex-col xl:flex-row gap-8">
-          {/* Left: Nearby Locations */}
           <div className="w-full xl:w-5/12">
             <h3 className="text-base md:text-lg font-bold text-gray-900 uppercase tracking-wide mb-4 md:mb-6 flex items-center gap-2">
               <Navigation size={18} className="text-[#711113] w-[14px] h-[14px] md:w-[18px] md:h-[18px]" /> Nearby Landmarks
@@ -106,7 +99,7 @@ export default function ProjectLocation({ mapSrc, address, nearbyLocations }: Pr
                     <span className={`text-[9px] md:text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 md:px-2.5 md:py-1 rounded-full border shrink-0 ${categoryColors[loc.category] || categoryColors["default"]}`}>
                       {loc.category}
                     </span>
-                    <span className="text-xs md:text-sm font-semibold text-gray-800 break-words">{loc.name}</span>
+                    <span className="text-xs md:text-xs font-semibold text-gray-800 break-words">{loc.name}</span>
                   </div>
                   <span className="text-xs md:text-sm font-bold text-[#711113] shrink-0 ml-1">{loc.distance}</span>
                 </motion.div>

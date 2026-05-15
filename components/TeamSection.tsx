@@ -48,13 +48,12 @@ export default function TeamSection() {
     <section id="team" className="py-10 md:py-16 bg-[#E5E7EB] text-gray-900 overflow-hidden">
       <div className="container mx-auto px-4 lg:px-8">
 
-        {/* Section Header */}
         <div className="text-center max-w-2xl mx-auto mb-10 md:mb-14">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
-            className="text-xl md:text-4xl font-extrabold text-[#711113] uppercase tracking-wide"
+            className="text-2xl md:text-3xl lg:text-4xl font-bold text-[#711113] mb-3"
           >
             Meet Our Team
           </motion.h2>
@@ -64,7 +63,6 @@ export default function TeamSection() {
           </p>
         </div>
 
-        {/* Team Cards Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
           {members.map((member, idx) => (
             <motion.div
@@ -76,9 +74,8 @@ export default function TeamSection() {
               className="group relative bg-white overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 flex flex-col w-full"
               style={{ borderRadius: "32px", height: "460px", padding: "12px" }}
             >
-              {/* Image background container */}
-              <div 
-                className="absolute inset-x-3 top-3 bottom-[180px] group-hover:bottom-3 overflow-hidden transition-all duration-500 z-0"
+              <div
+                className="absolute inset-x-3 top-3 bottom-[120px] group-hover:bottom-3 overflow-hidden transition-all duration-500 z-0"
                 style={{ borderRadius: "24px" }}
               >
                 <img
@@ -89,31 +86,15 @@ export default function TeamSection() {
                 <div className="absolute inset-0 bg-gradient-to-t from-white via-white/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
               </div>
 
-              {/* Foreground content positioned at bottom */}
               <div className="relative z-10 flex flex-col justify-end h-full pointer-events-none">
                 <div className="px-3 pb-3 pointer-events-auto">
                   <h3 className="text-2xl font-bold text-gray-900 mb-1 leading-snug">
                     {member.name}
                   </h3>
-                  <p className="text-gray-500 text-sm leading-relaxed mb-6 line-clamp-2">
+                  <p className="text-gray-500 text-sm leading-relaxed mb-2 line-clamp-2">
                     {member.role}
                   </p>
-                  
-                  <div className="flex items-center justify-between font-medium">
-                    <div className="flex items-center gap-4 text-gray-500 text-sm">
-                      <span className="flex items-center gap-1.5 font-semibold">
-                         <User size={16}/> 154
-                      </span>
-                      <span className="flex items-center gap-1.5 font-semibold">
-                         <ClipboardCheck size={16}/> 34
-                      </span>
-                    </div>
-                    
-                    <button className="px-5 py-2 rounded-full font-bold text-sm transition-colors duration-300 bg-[#F3F4F6] text-gray-900 group-hover:bg-[#4ADE80] group-hover:text-white">
-                      <span className="group-hover:hidden">Follow</span>
-                      <span className="hidden group-hover:inline">Unfollow</span>
-                    </button>
-                  </div>
+
                 </div>
               </div>
             </motion.div>

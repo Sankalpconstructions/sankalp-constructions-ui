@@ -34,7 +34,7 @@ export default function FloorPlansSection({ projectTitle, overviewImg, floorPlan
   const [showFloorForm, setShowFloorForm] = useState(false);
   const [hasUnlocked, setHasUnlocked] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
+
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
@@ -56,7 +56,7 @@ export default function FloorPlansSection({ projectTitle, overviewImg, floorPlan
         project: projectTitle || "General",
         message: `Requested to view ${floorPlansCount} Floor Plans for ${projectTitle}`
       });
-      
+
       setHasUnlocked(true);
       setTimeout(() => {
         setShowFloorForm(false);
@@ -77,13 +77,9 @@ export default function FloorPlansSection({ projectTitle, overviewImg, floorPlan
 
         {/* Header */}
         <div className="text-center mb-8 md:mb-12">
-          <span className="uppercase tracking-[0.25em] text-[10px] md:text-xs text-[#711113] font-bold mb-3 block">
-            Plans
-          </span>
-          <h2 className="text-2xl md:text-4xl font-extrabold text-gray-900 mb-4">
+          <h2 className="text-2xl md:text-3xl font-extrabold text-gray-900 mb-4">
             Project Plans
           </h2>
-          <div className="w-12 h-1 bg-[#711113] mx-auto rounded-full mb-4" />
           <p className="text-gray-500 text-sm md:text-base max-w-xl mx-auto px-4 leading-relaxed">
             Explore the master plan and detailed unit floor plans for{" "}
             {projectTitle || "this project"}.
@@ -111,9 +107,8 @@ export default function FloorPlansSection({ projectTitle, overviewImg, floorPlan
               <button
                 key={tab.key}
                 onClick={() => handleTabChange(tab.key)}
-                className={`relative z-10 px-4 md:px-8 py-2 md:py-3 text-[10px] md:text-sm font-bold uppercase tracking-widest rounded-lg md:rounded-xl transition-colors duration-300 min-w-[120px] md:min-w-[140px] ${
-                  activeTab === tab.key ? "text-white" : "text-gray-500 hover:text-gray-800"
-                }`}
+                className={`relative z-10 px-4 md:px-8 py-2 md:py-3 text-[10px] md:text-sm font-bold uppercase tracking-widest rounded-lg md:rounded-xl transition-colors duration-300 min-w-[120px] md:min-w-[140px] ${activeTab === tab.key ? "text-white" : "text-gray-500 hover:text-gray-800"
+                  }`}
               >
                 {tab.label}
               </button>
@@ -134,28 +129,28 @@ export default function FloorPlansSection({ projectTitle, overviewImg, floorPlan
                 exit="exit"
                 transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
               >{!hasUnlocked && (
-  <div className="absolute inset-0 bg-black/50 backdrop-blur-[4px] z-20 flex flex-col items-center justify-center">
-    <Lock size={30} className="text-[#F5C33C] mb-3" />
-    <p className="text-white text-[10px] font-black uppercase tracking-widest text-center px-6">
-      Fill form to view master plan
-    </p>
-  </div>
-)}
-<div className="relative bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden p-4 md:p-8">    
-  <div className={hasUnlocked ? "" : "filter blur-[6px] grayscale"}>             
-    {overviewImg ? (
-                    <img
-                      src={overviewImg}
-                      alt="Master Plan"
-                      className="w-full max-h-[520px] object-contain rounded-xl bg-gray-50"
-                    />
-                   
-                  ) : (
-                    <div className="py-20 text-center text-gray-400">
-                      <p className="text-xs font-black uppercase tracking-widest">Master Plan arriving soon</p>
-                    </div>
-                  )}
-                   </div> 
+                <div className="absolute inset-0 bg-black/50 backdrop-blur-[4px] z-20 flex flex-col items-center justify-center">
+                  <Lock size={30} className="text-[#F5C33C] mb-3" />
+                  <p className="text-white text-[10px] font-black uppercase tracking-widest text-center px-6">
+                    Fill form to view master plan
+                  </p>
+                </div>
+              )}
+                <div className="relative bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden p-4 md:p-8">
+                  <div className={hasUnlocked ? "" : "filter blur-[6px] grayscale"}>
+                    {overviewImg ? (
+                      <img
+                        src={overviewImg}
+                        alt="Master Plan"
+                        className="w-full max-h-[520px] object-contain rounded-xl bg-gray-50"
+                      />
+
+                    ) : (
+                      <div className="py-20 text-center text-gray-400">
+                        <p className="text-xs font-black uppercase tracking-widest">Master Plan arriving soon</p>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </motion.div>
             ) : (
@@ -242,9 +237,9 @@ export default function FloorPlansSection({ projectTitle, overviewImg, floorPlan
 
                 {hasUnlocked ? (
                   <div className="text-center py-6">
-                    <motion.div 
-                      initial={{ scale: 0 }} 
-                      animate={{ scale: 1 }} 
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
                       className="text-5xl mb-4"
                     >
                       🔓
@@ -254,29 +249,29 @@ export default function FloorPlansSection({ projectTitle, overviewImg, floorPlan
                 ) : (
                   <form onSubmit={handleUnlock} className="flex flex-col gap-4">
                     <div className="space-y-1">
-                       <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-1">Full Name</label>
-                       <input 
-                        required 
-                        type="text" 
-                        placeholder="e.g. John Doe" 
+                      <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-1">Full Name</label>
+                      <input
+                        required
+                        type="text"
+                        placeholder="e.g. John Doe"
                         value={formData.name}
-                        onChange={(e) => setFormData({...formData, name: e.target.value})}
-                        className="w-full p-3.5 bg-gray-50 border border-gray-100 rounded-xl text-sm focus:outline-none focus:border-[#711113] transition-all" 
+                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                        className="w-full p-3.5 bg-gray-50 border border-gray-100 rounded-xl text-sm focus:outline-none focus:border-[#711113] transition-all"
                       />
                     </div>
                     <div className="space-y-1">
-                       <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-1">Phone Number</label>
-                       <input 
-                        required 
-                        type="tel" 
-                        placeholder="+91 99999 99999" 
+                      <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-1">Phone Number</label>
+                      <input
+                        required
+                        type="tel"
+                        placeholder="+91 99999 99999"
                         value={formData.phone}
-                        onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                        className="w-full p-3.5 bg-gray-50 border border-gray-100 rounded-xl text-sm focus:outline-none focus:border-[#711113] transition-all" 
+                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                        className="w-full p-3.5 bg-gray-50 border border-gray-100 rounded-xl text-sm focus:outline-none focus:border-[#711113] transition-all"
                       />
                     </div>
-                    <button 
-                      type="submit" 
+                    <button
+                      type="submit"
                       disabled={isSubmitting}
                       className="mt-4 py-4 bg-[#711113] text-white font-bold uppercase tracking-[0.2em] rounded-xl shadow-xl shadow-[#711113]/20 hover:bg-[#520c0d] transition-all disabled:opacity-70"
                     >

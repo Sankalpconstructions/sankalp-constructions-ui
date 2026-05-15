@@ -197,16 +197,13 @@ function RelatedCarousel({ projects }: { projects: RelatedProject[] }) {
   const current = projects[index];
 
   return (
-    <div className="rounded-2xl overflow-hidden border border-gray-100 shadow-lg bg-white">
+    <div className="rounded-2xl overflow-hidden shadow-md border border-gray-100 shadow-lg bg-white">
       {/* Title */}
       <div className="px-5 py-4 border-b border-gray-100 flex items-center gap-3">
-        <div className="w-1 h-6 bg-[#711113] rounded-full" />
+        <div className="w-2 h-6 bg-[#711113] rounded-full" />
         <div>
-          <p className="text-[10px] uppercase tracking-widest font-bold text-[#711113] leading-none text-center">
-            Explore More
-          </p>
           <h3 className="text-sm font-extrabold text-gray-900">
-            Related Projects
+            Available Projects
           </h3>
         </div>
       </div>

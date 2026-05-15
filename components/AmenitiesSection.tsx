@@ -58,12 +58,11 @@ export default function AmenitiesSection({ items = [], amenitiesCount }: Props) 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
-            className="text-2xl md:text-4xl font-extrabold text-[#711113] uppercase tracking-wide px-4"
+            className="text-2xl md:text-3xl font-extrabold text-gray-900 mb-4"
           >
-            World-Class Amenities
+            Amenities
           </motion.h2>
-          <div className="w-24 h-1 bg-[#29B1D2] mx-auto mt-4 mb-6"></div>
-          <p className="text-gray-500 text-sm md:text-lg px-4 leading-relaxed">
+          <p className="text-gray-500 text-sm md:text-base px-4 leading-relaxed">
             Experience a lifestyle of uncompromising luxury. {amenitiesCount || `${items.length}+`} curated amenities
             designed to elevate your everyday living.
           </p>

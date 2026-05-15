@@ -306,7 +306,7 @@ export default function Header() {
         </nav>
 
         {/* Mobile Buttons */}
-        <div className="flex md:hidden items-center gap-4 z-20">
+        <div className="flex md:hidden items-center gap-3 z-20">
           <button
             onClick={() =>
               setIsSearchOpen(!isSearchOpen)
@@ -314,9 +314,9 @@ export default function Header() {
             className="text-white"
           >
             {isSearchOpen ? (
-              <X size={24} />
+              <X size={18} />
             ) : (
-              <Search size={24} />
+              <Search size={18} />
             )}
           </button>
 
@@ -325,9 +325,9 @@ export default function Header() {
             className="text-white"
           >
             {isOpen ? (
-              <X size={28} />
+              <X size={20} />
             ) : (
-              <Menu size={28} />
+              <Menu size={20} />
             )}
           </button>
         </div>
@@ -385,44 +385,44 @@ export default function Header() {
             }}
             className="md:hidden bg-white overflow-hidden"
           >
-            <ul className="flex flex-col items-start px-8 py-8 gap-6 w-full">
+            <ul className="flex flex-col items-start px-4 py-4 gap-3 w-full">
               {navLinks.map((link) => (
                 <li key={link.name} className="w-full flex flex-col items-start">
                   {link.name === "Our Projects" ? (
                     <div className="w-full">
                       <button
-                        className="text-black uppercase text-lg hover:text-[#711113] flex items-center justify-between w-full pb-2 border-b border-gray-100"
+                        className="text-black uppercase text-[11px] tracking-[0.15em] hover:text-[#711113] flex items-center justify-between w-full pb-2 border-b border-gray-100"
                         onClick={() => {
                           const el = document.getElementById('mobile-projects');
                           if (el) el.classList.toggle('hidden');
                         }}
                       >
-                        {link.name} <ChevronDown size={18} />
+                        {link.name} <ChevronDown size={13} />
                       </button>
-                      <div id="mobile-projects" className="hidden w-full bg-gray-50 py-4 px-4 mt-2 text-left rounded-md">
-                        <div className="mb-4 text-left">
-                          <h4 className="text-[#711113] font-bold text-sm uppercase tracking-widest border-b border-gray-200 pb-1 mb-3 inline-block">Ongoing</h4>
-                          <div className="flex flex-col gap-1">
+                      <div id="mobile-projects" className="hidden w-full bg-gray-50 py-2 px-3 mt-1.5 text-left rounded-md">
+                        <div className="mb-3 text-left">
+                          <h4 className="text-[#711113] font-bold text-[9px] uppercase tracking-widest border-b border-gray-200 pb-1 mb-2 inline-block">Ongoing</h4>
+                          <div className="flex flex-col gap-0.5">
                             {ongoingProjects.map(p => (
-                              <Link key={p._id} href={`/projects/${p._id}`} onClick={() => setIsOpen(false)} className="text-gray-700 text-base py-1.5 hover:text-black block">{p.title}</Link>
+                              <Link key={p._id} href={`/projects/${p._id}`} onClick={() => setIsOpen(false)} className="text-gray-700 text-[11px] py-1 hover:text-black block">{p.title}</Link>
                             ))}
                           </div>
                         </div>
 
-                        <div className="mb-4 text-left">
-                          <h4 className="text-[#711113] font-bold text-sm uppercase tracking-widest border-b border-gray-200 pb-1 mb-3 inline-block">Upcoming</h4>
-                          <div className="flex flex-col gap-1">
+                        <div className="mb-3 text-left">
+                          <h4 className="text-[#711113] font-bold text-[9px] uppercase tracking-widest border-b border-gray-200 pb-1 mb-2 inline-block">Upcoming</h4>
+                          <div className="flex flex-col gap-0.5">
                             {upcomingProjects.map(p => (
-                              <Link key={p._id} href={`/projects/${p._id}`} onClick={() => setIsOpen(false)} className="text-gray-700 text-base py-1.5 hover:text-black block">{p.title}</Link>
+                              <Link key={p._id} href={`/projects/${p._id}`} onClick={() => setIsOpen(false)} className="text-gray-700 text-[11px] py-1 hover:text-black block">{p.title}</Link>
                             ))}
                           </div>
                         </div>
 
                         <div className="text-left">
-                          <h4 className="text-[#711113] font-bold text-sm uppercase tracking-widest border-b border-gray-200 pb-1 mb-3 inline-block">Completed</h4>
-                          <div className="flex flex-col gap-1">
+                          <h4 className="text-[#711113] font-bold text-[9px] uppercase tracking-widest border-b border-gray-200 pb-1 mb-2 inline-block">Completed</h4>
+                          <div className="flex flex-col gap-0.5">
                             {completedProjects.map(p => (
-                              <Link key={p._id} href={`/projects/${p._id}`} onClick={() => setIsOpen(false)} className="text-gray-700 text-base py-1.5 hover:text-black block">{p.title}</Link>
+                              <Link key={p._id} href={`/projects/${p._id}`} onClick={() => setIsOpen(false)} className="text-gray-700 text-[11px] py-1 hover:text-black block">{p.title}</Link>
                             ))}
                           </div>
                         </div>
@@ -431,17 +431,17 @@ export default function Header() {
                   ) : link.name === "Rent" ? (
                     <div className="w-full">
                       <button
-                        className="text-black uppercase text-lg hover:text-[#711113] flex items-center justify-between w-full pb-2 border-b border-gray-100"
+                        className="text-black uppercase text-[11px] tracking-[0.15em] hover:text-[#711113] flex items-center justify-between w-full pb-2 border-b border-gray-100"
                         onClick={() => {
                           const el = document.getElementById('mobile-rent');
                           if (el) el.classList.toggle('hidden');
                         }}
                       >
-                        {link.name} <ChevronDown size={18} />
+                        {link.name} <ChevronDown size={13} />
                       </button>
-                      <div id="mobile-rent" className="hidden w-full bg-gray-50 py-4 px-4 mt-2 text-left rounded-md flex flex-col gap-1">
-                        <Link href="/rent/residential" onClick={() => setIsOpen(false)} className="text-[#711113] font-bold text-base uppercase tracking-widest hover:text-black block py-2">Residential</Link>
-                        <Link href="/rent/commercial" onClick={() => setIsOpen(false)} className="text-[#711113] font-bold text-base uppercase tracking-widest hover:text-black block py-2">Commercial</Link>
+                      <div id="mobile-rent" className="hidden w-full bg-gray-50 py-2 px-3 mt-1.5 text-left rounded-md flex flex-col gap-0.5">
+                        <Link href="/rent/residential" onClick={() => setIsOpen(false)} className="text-[#711113] font-bold text-[11px] uppercase tracking-widest hover:text-black block py-1.5">Residential</Link>
+                        <Link href="/rent/commercial" onClick={() => setIsOpen(false)} className="text-[#711113] font-bold text-[11px] uppercase tracking-widest hover:text-black block py-1.5">Commercial</Link>
                       </div>
                     </div>
                   ) : (
@@ -449,7 +449,7 @@ export default function Header() {
                       <Link
                         href={link.href}
                         onClick={() => setIsOpen(false)}
-                        className="text-black uppercase text-lg hover:text-[#711113] block w-full"
+                        className="text-black uppercase text-[11px] tracking-[0.15em] hover:text-[#711113] block w-full"
                       >
                         {link.name}
                       </Link>
@@ -457,11 +457,11 @@ export default function Header() {
                   )}
                 </li>
               ))}
-              <li className="w-full pt-4">
+              <li className="w-full pt-2">
                 <Link
                   href="/contact"
                   onClick={() => setIsOpen(false)}
-                  className="w-full block text-center bg-black text-white py-3 font-semibold uppercase tracking-widest text-sm hover:bg-[#711113] transition-colors"
+                  className="w-full block text-center bg-black text-white py-2.5 font-semibold uppercase tracking-widest text-[10px] hover:bg-[#711113] transition-colors"
                 >
                   Inquire Now
                 </Link>

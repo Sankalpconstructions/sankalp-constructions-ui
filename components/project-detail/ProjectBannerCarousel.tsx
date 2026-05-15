@@ -52,10 +52,10 @@ export default function ProjectBannerCarousel({ slides, title, location, type }:
           <span className="inline-block bg-[#F5C33C] text-[#711113] px-3 py-1 font-bold text-xs uppercase tracking-widest rounded mb-4">
             {type}
           </span>
-          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold uppercase tracking-wide drop-shadow-xl mb-2">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold uppercase tracking-wide drop-shadow-xl mb-2">
             {title}
           </h1>
-          <p className="text-gray-300 text-lg">{location}</p>
+          <p className="text-gray-300 text-xs md:text-lg">{location}</p>
         </motion.div>
       </div>
 
@@ -64,17 +64,17 @@ export default function ProjectBannerCarousel({ slides, title, location, type }:
         <>
           <button
             onClick={prev}
-            className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-black/40 border border-white/20 text-white hover:bg-[#711113] hover:border-[#711113] flex items-center justify-center transition-all"
+            className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 z-20 w-9 h-9 md:w-11 md:h-11 rounded-full bg-black/40 border border-white/20 text-white hover:bg-[#711113] hover:border-[#711113] flex items-center justify-center transition-all"
             aria-label="Previous"
           >
-            <ChevronLeft size={22} />
+            <ChevronLeft size={20} />
           </button>
           <button
             onClick={next}
-            className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-black/40 border border-white/20 text-white hover:bg-[#711113] hover:border-[#711113] flex items-center justify-center transition-all"
+            className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 z-20 w-9 h-9 md:w-11 md:h-11 rounded-full bg-black/40 border border-white/20 text-white hover:bg-[#711113] hover:border-[#711113] flex items-center justify-center transition-all"
             aria-label="Next"
           >
-            <ChevronRight size={22} />
+            <ChevronRight size={20} />
           </button>
           {/* Dots */}
           <div className="absolute bottom-6 right-8 z-20 flex gap-2">

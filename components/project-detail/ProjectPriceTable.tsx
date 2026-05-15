@@ -20,7 +20,7 @@ export default function ProjectPriceTable({ projectTitle, rows }: Props) {
   const [showForm, setShowForm] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-  
+
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
@@ -37,8 +37,8 @@ export default function ProjectPriceTable({ projectTitle, rows }: Props) {
         message: `Requested Pricing Details for ${projectTitle}`
       });
       setIsSuccess(true);
-      setTimeout(() => { 
-        setShowForm(false); 
+      setTimeout(() => {
+        setShowForm(false);
         setIsSubmitting(false);
         setIsSuccess(false);
         setFormData({ name: "", phone: "", email: "" });
@@ -54,22 +54,59 @@ export default function ProjectPriceTable({ projectTitle, rows }: Props) {
     <section className="py-10 md:py-16 bg-gray-50 border-t border-gray-100">
       <div className="container mx-auto px-0 md:px-4">
         <div className="text-center mb-8">
-          <span className="uppercase tracking-[0.25em] text-[10px] md:text-xs text-[#711113] font-bold mb-3 block">Pricing</span>
-          <h2 className="text-2xl md:text-4xl font-extrabold text-gray-900 mb-4">Configuration & Pricing</h2>
-          <div className="w-12 h-1 bg-[#711113] mx-auto rounded-full mb-4" />
-          <p className="text-gray-500 text-sm md:text-base max-w-xl mx-auto px-4">Find the configuration that fits your lifestyle. Contact us for detailed pricing & offers.</p>
+          <h2 className="text-xl md:text-3xl font-extrabold text-gray-900 mb-4">Configuration & Pricing</h2>
+          <p className="text-gray-500 text-xs md:text-base max-w-xl mx-auto px-4">Find the configuration that fits your lifestyle. Contact us for detailed pricing & offers.</p>
         </div>
 
         <div className="max-w-5xl mx-auto px-2 sm:px-0">
-          <div className="bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden">
-            {/* Table header */}
-            <div className="grid grid-cols-4 bg-[#711113] text-white text-[9px] md:text-xs font-bold uppercase tracking-widest px-4 md:px-6 py-4">
+
+          {/* ── Mobile: card layout (< sm) ── */}
+          <div className="flex flex-col gap-3 sm:hidden">
+            {rows.map((row, i) => (
+              <div
+                key={i}
+                className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden"
+              >
+                {/* Card header stripe */}
+                <div className="bg-[#711113] px-3 py-2 flex items-center justify-between">
+                  <span className="text-white text-xs font-extrabold tracking-wide">{row.type}</span>
+                  <button
+                    onClick={() => setShowForm(true)}
+                    className="flex items-center gap-1 text-[9px] font-bold bg-white text-[#711113] px-2.5 py-0.5 rounded-full hover:bg-[#F5C33C] hover:text-[#711113] transition-all shadow-sm"
+                  >
+                    <Lock size={8} /> Get Price
+                  </button>
+                </div>
+                {/* Card body: 2-column label-value grid */}
+                <div className="grid grid-cols-2 gap-x-3 gap-y-2 px-3 py-2.5">
+                  <div>
+                    <p className="text-[10px] uppercase tracking-widest font-bold text-gray-400 mb-0.5">Carpet Area</p>
+                    <p className="text-xs font-semibold text-gray-800">{row.area}</p>
+                  </div>
+                  <div>
+                    <p className="text-[10px] uppercase tracking-widest font-bold text-gray-400 mb-0.5">Super Built-up</p>
+                    <p className="text-xs font-semibold text-gray-800">{row.superBuiltUpArea || "—"}</p>
+                  </div>
+                  {row.facing && (
+                    <div className="col-span-2">
+                      <p className="text-[10px] uppercase tracking-widest font-bold text-gray-400 mb-0.5">Facing</p>
+                      <p className="text-xs font-semibold text-gray-800">{row.facing}</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* ── Tablet & Desktop: table layout (≥ sm) ── */}
+          <div className="hidden sm:block bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden">
+            {/* Header */}
+            <div className="grid grid-cols-4 bg-[#711113] text-white text-[10px] md:text-xs font-bold uppercase tracking-widest px-4 md:px-6 py-4">
               <span>Type</span>
               <span className="text-center">Carpet Area</span>
               <span className="text-center">Super Built-up</span>
               <span className="text-right">Price</span>
             </div>
-
             {/* Rows */}
             {rows.map((row, i) => (
               <div
@@ -78,26 +115,31 @@ export default function ProjectPriceTable({ projectTitle, rows }: Props) {
               >
                 <div className="flex flex-col">
                   <span className="text-xs md:text-sm font-bold text-gray-900">{row.type}</span>
+                  {row.facing && (
+                    <span className="text-[10px] text-gray-400 mt-0.5">{row.facing}</span>
+                  )}
                 </div>
-                <span className="text-[11px] md:text-sm text-gray-600 text-center">{row.area}</span>
-                <span className="text-[11px] md:text-sm text-gray-600 text-center">{row.superBuiltUpArea || "-"}</span>
+                <span className="text-xs md:text-sm text-gray-600 text-center">{row.area}</span>
+                <span className="text-xs md:text-sm text-gray-600 text-center">{row.superBuiltUpArea || "—"}</span>
                 <div className="flex justify-end">
                   <button
                     onClick={() => setShowForm(true)}
                     className="flex items-center gap-1 text-[10px] md:text-xs font-bold text-[#711113] border border-[#711113]/30 px-2.5 md:px-3 py-1 rounded-full hover:bg-[#711113] hover:text-white transition-all shadow-sm"
                   >
-                    <Lock size={10} className="md:w-3 md:h-3" /> <span className="whitespace-nowrap">Get Price</span>
+                    <Lock size={10} className="md:w-3 md:h-3" />
+                    <span className="whitespace-nowrap">Get Price</span>
                   </button>
                 </div>
               </div>
             ))}
           </div>
 
-          <p className="text-[10px] text-gray-400 text-center mt-5 px-4">* Prices are subject to change. GST &amp; other charges applicable. Contact our sales team for the latest pricing.</p>
+          <p className="text-[10px] text-gray-400 text-center mt-5 px-4">
+            * Prices are subject to change. GST &amp; other charges applicable. Contact our sales team for the latest pricing.
+          </p>
         </div>
       </div>
 
-      {/* Unlock Price Form Modal */}
       <AnimatePresence>
         {showForm && (
           <>
@@ -134,32 +176,32 @@ export default function ProjectPriceTable({ projectTitle, rows }: Props) {
                   </div>
                 ) : (
                   <form onSubmit={handleFormSubmit} className="flex flex-col gap-4">
-                    <input 
-                      required 
-                      type="text" 
-                      placeholder="Full Name" 
+                    <input
+                      required
+                      type="text"
+                      placeholder="Full Name"
                       value={formData.name}
-                      onChange={(e) => setFormData({...formData, name: e.target.value})}
-                      className="p-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#711113]" 
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      className="p-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#711113]"
                     />
-                    <input 
-                      required 
-                      type="tel" 
-                      placeholder="Phone Number" 
+                    <input
+                      required
+                      type="tel"
+                      placeholder="Phone Number"
                       value={formData.phone}
-                      onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                      className="p-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#711113]" 
+                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                      className="p-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#711113]"
                     />
-                    <input 
-                      required 
-                      type="email" 
-                      placeholder="Email (optional)" 
+                    <input
+                      required
+                      type="email"
+                      placeholder="Email (optional)"
                       value={formData.email}
-                      onChange={(e) => setFormData({...formData, email: e.target.value})}
-                      className="p-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#711113]" 
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      className="p-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#711113]"
                     />
-                    <button 
-                      type="submit" 
+                    <button
+                      type="submit"
                       disabled={isSubmitting}
                       className="mt-2 py-4 bg-[#711113] text-white font-bold uppercase tracking-widest rounded-xl shadow-lg hover:bg-[#520c0d] transition-colors disabled:opacity-70"
                     >

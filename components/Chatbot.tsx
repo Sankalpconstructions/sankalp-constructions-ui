@@ -250,15 +250,15 @@ export default function Chatbot() {
   return (
     <>
       {/* Floating Toggle */}
-      <div className="fixed bottom-6 right-6 z-[150]">
+      <div className="fixed bottom-4 right-3 md:bottom-6 md:right-6 z-[150]">
         {!isOpen && (
           <button
             onClick={() => setIsOpen(true)}
             onMouseEnter={() => setIsHoverToggleHovered(true)}
             onMouseLeave={() => setIsHoverToggleHovered(false)}
-            className="w-14 h-14 bg-[#1E1E1E] text-[#F5C33C] rounded-full shadow-2xl flex items-center justify-center hover:scale-105 transition-all"
+            className="w-11 h-11 md:w-14 md:h-14 bg-[#1E1E1E] text-[#F5C33C] rounded-full shadow-2xl flex items-center justify-center hover:scale-105 transition-all"
           >
-            <Bot size={28} />
+            <Bot className="w-5 h-5 md:w-7 md:h-7" />
           </button>
         )}
       </div>
@@ -269,11 +269,11 @@ export default function Chatbot() {
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="fixed bottom-[5.5rem] right-6 z-[160] w-80 sm:w-[380px] bg-white rounded-3xl shadow-2xl overflow-hidden border flex flex-col"
-            style={{ maxHeight: "650px", height: "75vh" }}
+            className="fixed bottom-[4.5rem] right-2 z-[160] w-[calc(100vw-1rem)] max-w-[360px] sm:w-[380px] md:bottom-[5.5rem] md:right-6 bg-white rounded-3xl shadow-2xl overflow-hidden border flex flex-col"
+            style={{ maxHeight: "620px", height: "70vh" }}
           >
             {/* Header */}
-            <div className="bg-gradient-to-r from-gray-900 to-[#4a0b0d] p-5 text-white flex justify-between items-center">
+            <div className="bg-gradient-to-r from-gray-900 to-[#4a0b0d] p-3 md:p-5 text-white flex justify-between items-center">
               <div className="flex items-center gap-3">
                 <Bot size={24} className="text-[#F5C33C]" />
                 <div>
@@ -285,7 +285,7 @@ export default function Chatbot() {
             </div>
 
             {/* Chat Body */}
-            <div className="flex-1 overflow-y-auto p-5 space-y-6 bg-gray-50 chat-scroll">
+            <div className="flex-1 overflow-y-auto p-3 md:p-5 space-y-4 md:space-y-6 bg-gray-50 chat-scroll">
               {messages.map((msg) => (
                 <motion.div key={msg.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"}`}>
                   {msg.isTyping ? (

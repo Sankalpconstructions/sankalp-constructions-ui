@@ -84,14 +84,67 @@ export default function ProjectDetailsPage() {
   }, [id]);
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-white flex flex-col items-center justify-center">
-        <p className="text-gray-500 font-bold uppercase tracking-widest text-xs">
-          Loading Project...
-        </p>
+  return (
+    <div className="bg-white animate-pulse">
+      
+      {/* Banner Skeleton */}
+      <div className="w-full h-[300px] md:h-[500px] bg-gray-200 animate-shimmer" />
+
+      <div className="container mx-auto px-4 lg:px-8 py-8 md:py-12">
+        <div className="flex flex-col lg:grid lg:grid-cols-[1fr_320px] xl:grid-cols-[1fr_360px] gap-10">
+
+          {/* Left Content */}
+          <div className="space-y-8">
+
+            {/* Gallery */}
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="h-[180px] md:h-[220px] rounded-lg bg-gray-200"
+                />
+              ))}
+            </div>
+
+            {/* Description */}
+            <div className="space-y-4">
+              <div className="h-8 w-1/3 bg-gray-200 rounded" />
+              <div className="h-4 w-full bg-gray-200 rounded" />
+              <div className="h-4 w-full bg-gray-200 rounded" />
+              <div className="h-4 w-5/6 bg-gray-200 rounded" />
+            </div>
+
+            {/* Price Table */}
+            <div className="space-y-4">
+              <div className="h-8 w-1/4 bg-gray-200 rounded" />
+              <div className="h-[200px] bg-gray-200 rounded-lg" />
+            </div>
+
+            {/* Amenities */}
+            <div className="space-y-4">
+              <div className="h-8 w-1/4 bg-gray-200 rounded" />
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <div
+                    key={i}
+                    className="h-14 bg-gray-200 rounded-lg"
+                  />
+                ))}
+              </div>
+            </div>
+
+          </div>
+
+          {/* Sidebar */}
+          <div className="space-y-4">
+            <div className="h-[400px] bg-gray-200 rounded-xl" />
+          </div>
+
+        </div>
       </div>
-    );
-  }
+    </div>
+  );
+}
 
   if (error || !project) {
     return (

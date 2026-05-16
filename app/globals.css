@@ -57,3 +57,36 @@ body {
   scrollbar-width: thin;
   scrollbar-color: #711113 #f1f1f1;
 }
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.animate-shimmer {
+  background-size: 1000px 100%;
+  animation: shimmer 1.5s infinite linear;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 2s infinite linear;
+  background: linear-gradient(
+    to right,
+    #f3f3f3 8%,
+    #e5e5e5 18%,
+    #f3f3f3 33%
+  );
+  background-size: 1000px 100%;
+}

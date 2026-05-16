@@ -11,6 +11,7 @@ export default function ProjectsShowcase() {
   const [isManualScrolling, setIsManualScrolling] = useState(false);
 
   const [projects, setProjects] = useState<any[]>([]);
+ 
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -21,13 +22,20 @@ export default function ProjectsShowcase() {
         if (res.ok) {
           const data = await res.json();
           // Format data to match expected props
-          const formatted = data.map((p: any) => ({
-            id: p._id || p.id,
-            title: p.title,
-            location: p.location,
-            image: p.image || p.banners?.[0] || "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800",
-            type: p.type
-          }));
+         const formatted = data.map((p: any) => ({
+  id: p._id || p.id,
+  title: p.title,
+  location: p.location,
+  image:
+    p.mainImage ||
+    p.image ||
+    "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800",
+
+  type: p.type,
+  status: p.status,
+  configurations:
+    p.priceConfigurations?.map((pc: any) => pc.configuration) || [],
+}));
           setProjects(formatted);
         }
       } catch (error) {
@@ -162,9 +170,16 @@ export default function ProjectsShowcase() {
             style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
           >
             {loading ? (
-              <div className="w-full text-center py-20 text-gray-500 font-bold uppercase tracking-widest text-sm">
-                Loading Projects...
-              </div>
+               <div className="flex gap-4 md:gap-8">
+    {Array.from({ length: 4 }).map((_, i) => (
+      <div
+        key={i}
+        className="w-[85vw] md:w-[350px] h-[220px] shrink-0 rounded-lg bg-gray-200 animate-pulse"
+      >
+        <div className="h-full w-full bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 animate-shimmer" />
+      </div>
+    ))}
+  </div>
             ) : duplicatedProjects.length > 0 ? (
               duplicatedProjects.map((project, idx) => (
               <div
@@ -198,7 +213,7 @@ export default function ProjectsShowcase() {
                     <div className="flex justify-between items-end text-sm text-gray-300">
                       <div className="flex items-center gap-1 font-light">
                         <MapPin size={16} />
-                        {project.location}
+                        {project.configurations}
                       </div>
 
                       <span className="text-[#F5C33C] text-xs font-bold uppercase tracking-wider relative z-30 flex items-center gap-1">

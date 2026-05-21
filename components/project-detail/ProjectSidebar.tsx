@@ -145,13 +145,13 @@ function ProjectOverviewCard({
               `Hi, I'm interested in ${projectTitle}. Please share more details.`
             )
           }
-          className="flex-1 py-3.5 bg-[#711113] hover:bg-[#25D366] text-white font-bold uppercase tracking-widest text-[10px] md:text-xs rounded-xl shadow-md transition-all duration-300 flex items-center justify-center gap-2"
+          className="flex-1 cursor-pointer py-3.5 bg-[#711113] hover:bg-[#25D366] text-white font-bold uppercase tracking-widest text-[10px] md:text-xs rounded-xl shadow-md transition-all duration-300 flex items-center justify-center gap-2"
         >
           <MessageCircle size={16} /> Enquire Now
         </button>
         <button
           onClick={handleDownloadBrochure}
-          className="flex-1 py-3.5 bg-white border-2 border-gray-200 hover:border-[#711113] hover:text-[#711113] text-gray-700 font-bold uppercase tracking-widest text-[10px] md:text-xs rounded-xl transition-all duration-300 flex items-center justify-center gap-2"
+          className="flex-1 py-3.5 cursor-pointer  bg-white border-2 border-gray-200 hover:border-[#711113] hover:text-[#711113] text-gray-700 font-bold uppercase tracking-widest text-[10px] md:text-xs rounded-xl transition-all duration-300 flex items-center justify-center gap-2"
         >
           <FileDown size={16} /> Download Brochure
         </button>

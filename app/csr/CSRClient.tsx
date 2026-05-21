@@ -21,7 +21,7 @@ export default function CSRClient() {
   React.useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+        const baseUrl = process.env.NEXT_PUBLIC_API_URL || (typeof window !== "undefined" ? `${window.location.protocol}//${window.location.hostname}:3001` : 'http://localhost:3001');
         const res = await fetch(`${baseUrl}/api/csr`);
         if (res.ok) {
           const data = await res.json();

@@ -8,7 +8,8 @@ const MIN_DISPLAY_MS = 2000; // always show at least 2s (brand experience)
 const MAX_DISPLAY_MS = 4000; // never block longer than 4s (slow network safety)
 
 export default function Preloader() {
-  const [isVisible, setIsVisible] = useState(false);
+  // Start visible so the server renders it, preventing the page underneath from flashing
+  const [isVisible, setIsVisible] = useState(true);
   const { isReady } = useAppData();
 
   // Track when the preloader started showing
@@ -26,13 +27,8 @@ export default function Preloader() {
   };
 
   useEffect(() => {
-    const alreadyShown = sessionStorage.getItem("preloader_shown");
-    if (alreadyShown) return;
-
-    sessionStorage.setItem("preloader_shown", "true");
     shownAtRef.current = Date.now();
-    setIsVisible(true);
-
+    
     // Hard cap: never block the user more than MAX_DISPLAY_MS
     maxTimerRef.current = setTimeout(hide, MAX_DISPLAY_MS);
 
@@ -94,7 +90,7 @@ export default function Preloader() {
       <motion.h1
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.5 }}
+        transition={{ delay: 0.2 }}
         className="text-2xl font-bold text-[#711113] uppercase tracking-widest mt-4"
       >
         Sankalp Constructions

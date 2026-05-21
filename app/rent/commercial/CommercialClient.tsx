@@ -25,7 +25,7 @@ export default function CommercialClient() {
     const fetchProperties = async () => {
       setLoading(true);
       try {
-        const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+        const baseUrl = process.env.NEXT_PUBLIC_API_URL || (typeof window !== "undefined" ? `${window.location.protocol}//${window.location.hostname}:3001` : 'http://localhost:3001');
         const res = await fetch(`${baseUrl}/api/rentals?type=commercial`);
         const data = await res.json();
         const formattedData = Array.isArray(data) ? data.map(item => ({

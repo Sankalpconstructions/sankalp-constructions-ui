@@ -7,9 +7,8 @@ const IMAGE_SLIDE_DURATION = 6000;
 
 export default function HeroBanner() {
   const FALLBACK_SLIDES = [
-    { type: "video", src: "/assets/Project-video.mp4" },
-    { type: "image", src: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1600" },
-    { type: "image", src: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1600" }
+    { type: "image", src: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1600", mobileImage: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800" },
+    { type: "image", src: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1600", mobileImage: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800" }
   ];
 
   const [slides, setSlides] = useState<any[]>(FALLBACK_SLIDES);
@@ -18,13 +17,13 @@ export default function HeroBanner() {
   useEffect(() => {
     const fetchBanners = async () => {
       try {
-        const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+        const baseUrl = process.env.NEXT_PUBLIC_API_URL || (typeof window !== "undefined" ? `${window.location.protocol}//${window.location.hostname}:3001` : 'http://localhost:3001');
         const res = await fetch(`${baseUrl}/api/herobanners`);
         if (res.ok) {
           const data = await res.json();
           const activeSlides = data.filter((s: any) => s.isActive);
           if (activeSlides.length > 0) {
-            setSlides(activeSlides.map((s: any) => ({ type: s.type || 'image', src: s.image || s.url || s.src })));
+            setSlides(activeSlides.map((s: any) => ({ type: s.type || 'image', src: s.image || s.url || s.src, mobileImage: s.mobileImage || s.image || s.url || s.src })));
           } else {
             // keep FALLBACK_SLIDES (already set)
           }
@@ -32,9 +31,8 @@ export default function HeroBanner() {
       } catch (error) {
         console.error("Error fetching banners:", error);
         setSlides([
-          { type: "video", src: "/assets/Project-video.mp4" },
-          { type: "image", src: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1600" },
-          { type: "image", src: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1600" }
+          { type: "image", src: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1600", mobileImage: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800" },
+          { type: "image", src: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1600", mobileImage: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800" }
         ]);
       } finally {
         setLoading(false);
@@ -137,18 +135,23 @@ export default function HeroBanner() {
             className="absolute inset-0 w-full h-full object-contain md:object-cover"
           />
         ) : (
-          <motion.img
+          <motion.picture
             key={`image-${index}`}
-            src={current.src}
-            alt="Hero Background"
             custom={direction}
             variants={slideVariants}
             initial="enter"
             animate="center"
             exit="exit"
             transition={{ duration: 0.45, ease: [0.25, 0.46, 0.45, 0.94] }}
-            className="absolute inset-0 w-full h-full object-contain md:object-cover"
-          />
+            className="absolute inset-0 w-full h-full"
+          >
+            <source media="(max-width: 768px)" srcSet={current.mobileImage} />
+            <img
+              src={current.src}
+              alt="Hero Background"
+              className="w-full h-full object-cover"
+            />
+          </motion.picture>
         )}
       </AnimatePresence>
 

@@ -24,7 +24,7 @@ export default function ProjectDetailsPage() {
   useEffect(() => {
     const fetchProjectData = async () => {
       try {
-        const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+        const baseUrl = process.env.NEXT_PUBLIC_API_URL || (typeof window !== "undefined" ? `${window.location.protocol}//${window.location.hostname}:3001` : 'http://localhost:3001');
         // Fetch specific project
         const res = await fetch(`${baseUrl}/api/projects/${id}`);
         if (!res.ok) throw new Error("Project not found");

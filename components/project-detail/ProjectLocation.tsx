@@ -76,7 +76,7 @@ export default function ProjectLocation({ mapSrc, address, nearbyLocations }: Pr
   }, [address, mapSrc, activeLandmark]);
 
   return (
-    <section className="py-12 md:py-20 bg-[#0d0d0d] border-t border-white/5 relative overflow-hidden rounded">
+    <section className="py-12  bg-[#0d0d0d] border-t border-white/5 relative overflow-hidden rounded">
 
       {/* Background grid */}
       <div

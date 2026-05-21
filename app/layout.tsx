@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ProjectProvider } from "@/context/ProjectContext";
+import { AppDataProvider } from "@/context/AppDataContext";
 import ScrollToTop from "@/components/ScrollToTop";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -39,6 +40,7 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
       </head>
       <body className="min-h-full flex flex-col bg-white text-gray-900 override">
+        <AppDataProvider>
         <ProjectProvider>
           <ScrollToTop />
           <Header />
@@ -47,6 +49,7 @@ export default function RootLayout({
           <ScrollController />
           <Footer />
         </ProjectProvider>
+        </AppDataProvider>
       </body>
     </html>
   );

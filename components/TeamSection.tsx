@@ -1,46 +1,15 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { motion } from "framer-motion";
-import { Loader2, User, ClipboardCheck } from "lucide-react";
-
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
-
-interface TeamMember {
-  _id: string;
-  name: string;
-  role: string;
-  image: string;
-}
+import { useAppData } from "@/context/AppDataContext";
+import type { TeamMember } from "@/context/AppDataContext";
 
 export default function TeamSection() {
-  const [members, setMembers] = useState<TeamMember[]>([]);
-  const [loading, setLoading] = useState(true);
+  // Read from global prefetch cache — data is already loading during preloader
+  const { team: members, isReady } = useAppData();
 
-  useEffect(() => {
-    const fetchTeam = async () => {
-      try {
-        const res = await fetch(`${API_BASE_URL}/api/team`);
-        if (res.ok) {
-          const data = await res.json();
-          setMembers(data);
-        }
-      } catch (error) {
-        console.error("Error fetching team:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchTeam();
-  }, []);
-
-  if (loading) {
-    return (
-      <div className="py-24 bg-[#E5E7EB] flex flex-col items-center justify-center">
-        <Loader2 className="animate-spin text-[#711113] mb-4" size={40} />
-        <p className="text-gray-400 font-bold uppercase tracking-widest text-[10px]">Loading Our Team...</p>
-      </div>
-    );
-  }
+  // Still loading (rare: only if API is slower than 4s hard cap)
+  if (!isReady) return null;
 
   if (members.length === 0) return null;
 

@@ -1,13 +1,10 @@
 "use client";
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext } from "react";
+import { useAppData } from "@/context/AppDataContext";
+import type { Project } from "@/context/AppDataContext";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
-
-interface Project {
-  _id: string;
-  title: string;
-  status: string;
-}
+// Re-export Project type for backwards compatibility
+export type { Project };
 
 interface ProjectContextType {
   projects: Project[];
@@ -20,31 +17,15 @@ const ProjectContext = createContext<ProjectContextType>({
 });
 
 export const ProjectProvider = ({ children }: { children: React.ReactNode }) => {
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        const res = await fetch(`${API_BASE_URL}/api/projects`);
-        if (res.ok) {
-          const data = await res.json();
-          setProjects(data);
-        }
-      } catch (error) {
-        console.error("Error fetching projects globally:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchProjects();
-  }, []);
+  // Delegate to AppDataContext — no duplicate fetch!
+  const { projects, isReady } = useAppData();
 
   return (
-    <ProjectContext.Provider value={{ projects, loading }}>
+    <ProjectContext.Provider value={{ projects, loading: !isReady }}>
       {children}
     </ProjectContext.Provider>
   );
 };
 
 export const useProjects = () => useContext(ProjectContext);
+

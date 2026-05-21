@@ -4,48 +4,16 @@ import { motion } from "framer-motion";
 import { MapPin, ChevronRight, ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { useAppData } from "@/context/AppDataContext";
 
 export default function ProjectsShowcase() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState(false);
   const [isManualScrolling, setIsManualScrolling] = useState(false);
 
-  const [projects, setProjects] = useState<any[]>([]);
- 
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
-        const res = await fetch(`${baseUrl}/api/projects`);
-        if (res.ok) {
-          const data = await res.json();
-          // Format data to match expected props
-         const formatted = data.map((p: any) => ({
-  id: p._id || p.id,
-  title: p.title,
-  location: p.location,
-  image:
-    p.mainImage ||
-    p.image ||
-    "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800",
-
-  type: p.type,
-  status: p.status,
-  configurations:
-    p.priceConfigurations?.map((pc: any) => pc.configuration) || [],
-}));
-          setProjects(formatted);
-        }
-      } catch (error) {
-        console.error("Error fetching projects:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchProjects();
-  }, []);
+  // Read from global prefetch cache — data is already loading during preloader
+  const { projects, isReady } = useAppData();
+  const loading = !isReady;
 
   // Duplicate projects to create an infinite scroll illusion
   // Using 4 sets ensures we have enough items for very wide screens and seamless wrapping

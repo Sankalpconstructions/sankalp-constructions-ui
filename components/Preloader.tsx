@@ -1,28 +1,65 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { Home, Building, Blocks } from "lucide-react";
+import { useAppData } from "@/context/AppDataContext";
+
+const MIN_DISPLAY_MS = 2000; // always show at least 2s (brand experience)
+const MAX_DISPLAY_MS = 4000; // never block longer than 4s (slow network safety)
 
 export default function Preloader() {
-  // Start invisible until we confirm on the client whether it should show
   const [isVisible, setIsVisible] = useState(false);
+  const { isReady } = useAppData();
+
+  // Track when the preloader started showing
+  const shownAtRef = useRef<number | null>(null);
+  const maxTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const minTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const hiddenRef = useRef(false);
+
+  const hide = () => {
+    if (hiddenRef.current) return;
+    hiddenRef.current = true;
+    setIsVisible(false);
+    if (maxTimerRef.current) clearTimeout(maxTimerRef.current);
+    if (minTimerRef.current) clearTimeout(minTimerRef.current);
+  };
 
   useEffect(() => {
     const alreadyShown = sessionStorage.getItem("preloader_shown");
-    if (alreadyShown) {
-      // Don't show again during this browser session
-      return;
-    }
+    if (alreadyShown) return;
 
-    // Mark as shown for the rest of this session
     sessionStorage.setItem("preloader_shown", "true");
+    shownAtRef.current = Date.now();
     setIsVisible(true);
 
-    const timer = setTimeout(() => {
-      setIsVisible(false);
-    }, 2000);
-    return () => clearTimeout(timer);
+    // Hard cap: never block the user more than MAX_DISPLAY_MS
+    maxTimerRef.current = setTimeout(hide, MAX_DISPLAY_MS);
+
+    // Minimum brand display
+    minTimerRef.current = setTimeout(() => {
+      // If APIs are already ready by the time min timer fires → hide immediately
+      if (isReady) hide();
+      // Otherwise wait for isReady effect below to trigger hide
+    }, MIN_DISPLAY_MS);
+
+    return () => {
+      if (maxTimerRef.current) clearTimeout(maxTimerRef.current);
+      if (minTimerRef.current) clearTimeout(minTimerRef.current);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // When APIs become ready, hide only if min time has already passed
+  useEffect(() => {
+    if (!isReady || !isVisible || !shownAtRef.current) return;
+    const elapsed = Date.now() - shownAtRef.current;
+    if (elapsed >= MIN_DISPLAY_MS) {
+      hide();
+    }
+    // If min time hasn't passed yet, the minTimer useEffect above will handle it
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isReady]);
 
   if (!isVisible) return null;
 

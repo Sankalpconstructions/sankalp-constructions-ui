@@ -7,41 +7,19 @@ import { Navigation, Autoplay, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
-
-interface Testimonial {
-  _id: string;
-  name: string;
-  role: string;
-  quote: string;
-  rating: number;
-  avatar: string; // Can be an image URL or a video URL (.mp4)
-}
+import { useAppData } from "@/context/AppDataContext";
+import type { Testimonial } from "@/context/AppDataContext";
 
 export default function TestimonialsSection() {
   const [activeVideoUrl, setActiveVideoUrl] = useState<string | null>(null);
-  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+
+  // Read from global prefetch cache — data is already loading during preloader
+  const { testimonials, isReady } = useAppData();
+  const isLoading = !isReady;
 
   // Video state tracking
   const [playingVideos, setPlayingVideos] = useState<Record<string, boolean>>({});
   const videoRefs = useRef<Record<string, HTMLVideoElement | null>>({});
-
-  useEffect(() => {
-    const fetchTestimonials = async () => {
-      try {
-        const res = await fetch(`${API_BASE_URL}/api/testimonials`);
-        const data = await res.json();
-        setTestimonials(data);
-      } catch (error) {
-        console.error("Error fetching testimonials:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchTestimonials();
-  }, []);
 
   // Close modal on Escape
   useEffect(() => {

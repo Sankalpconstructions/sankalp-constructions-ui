@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Poppins, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ProjectProvider } from "@/context/ProjectContext";
 import { AppDataProvider } from "@/context/AppDataContext";
@@ -9,9 +9,10 @@ import Footer from "@/components/Footer";
 import ContactFloating from "@/components/ContactFloating";
 import ScrollController from "@/components/ScrollController";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const poppins = Poppins({
+  weight: ["300", "400", "500", "600", "700", "800", "900"],
   subsets: ["latin"],
+  variable: "--font-poppins",
 });
 
 const geistMono = Geist_Mono({
@@ -35,7 +36,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable} scroll-smooth antialiased h-full`}>
+    <html lang="en" className={`${poppins.variable} ${geistMono.variable} scroll-smooth antialiased h-full`}>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
       </head>

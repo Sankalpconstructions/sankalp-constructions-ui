@@ -15,13 +15,13 @@ export default function Preloader() {
     hiddenRef.current = true;
     setIsVisible(false);
     if (typeof window !== "undefined") {
-      (window as any).sankalp_preloader_loaded = true;
+      sessionStorage.setItem("sankalp_preloader_loaded", "true");
     }
     if (timerRef.current) clearTimeout(timerRef.current);
   };
 
   useEffect(() => {
-    const hasLoaded = typeof window !== "undefined" && (window as any).sankalp_preloader_loaded === true;
+    const hasLoaded = typeof window !== "undefined" && sessionStorage.getItem("sankalp_preloader_loaded") === "true";
     if (hasLoaded) {
       setIsVisible(false);
       return;
@@ -40,7 +40,7 @@ export default function Preloader() {
   }, []);
 
   // If already loaded, do not display anything
-  const hasLoaded = typeof window !== "undefined" && (window as any).sankalp_preloader_loaded === true;
+  const hasLoaded = typeof window !== "undefined" && sessionStorage.getItem("sankalp_preloader_loaded") === "true";
   if (!isVisible || hasLoaded) return null;
 
   return (

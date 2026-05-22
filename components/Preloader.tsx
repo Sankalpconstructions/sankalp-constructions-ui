@@ -63,14 +63,14 @@ export default function Preloader() {
           priority
         />
       </div>
-      <motion.h1
+      {/* <motion.h1
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
         className="text-base sm:text-lg md:text-2xl lg:text-3xl font-bold text-[#07aeda] uppercase tracking-widest mt-4 md:mt-6 text-center px-6 w-full max-w-[95vw] md:max-w-3xl leading-relaxed"
       >
         welcome to Sankalp Constructions
-      </motion.h1>
+      </motion.h1> */}
     </motion.div>
   );
 }

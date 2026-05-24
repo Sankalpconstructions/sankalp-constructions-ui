@@ -40,7 +40,7 @@ export default function ContactPage() {
   return (
     <div className="bg-white">
       {/* Hero Banner */}
-      <PageBanner 
+      <PageBanner
         title={<>Get In <span className="text-[#29B1D2]">Touch</span></>}
         subtitle="Whether you're looking to invest in a dream home or a premium commercial property, our tailored advisors are here to help."
         image="https://images.unsplash.com/photo-1497366216548-37526070297c?w=1600"
@@ -112,22 +112,22 @@ export default function ContactPage() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
                         <label className="block text-sm uppercase tracking-wider font-semibold text-gray-600 mb-2">Full Name <span className="text-red-500">*</span></label>
-                        <input required type="text" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} className="w-full p-4 bg-gray-50 border border-gray-200 rounded-lg outline-none focus:border-[#29B1D2] focus:bg-white transition-all text-gray-800 shadow-sm" placeholder="John Doe" />
+                        <input required type="text" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} className="w-full p-4 bg-gray-50 border border-gray-200 rounded-lg outline-none focus:border-[#29B1D2] focus:bg-white transition-all text-gray-800 shadow-sm" placeholder="Your full name" />
                       </div>
                       <div>
                         <label className="block text-sm uppercase tracking-wider font-semibold text-gray-600 mb-2">Phone Number <span className="text-red-500">*</span></label>
-                        <input required type="tel" value={formData.phone} onChange={(e) => setFormData({...formData, phone: e.target.value})} className="w-full p-4 bg-gray-50 border border-gray-200 rounded-lg outline-none focus:border-[#29B1D2] focus:bg-white transition-all text-gray-800 shadow-sm" placeholder="+91 99999 99999" />
+                        <input required type="tel" value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} className="w-full p-4 bg-gray-50 border border-gray-200 rounded-lg outline-none focus:border-[#29B1D2] focus:bg-white transition-all text-gray-800 shadow-sm" placeholder="Your phone number" />
                       </div>
                     </div>
 
                     <div>
                       <label className="block text-sm uppercase tracking-wider font-semibold text-gray-600 mb-2">Email Address <span className="text-gray-400 font-normal lowercase">(Optional)</span></label>
-                      <input type="email" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} className="w-full p-4 bg-gray-50 border border-gray-200 rounded-lg outline-none focus:border-[#29B1D2] focus:bg-white transition-all text-gray-800 shadow-sm" placeholder="john@example.com" />
+                      <input type="email" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} className="w-full p-4 bg-gray-50 border border-gray-200 rounded-lg outline-none focus:border-[#29B1D2] focus:bg-white transition-all text-gray-800 shadow-sm" placeholder="Your email address" />
                     </div>
 
                     <div>
                       <label className="block text-sm uppercase tracking-wider font-semibold text-gray-600 mb-2">Project of Interest</label>
-                      <select value={formData.project} onChange={(e) => setFormData({...formData, project: e.target.value})} className="w-full p-4 bg-gray-50 border border-gray-200 rounded-lg outline-none focus:border-[#29B1D2] focus:bg-white transition-all text-gray-800 shadow-sm appearance-none cursor-pointer">
+                      <select value={formData.project} onChange={(e) => setFormData({ ...formData, project: e.target.value })} className="w-full p-4 bg-gray-50 border border-gray-200 rounded-lg outline-none focus:border-[#29B1D2] focus:bg-white transition-all text-gray-800 shadow-sm appearance-none cursor-pointer">
                         <option value="">Select a Project</option>
                         <option value="Sankalp Heights">Sankalp Heights</option>
                         <option value="Sankalp Oasis">Sankalp Oasis</option>
@@ -139,7 +139,7 @@ export default function ContactPage() {
 
                     <div>
                       <label className="block text-sm uppercase tracking-wider font-semibold text-gray-600 mb-2">Your Message <span className="text-red-500">*</span></label>
-                      <textarea required rows={4} value={formData.message} onChange={(e) => setFormData({...formData, message: e.target.value})} className="w-full p-4 bg-gray-50 border border-gray-200 rounded-lg outline-none focus:border-[#29B1D2] focus:bg-white transition-all text-gray-800 shadow-sm resize-none" placeholder="Let us know how we can assist you..."></textarea>
+                      <textarea required rows={4} value={formData.message} onChange={(e) => setFormData({ ...formData, message: e.target.value })} className="w-full p-4 bg-gray-50 border border-gray-200 rounded-lg outline-none focus:border-[#29B1D2] focus:bg-white transition-all text-gray-800 shadow-sm resize-none" placeholder="Let us know how we can assist you..."></textarea>
                     </div>
 
                     <button
@@ -169,8 +169,8 @@ export default function ContactPage() {
       {/* Embedded Map Section */}
       <section className="w-full h-96 relative bg-gray-200 border-t border-gray-300">
         <iframe
-       src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d121795.54401845207!2d78.3585938!3d17.4544125!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb9bad6903b619%3A0x694c0f2553278fdd!2sSankalp%20constructions!5e0!3m2!1sen!2sin!4v1778676386966!5m2!1sen!2sin"
-            width="100%"
+          src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d121795.54401845207!2d78.3585938!3d17.4544125!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb9bad6903b619%3A0x694c0f2553278fdd!2sSankalp%20constructions!5e0!3m2!1sen!2sin!4v1778676386966!5m2!1sen!2sin"
+          width="100%"
           height="100%"
           style={{ border: 0 }}
           allowFullScreen

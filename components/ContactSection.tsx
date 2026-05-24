@@ -76,7 +76,7 @@ export default function ContactSection() {
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       className="w-full border-b border-gray-200 py-2 focus:outline-none focus:border-[#29B1D2] transition-colors text-sm text-gray-600"
-                      placeholder="John Doe"
+                      placeholder="Your full name"
                     />
                   </div>
                   <div>
@@ -87,7 +87,7 @@ export default function ContactSection() {
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                       className="w-full border-b border-gray-200 py-2 focus:outline-none focus:border-[#29B1D2] transition-colors text-sm text-gray-600"
-                      placeholder="john@example.com"
+                      placeholder="Your email address"
                     />
                   </div>
                 </div>
@@ -101,7 +101,7 @@ export default function ContactSection() {
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                       className="w-full border-b border-gray-200 py-2 focus:outline-none focus:border-[#29B1D2] transition-colors text-sm text-gray-600"
-                      placeholder="+91 99999 99999"
+                      placeholder="Your phone number"
                     />
                   </div>
                   <div>
@@ -111,7 +111,7 @@ export default function ContactSection() {
                       onChange={(e) => setFormData({ ...formData, project: e.target.value })}
                       className="w-full border-b border-gray-200 py-2 focus:outline-none focus:border-[#29B1D2] transition-colors bg-white text-sm text-gray-600 cursor-pointer"
                     >
-                      <option value="General Inquiry">General Inquiry</option>
+                      <option value="General Inquiry">General Enquiries</option>
                       <option value="2 BHK Apartments">2 BHK Apartments</option>
                       <option value="3 BHK Premium">3 BHK Premium</option>
                       <option value="Luxury Villas">Luxury Villas</option>
@@ -127,7 +127,7 @@ export default function ContactSection() {
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                     className="w-full border-b border-gray-200 py-2 focus:outline-none focus:border-[#29B1D2] transition-colors resize-none text-sm text-gray-600"
-                    placeholder="How can we help you?"
+                    placeholder="Your message"
                   ></textarea>
                 </div>
 
@@ -149,7 +149,7 @@ export default function ContactSection() {
           {/* Map Side (Right) */}
           <div className="lg:w-1/2 min-h-[400px] lg:min-h-auto relative bg-gray-100">
             <iframe
-       src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d121795.54401845207!2d78.3585938!3d17.4544125!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb9bad6903b619%3A0x694c0f2553278fdd!2sSankalp%20constructions!5e0!3m2!1sen!2sin!4v1778676386966!5m2!1sen!2sin"
+              src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d121795.54401845207!2d78.3585938!3d17.4544125!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb9bad6903b619%3A0x694c0f2553278fdd!2sSankalp%20constructions!5e0!3m2!1sen!2sin!4v1778676386966!5m2!1sen!2sin"
               className="absolute inset-0 w-full h-full border-0 grayscale hover:grayscale-0 transition-all duration-1000"
               allowFullScreen={false}
               loading="lazy"

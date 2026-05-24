@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import sankalpLogo from "../public/assets/sankalp-red.png";
+import sankalpLogo from "../public/assets/Sankalplogo.png";
 import {
   Menu,
   X,
@@ -126,8 +126,8 @@ export default function Header() {
   return (
     <header
       className={`fixed top-0 w-full z-50 transition-all duration-700 ${isScrolled
-        ? "bg-[#050505] py-2 shadow-2xl border-b border-white/5"
-        : "bg-gradient-to-b from-black/60 to-transparent py-6"
+        ? "bg-white py-2 shadow-2xl border-b border-black/5"
+        : "bg-white py-3"
         }`}
     >
       <div className="container mx-auto px-4 lg:px-8 flex justify-between items-center relative">
@@ -137,12 +137,12 @@ export default function Header() {
           <Image
             src={sankalpLogo}
             alt="Sankalp Logo"
-            width={160}
-            height={160}
+            width={190}
+            height={190}
             priority
             className={`w-auto object-contain transition-all duration-700 ${isScrolled
-              ? "h-12 md:h-14"
-              : "h-12 md:h-14"
+              ? "h-16 md:h-16"
+              : "h-16 md:h-16"
               }`}
           />
         </Link>
@@ -161,7 +161,7 @@ export default function Header() {
                   link.name !== "Rent" &&
                   handleScrollTo(e, link.href)
                 }
-                className="text-white/80 hover:text-white text-[11px] uppercase tracking-[0.2em] transition-colors flex items-center gap-1"
+                className="text-black/80 hover:text-black text-[11px] uppercase font-bold tracking-[0.2em] transition-colors flex items-center gap-1"
               >
                 {link.name}
 
@@ -177,11 +177,11 @@ export default function Header() {
               {/* Projects Dropdown */}
               {link.name === "Our Projects" && (
                 <div className="absolute top-full left-1/2 -translate-x-1/2 pt-6 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-500 z-50">
-                  <div className="w-max bg-[#050505] text-white shadow-2xl p-8 border border-white/10 flex gap-10">
+                  <div className="w-max bg-white/40 backdrop-blur-[40px] text-black shadow-2xl p-8 border border-black/10 flex gap-10">
 
                     {/* Ongoing */}
                     <div className="flex-1">
-                      <h3 className="text-[#F5C33C] text-xs uppercase mb-6">
+                      <h3 className="text-black font-bold text-xs uppercase mb-6">
                         Ongoing Projects
                       </h3>
 
@@ -190,7 +190,7 @@ export default function Header() {
                           <li key={p._id}>
                             <Link
                               href={`/projects/${p._id}`}
-                              className="text-sm text-white/60 hover:text-white"
+                              className="text-sm text-black/70 hover:text-black font-medium"
                             >
                               {p.title}
                             </Link>
@@ -200,8 +200,8 @@ export default function Header() {
                     </div>
 
                     {/* Upcoming */}
-                    <div className="flex-1 border-l border-white/10 pl-10">
-                      <h3 className="text-[#F5C33C] text-xs uppercase mb-6">
+                    <div className="flex-1 border-l border-black/10 pl-10">
+                      <h3 className="text-black font-bold text-xs uppercase mb-6">
                         Upcoming Projects
                       </h3>
 
@@ -210,7 +210,7 @@ export default function Header() {
                           <li key={p._id}>
                             <Link
                               href={`/projects/${p._id}`}
-                              className="text-white/60 hover:text-white"
+                              className="text-sm text-black/70 hover:text-black font-medium"
                             >
                               {p.title}
                             </Link>
@@ -220,8 +220,8 @@ export default function Header() {
                     </div>
 
                     {/* Completed */}
-                    <div className="flex-1 border-l border-white/10 pl-10">
-                      <h3 className="text-[#F5C33C] text-xs uppercase mb-6">
+                    <div className="flex-1 border-l border-black/10 pl-10">
+                      <h3 className="text-black font-bold text-xs uppercase mb-6">
                         Completed Projects
                       </h3>
 
@@ -230,7 +230,7 @@ export default function Header() {
                           <li key={p._id}>
                             <Link
                               href={`/projects/${p._id}`}
-                              className="text-sm text-white/60 hover:text-white"
+                              className="text-sm text-black/70 hover:text-black font-medium"
                             >
                               {p.title}
                             </Link>
@@ -246,16 +246,16 @@ export default function Header() {
               {/* Rent Dropdown */}
               {link.name === "Rent" && (
                 <div className="absolute top-full left-1/2 -translate-x-1/2 pt-6 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-500 z-50">
-                  <div className="w-max min-w-[300px] bg-[#050505] text-white shadow-2xl p-8 border border-white/10 flex gap-10">
+                  <div className="w-max min-w-[300px] bg-white/40 backdrop-blur-[40px] text-black shadow-2xl p-8 border border-black/10 flex gap-10">
 
                     {/* Residential */}
                     <div className="flex-1">
-                      <h3 className="text-[#F5C33C] text-xs uppercase mb-6">
+                      <h3 className="text-black font-bold text-xs uppercase mb-6">
                         Residential
                       </h3>
                       <ul className="space-y-4">
                         <li>
-                          <Link href="/rent/residential" className="text-sm text-white/60 hover:text-white">
+                          <Link href="/rent/residential" className="text-sm text-black/70 hover:text-black font-medium">
                             View Residential Properties
                           </Link>
                         </li>
@@ -263,13 +263,13 @@ export default function Header() {
                     </div>
 
                     {/* Commercial */}
-                    <div className="flex-1 border-l border-white/10 pl-10">
-                      <h3 className="text-[#F5C33C] text-xs uppercase mb-6">
+                    <div className="flex-1 border-l border-black/10 pl-10">
+                      <h3 className="text-black font-bold text-xs uppercase mb-6">
                         Commercial
                       </h3>
                       <ul className="space-y-4">
                         <li>
-                          <Link href="/rent/commercial" className="text-sm text-white/60 hover:text-white">
+                          <Link href="/rent/commercial" className="text-sm text-black/70 hover:text-black font-medium">
                             View Commercial Properties
                           </Link>
                         </li>
@@ -287,7 +287,7 @@ export default function Header() {
             onClick={() =>
               setIsSearchOpen(!isSearchOpen)
             }
-            className="text-white hover:text-[#F5C33C]"
+            className="text-black hover:text-[#711113]"
           >
             {isSearchOpen ? (
               <X size={18} />
@@ -299,9 +299,9 @@ export default function Header() {
           {/* CTA */}
           <Link
             href="/contact"
-            className="px-5 py-2 border border-white/30 text-white hover:bg-white hover:text-black transition-all text-[10px] uppercase tracking-[0.2em]"
+            className="px-5 py-2 border border-black/30 text-black font-bold hover:bg-black hover:text-white transition-all text-[10px] uppercase tracking-[0.2em]"
           >
-            Inquire
+            Enquiry Now
           </Link>
         </nav>
 
@@ -311,7 +311,7 @@ export default function Header() {
             onClick={() =>
               setIsSearchOpen(!isSearchOpen)
             }
-            className="text-white"
+            className="text-black"
           >
             {isSearchOpen ? (
               <X size={18} />
@@ -322,7 +322,7 @@ export default function Header() {
 
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="text-white"
+            className="text-black"
           >
             {isOpen ? (
               <X size={20} />
@@ -343,7 +343,7 @@ export default function Header() {
             >
               <form
                 onSubmit={handleSearchSubmit}
-                className="max-w-lg mx-auto bg-black/90 border border-white/20 rounded-full overflow-hidden flex shadow-2xl backdrop-blur-sm"
+                className="max-w-lg mx-auto bg-white border border-black/10 rounded-full overflow-hidden flex shadow-2xl"
               >
                 <input
                   type="text"
@@ -352,7 +352,7 @@ export default function Header() {
                   onChange={(e) =>
                     setSearchQuery(e.target.value)
                   }
-                  className="flex-1 bg-transparent text-white px-5 py-3 text-sm outline-none placeholder:text-gray-400"
+                  className="flex-1 bg-transparent text-black px-5 py-3 text-sm outline-none placeholder:text-gray-500"
                 />
 
                 <button
@@ -383,7 +383,7 @@ export default function Header() {
               opacity: 0,
               height: 0,
             }}
-            className="md:hidden bg-white overflow-hidden"
+            className="md:hidden bg-white/40 backdrop-blur-[40px] overflow-hidden"
           >
             <ul className="flex flex-col items-start px-4 py-4 gap-3 w-full">
               {navLinks.map((link) => (
@@ -391,7 +391,7 @@ export default function Header() {
                   {link.name === "Our Projects" ? (
                     <div className="w-full">
                       <button
-                        className="text-black uppercase text-[11px] tracking-[0.15em] hover:text-[#711113] flex items-center justify-between w-full pb-2 border-b border-gray-100"
+                        className="text-black uppercase text-[11px] tracking-[0.15em] hover:text-black/70 flex items-center justify-between w-full pb-2 border-b border-black/10"
                         onClick={() => {
                           const el = document.getElementById('mobile-projects');
                           if (el) el.classList.toggle('hidden');
@@ -399,30 +399,30 @@ export default function Header() {
                       >
                         {link.name} <ChevronDown size={13} />
                       </button>
-                      <div id="mobile-projects" className="hidden w-full bg-gray-50 py-2 px-3 mt-1.5 text-left rounded-md">
+                      <div id="mobile-projects" className="hidden w-full bg-white/20 py-2 px-3 mt-1.5 text-left rounded-md">
                         <div className="mb-3 text-left">
-                          <h4 className="text-[#711113] font-bold text-[9px] uppercase tracking-widest border-b border-gray-200 pb-1 mb-2 inline-block">Ongoing</h4>
+                          <h4 className="text-black font-bold text-[9px] uppercase tracking-widest border-b border-black/10 pb-1 mb-2 inline-block">Ongoing</h4>
                           <div className="flex flex-col gap-0.5">
                             {ongoingProjects.map(p => (
-                              <Link key={p._id} href={`/projects/${p._id}`} onClick={() => setIsOpen(false)} className="text-gray-700 text-[11px] py-1 hover:text-black block">{p.title}</Link>
+                              <Link key={p._id} href={`/projects/${p._id}`} onClick={() => setIsOpen(false)} className="text-black/70 text-[11px] py-1 hover:text-black block font-medium">{p.title}</Link>
                             ))}
                           </div>
                         </div>
 
                         <div className="mb-3 text-left">
-                          <h4 className="text-[#711113] font-bold text-[9px] uppercase tracking-widest border-b border-gray-200 pb-1 mb-2 inline-block">Upcoming</h4>
+                          <h4 className="text-black font-bold text-[9px] uppercase tracking-widest border-b border-black/10 pb-1 mb-2 inline-block">Upcoming</h4>
                           <div className="flex flex-col gap-0.5">
                             {upcomingProjects.map(p => (
-                              <Link key={p._id} href={`/projects/${p._id}`} onClick={() => setIsOpen(false)} className="text-gray-700 text-[11px] py-1 hover:text-black block">{p.title}</Link>
+                              <Link key={p._id} href={`/projects/${p._id}`} onClick={() => setIsOpen(false)} className="text-black/70 text-[11px] py-1 hover:text-black block font-medium">{p.title}</Link>
                             ))}
                           </div>
                         </div>
 
                         <div className="text-left">
-                          <h4 className="text-[#711113] font-bold text-[9px] uppercase tracking-widest border-b border-gray-200 pb-1 mb-2 inline-block">Completed</h4>
+                          <h4 className="text-black font-bold text-[9px] uppercase tracking-widest border-b border-black/10 pb-1 mb-2 inline-block">Completed</h4>
                           <div className="flex flex-col gap-0.5">
                             {completedProjects.map(p => (
-                              <Link key={p._id} href={`/projects/${p._id}`} onClick={() => setIsOpen(false)} className="text-gray-700 text-[11px] py-1 hover:text-black block">{p.title}</Link>
+                              <Link key={p._id} href={`/projects/${p._id}`} onClick={() => setIsOpen(false)} className="text-black/70 text-[11px] py-1 hover:text-black block font-medium">{p.title}</Link>
                             ))}
                           </div>
                         </div>
@@ -431,7 +431,7 @@ export default function Header() {
                   ) : link.name === "Rent" ? (
                     <div className="w-full">
                       <button
-                        className="text-black uppercase text-[11px] tracking-[0.15em] hover:text-[#711113] flex items-center justify-between w-full pb-2 border-b border-gray-100"
+                        className="text-black uppercase text-[11px] tracking-[0.15em] hover:text-black/70 flex items-center justify-between w-full pb-2 border-b border-black/10"
                         onClick={() => {
                           const el = document.getElementById('mobile-rent');
                           if (el) el.classList.toggle('hidden');
@@ -439,17 +439,17 @@ export default function Header() {
                       >
                         {link.name} <ChevronDown size={13} />
                       </button>
-                      <div id="mobile-rent" className="hidden w-full bg-gray-50 py-2 px-3 mt-1.5 text-left rounded-md flex flex-col gap-0.5">
-                        <Link href="/rent/residential" onClick={() => setIsOpen(false)} className="text-[#711113] font-bold text-[11px] uppercase tracking-widest hover:text-black block py-1.5">Residential</Link>
-                        <Link href="/rent/commercial" onClick={() => setIsOpen(false)} className="text-[#711113] font-bold text-[11px] uppercase tracking-widest hover:text-black block py-1.5">Commercial</Link>
+                      <div id="mobile-rent" className="hidden w-full bg-white/20 py-2 px-3 mt-1.5 text-left rounded-md flex flex-col gap-0.5">
+                        <Link href="/rent/residential" onClick={() => setIsOpen(false)} className="text-black/80 font-bold text-[11px] uppercase tracking-widest hover:text-black block py-1.5">Residential</Link>
+                        <Link href="/rent/commercial" onClick={() => setIsOpen(false)} className="text-black/80 font-bold text-[11px] uppercase tracking-widest hover:text-black block py-1.5">Commercial</Link>
                       </div>
                     </div>
                   ) : (
-                    <div className="w-full border-b border-gray-100 pb-2 text-left">
+                    <div className="w-full border-b border-black/10 pb-2 text-left">
                       <Link
                         href={link.href}
                         onClick={() => setIsOpen(false)}
-                        className="text-black uppercase text-[11px] tracking-[0.15em] hover:text-[#711113] block w-full"
+                        className="text-black uppercase text-[11px] tracking-[0.15em] hover:text-black/70 block w-full"
                       >
                         {link.name}
                       </Link>
@@ -461,9 +461,9 @@ export default function Header() {
                 <Link
                   href="/contact"
                   onClick={() => setIsOpen(false)}
-                  className="w-full block text-center bg-black text-white py-2.5 font-semibold uppercase tracking-widest text-[10px] hover:bg-[#711113] transition-colors"
+                  className="w-full block text-center font-bold bg-black text-white py-2.5  uppercase tracking-widest text-[10px] hover:bg-black/80 transition-colors"
                 >
-                  Inquire Now
+                  Enquiry Now
                 </Link>
               </li>
             </ul>

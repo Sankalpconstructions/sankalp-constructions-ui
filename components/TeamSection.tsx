@@ -17,7 +17,7 @@ export default function TeamSection() {
     <section id="team" className="py-10 md:py-16 bg-[#E5E7EB] text-gray-900 overflow-hidden">
       <div className="container mx-auto px-4 lg:px-8">
 
-        <div className="text-center max-w-2xl mx-auto mb-10 md:mb-14">
+        <div className="text-center max-w-2xl mx-auto mb-10 md:mb-14 flex flex-col items-center">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -26,6 +26,7 @@ export default function TeamSection() {
           >
             Meet Our Team
           </motion.h2>
+          <img src="/assets/Title-decorations.png" alt="Decoration" className="w-[150px] md:w-[200px] h-auto object-contain mt-1 mb-4" />
           <p className="text-gray-500 text-xs md:text-base px-2 leading-relaxed">
             The visionary leaders and dedicated experts behind Sankalp Constructions&apos; success.
           </p>

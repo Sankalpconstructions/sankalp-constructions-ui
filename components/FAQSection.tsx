@@ -50,7 +50,7 @@ export default function FAQSection() {
       className="py-12 md:py-16 bg-white text-gray-900 overflow-hidden border-t border-gray-200"
     >
       <div className="container mx-auto px-4 lg:px-8 max-w-6xl">
-        <div className="text-center mb-8 md:mb-12">
+        <div className="text-center mb-8 md:mb-12 flex flex-col items-center">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -59,7 +59,7 @@ export default function FAQSection() {
           >
             Frequently Asked Questions
           </motion.h2>
-
+          <img src="/assets/Title-decorations.png" alt="Decoration" className="w-[150px] md:w-[200px] h-auto object-contain mt-1 mb-4" />
           <p className="text-gray-600 text-sm md:text-base leading-relaxed">
             Everything you need to know about our projects, booking process, and company policies.
           </p>

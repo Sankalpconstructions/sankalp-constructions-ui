@@ -100,6 +100,7 @@ export default function ProjectsShowcase() {
             <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-[#711113] mb-3">
               Our Projects
             </h2>
+            <img src="/assets/Title-decorations.png" alt="Decoration" className="w-[150px] md:w-[200px] h-auto object-contain mt-1 mb-4" />
             <p className="text-gray-600 mb-3 whitespace-pre-line">
               Explore our residential & commercial projects.
             </p>

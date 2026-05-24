@@ -144,10 +144,11 @@ export default function StorySection({ variant = "compact" }: StorySectionProps)
       {/* BASE SHARED SECTION */}
       <section id="story" className="py-10 md:py-16 bg-white relative overflow-hidden">
         <div className="container mx-auto px-4 lg:px-8 z-10 relative">
-          <div className="text-center mb-6 md:mb-12">
+          <div className="text-center mb-6 md:mb-12 flex flex-col items-center">
             <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-[#711113] mb-3">
               {story.title}
             </h2>
+            <img src="/assets/Title-decorations.png" alt="Decoration" className="w-[150px] md:w-[200px] h-auto object-contain mt-1" />
           </div>
           <div className="flex flex-col md:flex-row items-start gap-8 md:gap-12 lg:gap-20 text-gray-900">
 

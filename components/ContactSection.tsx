@@ -39,10 +39,11 @@ export default function ContactSection() {
     <section className="py-8 md:py-15 bg-gray-50 text-gray-900 overflow-hidden border-t border-gray-200">
       <div className="container mx-auto px-4 lg:px-8">
 
-        <div id="contact" className="text-center max-w-2xl mx-auto mb-8 md:mb-16">
+        <div id="contact" className="text-center max-w-2xl mx-auto mb-8 md:mb-16 flex flex-col items-center">
           <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-[#711113] mb-3">
             Get In Touch
           </h2>
+          <img src="/assets/Title-decorations.png" alt="Decoration" className="w-[150px] md:w-[200px] h-auto object-contain mt-1 mb-4" />
           <p className="text-gray-600 text-sm md:text-base leading-relaxed">
             Reach out to our expert team for any inquiries, site visits, or investment opportunities.
           </p>

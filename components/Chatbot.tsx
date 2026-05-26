@@ -1,7 +1,7 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Bot, Loader2, CheckCircle } from "lucide-react";
+import { X, Speech, Loader2, CheckCircle } from "lucide-react";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
@@ -232,7 +232,7 @@ export default function Chatbot() {
   const TypingIndicator = () => (
     <div className="flex items-center gap-3">
       <div className="w-8 h-8 rounded-full bg-[#711113]/10 flex items-center justify-center">
-        <Bot size={16} className="text-[#711113]" />
+        <Speech size={16} className="text-[#711113]" />
       </div>
       <div className="bg-white border px-4 py-3 rounded-2xl flex items-center gap-1.5">
         <div className="flex gap-1">
@@ -292,7 +292,7 @@ export default function Chatbot() {
                     <div className={`max-w-[85%] ${msg.sender === "user" ? "flex-row-reverse" : ""} flex gap-3`}>
                       {msg.sender === "bot" && (
                         <div className="w-8 h-8 rounded-full bg-[#711113]/10 flex-shrink-0 mt-1 flex items-center justify-center">
-                          <Bot size={16} className="text-[#711113]" />
+                          <Speech size={16} className="text-[#711113]" />
                         </div>
                       )}
                       <div>

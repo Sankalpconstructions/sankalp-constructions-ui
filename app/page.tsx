@@ -8,6 +8,7 @@ import FAQSection from "@/components/FAQSection";
 import ContactSection from "@/components/ContactSection";
 import PopupLeadForm from "@/components/PopupLeadForm";
 import Chatbot from "@/components/Chatbot";
+import InstagramCarousel from "@/components/InstagramCarousel";
 
 import { constructMetadata } from "@/lib/seo";
 
@@ -27,6 +28,7 @@ export default function Home() {
     
       <TeamSection />
       <FAQSection />
+      <InstagramCarousel />
       <ContactSection />
 
       <PopupLeadForm />

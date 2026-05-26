@@ -150,7 +150,7 @@ export default function ContactSection() {
           <div className="lg:w-1/2 min-h-[400px] lg:min-h-auto relative bg-gray-100">
             <iframe
               src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d121795.54401845207!2d78.3585938!3d17.4544125!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb9bad6903b619%3A0x694c0f2553278fdd!2sSankalp%20constructions!5e0!3m2!1sen!2sin!4v1778676386966!5m2!1sen!2sin"
-              className="absolute inset-0 w-full h-full border-0 grayscale hover:grayscale-0 transition-all duration-1000"
+              className="absolute inset-0 w-full h-full border-0"
               allowFullScreen={false}
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"

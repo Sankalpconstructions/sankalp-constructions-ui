@@ -9,6 +9,7 @@ interface PricingRow {
   area: string;
   superBuiltUpArea?: string;
   facing?: string;
+  udsSqYards?: string;
 }
 
 interface Props {
@@ -87,8 +88,12 @@ export default function ProjectPriceTable({ projectTitle, rows }: Props) {
                     <p className="text-[10px] uppercase tracking-widest font-bold text-gray-400 mb-0.5">Super Built-up</p>
                     <p className="text-xs font-semibold text-gray-800">{row.superBuiltUpArea || "—"}</p>
                   </div>
+                  <div>
+                    <p className="text-[10px] uppercase tracking-widest font-bold text-gray-400 mb-0.5">UDS Sq.Yards</p>
+                    <p className="text-xs font-semibold text-gray-800">{row.udsSqYards || "—"}</p>
+                  </div>
                   {row.facing && (
-                    <div className="col-span-2">
+                    <div>
                       <p className="text-[10px] uppercase tracking-widest font-bold text-gray-400 mb-0.5">Facing</p>
                       <p className="text-xs font-semibold text-gray-800">{row.facing}</p>
                     </div>
@@ -101,17 +106,18 @@ export default function ProjectPriceTable({ projectTitle, rows }: Props) {
           {/* ── Tablet & Desktop: table layout (≥ sm) ── */}
           <div className="hidden sm:block bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden">
             {/* Header */}
-            <div className="grid grid-cols-4 bg-[#711113] text-white text-[10px] md:text-xs font-bold uppercase tracking-widest px-4 md:px-6 py-4">
+            <div className="grid grid-cols-5 bg-[#711113] text-white text-[10px] md:text-xs font-bold uppercase tracking-widest px-4 md:px-6 py-4">
               <span>Type</span>
               <span className="text-center">Carpet Area</span>
               <span className="text-center">Super Built-up</span>
+              <span className="text-center">UDS Sq.Yards</span>
               <span className="text-right">Price</span>
             </div>
             {/* Rows */}
             {rows.map((row, i) => (
               <div
                 key={i}
-                className={`grid grid-cols-4 px-4 md:px-6 py-4 md:py-5 border-b border-gray-50 items-center ${i % 2 === 0 ? "bg-white" : "bg-gray-50/50"}`}
+                className={`grid grid-cols-5 px-4 md:px-6 py-4 md:py-5 border-b border-gray-50 items-center ${i % 2 === 0 ? "bg-white" : "bg-gray-50/50"}`}
               >
                 <div className="flex flex-col">
                   <span className="text-xs md:text-sm font-bold text-gray-900">{row.type}</span>
@@ -121,6 +127,7 @@ export default function ProjectPriceTable({ projectTitle, rows }: Props) {
                 </div>
                 <span className="text-xs md:text-sm text-gray-600 text-center">{row.area}</span>
                 <span className="text-xs md:text-sm text-gray-600 text-center">{row.superBuiltUpArea || "—"}</span>
+                <span className="text-xs md:text-sm text-gray-600 text-center">{row.udsSqYards || "—"}</span>
                 <div className="flex justify-end">
                   <button
                     onClick={() => setShowForm(true)}

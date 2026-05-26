@@ -256,7 +256,7 @@ export default function Chatbot() {
             onMouseLeave={() => setIsHoverToggleHovered(false)}
             className="w-11 h-11 md:w-14 md:h-14 bg-[#1E1E1E] text-[#F5C33C] rounded-full shadow-2xl flex items-center justify-center hover:scale-105 transition-all"
           >
-            <Bot className="w-5 h-5 md:w-7 md:h-7" />
+            <Speech className="w-5 h-5 md:w-7 md:h-7" />
           </button>
         )}
       </div>
@@ -273,7 +273,7 @@ export default function Chatbot() {
             {/* Header */}
             <div className="bg-gradient-to-r from-gray-900 to-[#4a0b0d] p-3 md:p-5 text-white flex justify-between items-center">
               <div className="flex items-center gap-3">
-                <Bot size={24} className="text-[#F5C33C]" />
+                <Speech size={24} className="text-[#F5C33C]" />
                 <div>
                   <h4 className="font-bold">Sankalp Assistant</h4>
                   <p className="text-xs text-green-400">● Online</p>

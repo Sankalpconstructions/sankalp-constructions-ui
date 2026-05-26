@@ -6,13 +6,11 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 const IMAGE_SLIDE_DURATION = 6000;
 
 export default function HeroBanner() {
-  const FALLBACK_SLIDES = [
-    { type: "image", src: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1600", mobileImage: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800" },
-    { type: "image", src: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1600", mobileImage: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800" }
-  ];
 
-  const [slides, setSlides] = useState<any[]>(FALLBACK_SLIDES);
-  const [loading, setLoading] = useState(false);
+
+  const [slides, setSlides] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
 
   useEffect(() => {
     const fetchBanners = async () => {
@@ -25,15 +23,14 @@ export default function HeroBanner() {
           if (activeSlides.length > 0) {
             setSlides(activeSlides.map((s: any) => ({ type: s.type || 'image', src: s.image || s.url || s.src, mobileImage: s.mobileImage || s.image || s.url || s.src })));
           } else {
-            // keep FALLBACK_SLIDES (already set)
+            setSlides([]);
           }
+        } else {
+          setSlides([]);
         }
       } catch (error) {
         console.error("Error fetching banners:", error);
-        setSlides([
-          { type: "image", src: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1600", mobileImage: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800" },
-          { type: "image", src: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1600", mobileImage: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800" }
-        ]);
+        setSlides([]);
       } finally {
         setLoading(false);
       }
@@ -179,11 +176,10 @@ export default function HeroBanner() {
           <button
             key={i}
             onClick={() => goToSlide(i)}
-            className={`h-2 rounded-full transition-all duration-300 ${
-              i === index
-                ? "bg-[#F5C33C] w-8 shadow-[0_0_10px_rgba(245,195,60,0.6)]"
-                : "bg-white/40 hover:bg-white w-2"
-            }`}
+            className={`h-2 rounded-full transition-all duration-300 ${i === index
+              ? "bg-[#F5C33C] w-8 shadow-[0_0_10px_rgba(245,195,60,0.6)]"
+              : "bg-white/40 hover:bg-white w-2"
+              }`}
           />
         ))}
       </div>

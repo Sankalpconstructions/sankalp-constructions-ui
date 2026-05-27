@@ -5,7 +5,6 @@ import Image from "next/image";
 
 export default function Preloader() {
   const [isVisible, setIsVisible] = useState(true);
-  const [mounted, setMounted] = useState(false);
 
   // Track when the preloader started showing
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -22,7 +21,6 @@ export default function Preloader() {
   };
 
   useEffect(() => {
-    setMounted(true);
     const hasLoaded = typeof window !== "undefined" && sessionStorage.getItem("sankalp_preloader_loaded") === "true";
     if (hasLoaded) {
       setIsVisible(false);
@@ -40,27 +38,6 @@ export default function Preloader() {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  // During SSR and initial client hydration, render the preloader to avoid hydration mismatch
-  if (!mounted) {
-    return (
-      <div
-        className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#BFC8D1]"
-        style={{ display: "flex" }}
-      >
-        <div className="relative w-48 h-48 sm:w-60 sm:h-60 md:w-72 md:h-72 lg:w-80 lg:h-80 flex items-center justify-center">
-          <Image
-            src="/assets/Sankalp.gif"
-            alt="Sankalp Constructions Preloader"
-            fill
-            unoptimized
-            className="object-contain"
-            priority
-          />
-        </div>
-      </div>
-    );
-  }
 
   // If already loaded, do not display anything
   const hasLoaded = typeof window !== "undefined" && sessionStorage.getItem("sankalp_preloader_loaded") === "true";

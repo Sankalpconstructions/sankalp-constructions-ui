@@ -1,7 +1,7 @@
 "use client";
 import { useRef, useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
-import { MapPin, ChevronRight, ChevronLeft } from "lucide-react";
+import { MapPin, ChevronRight, ChevronLeft, Building } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { useAppData } from "@/context/AppDataContext";
@@ -106,11 +106,11 @@ export default function ProjectsShowcase() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-[#711113] mb-3">
+            <h2 className="text-2xl text-center md:text-left md:text-3xl lg:text-4xl font-bold text-[#711113] mb-3">
               Our Projects
             </h2>
-            <img src="/assets/Title-decorations.png" alt="Decoration" className="w-[150px] md:w-[200px] h-auto object-contain mt-1 mb-4" />
-            <p className="text-gray-600 mb-3 whitespace-pre-line">
+            <img src="/assets/Title-decorations.png" alt="Decoration" className="m-auto md:ml-0 w-[150px] md:w-[200px] h-auto object-contain mt-1 mb-4" />
+            <p className="text-gray-600 text-center md:text-left mb-3 whitespace-pre-line">
               Explore our residential & commercial projects.
             </p>
           </motion.div>
@@ -152,7 +152,7 @@ export default function ProjectsShowcase() {
                 {Array.from({ length: 4 }).map((_, i) => (
                   <div
                     key={i}
-                    className="w-[85vw] md:w-[350px] h-[220px] shrink-0 rounded-lg bg-gray-200 animate-pulse"
+                    className="w-full md:w-[60%] lg:w-[38%] h-[220px] shrink-0 rounded-lg bg-gray-200 animate-pulse"
                   >
                     <div className="h-full w-full bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 animate-shimmer" />
                   </div>
@@ -166,7 +166,7 @@ export default function ProjectsShowcase() {
                 return (
                   <div
                     key={`${project.id}-${idx}`}
-                    className="w-[85vw] md:w-[400px] shrink-0 snap-start"
+                    className="w-full md:w-[60%] lg:w-[38%] shrink-0 snap-start"
                   >
                     <div className="relative h-[300px] md:h-[400px] rounded-lg overflow-hidden shadow-xl group/card">
 
@@ -176,7 +176,7 @@ export default function ProjectsShowcase() {
                         src={project.image}
                         alt={project.title}
                         fill
-                        sizes="(max-width: 768px) 85vw, 400px"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1024px) 60vw, 38vw"
                         priority={idx < 3}
                         className="object-cover group-hover/card:scale-110 transition duration-700"
                       />
@@ -188,20 +188,18 @@ export default function ProjectsShowcase() {
                         {badge.label}
                       </span>
 
-                      <span className="absolute top-4 right-4 z-30 bg-black/50 backdrop-blur-sm text-white text-[10px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded-full">
-                        {project.type}
-                      </span>
-
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent pointer-events-none"></div>
 
                       <div className="absolute bottom-6 left-6 right-6 text-white pointer-events-none">
-                        <p className="text-xs font-bold tracking-widest text-[#F5C33C] uppercase mb-2">
-                          {project.type}
-                        </p>
 
-                        <h3 className="text-xl md:text-2xl font-bold mb-2 group-hover/card:text-[#29B1D2] transition-colors">
+                        <h3 className="text-lg md:text-xl font-bold mb-2 group-hover/card:text-[#29B1D2] transition-colors">
                           {project.title}
                         </h3>
+
+                        <div className="flex items-center gap-1 font-light text-sm text-gray-300 mb-3">
+                          <Building size={16} />
+                          {project.type}
+                        </div>
 
                         <div className="flex justify-between items-end text-sm text-gray-300">
                           <div className="flex items-center gap-1 font-light">

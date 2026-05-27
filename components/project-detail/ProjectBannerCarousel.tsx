@@ -28,7 +28,7 @@ export default function ProjectBannerCarousel({ slides, title, location, type }:
       <AnimatePresence mode="popLayout">
         <motion.img
           key={current}
-          src={slides[current].image}
+          src={slides[current]?.image}
           alt={title}
           initial={{ opacity: 0, scale: 1.08 }}
           animate={{ opacity: 1, scale: 1 }}

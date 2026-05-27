@@ -6,6 +6,15 @@ import Link from "next/link";
 import Image from "next/image";
 import { useAppData } from "@/context/AppDataContext";
 
+const STATUS_BADGE: Record<
+  string,
+  { label: string; color: string }
+> = {
+  ongoing: { label: "Ongoing", color: "bg-amber-500" },
+  upcoming: { label: "Upcoming", color: "bg-[#29B1D2]" },
+  completed: { label: "Completed", color: "bg-emerald-600" },
+};
+
 export default function ProjectsShowcase() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState(false);
@@ -18,7 +27,7 @@ export default function ProjectsShowcase() {
   // Duplicate projects to create an infinite scroll illusion
   // Using 4 sets ensures we have enough items for very wide screens and seamless wrapping
   const duplicatedProjects = projects.length > 0 ? [...projects, ...projects, ...projects, ...projects] : [];
-
+  console.log("du", duplicatedProjects)
   const handleScrollClick = useCallback((direction: "left" | "right") => {
     if (!scrollRef.current || projects.length === 0) return;
     setIsManualScrolling(true);
@@ -139,61 +148,77 @@ export default function ProjectsShowcase() {
             style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
           >
             {loading ? (
-               <div className="flex gap-4 md:gap-8">
-    {Array.from({ length: 4 }).map((_, i) => (
-      <div
-        key={i}
-        className="w-[85vw] md:w-[350px] h-[220px] shrink-0 rounded-lg bg-gray-200 animate-pulse"
-      >
-        <div className="h-full w-full bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 animate-shimmer" />
-      </div>
-    ))}
-  </div>
+              <div className="flex gap-4 md:gap-8">
+                {Array.from({ length: 4 }).map((_, i) => (
+                  <div
+                    key={i}
+                    className="w-[85vw] md:w-[350px] h-[220px] shrink-0 rounded-lg bg-gray-200 animate-pulse"
+                  >
+                    <div className="h-full w-full bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 animate-shimmer" />
+                  </div>
+                ))}
+              </div>
             ) : duplicatedProjects.length > 0 ? (
-              duplicatedProjects.map((project, idx) => (
-              <div
-                key={`${project.id}-${idx}`}
-                className="w-[85vw] md:w-[400px] shrink-0 snap-start"
-              >
-                <div className="relative h-[300px] md:h-[400px] rounded-lg overflow-hidden shadow-xl group/card">
+              duplicatedProjects.map((project, idx) => {
+                const projectStatusNormalized = (project.status || "upcoming").toLowerCase();
+                const badge = STATUS_BADGE[projectStatusNormalized] || STATUS_BADGE["upcoming"];
 
-                  <Link href={`/projects/${project.id}`} className="absolute inset-0 z-20" />
+                return (
+                  <div
+                    key={`${project.id}-${idx}`}
+                    className="w-[85vw] md:w-[400px] shrink-0 snap-start"
+                  >
+                    <div className="relative h-[300px] md:h-[400px] rounded-lg overflow-hidden shadow-xl group/card">
 
-                  <Image
-                    src={project.image}
-                    alt={project.title}
-                    fill
-                    sizes="(max-width: 768px) 85vw, 400px"
-                    priority={idx < 3}
-                    className="object-cover group-hover/card:scale-110 transition duration-700"
-                  />
+                      <Link href={`/projects/${project.id}`} className="absolute inset-0 z-20" />
 
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent pointer-events-none"></div>
+                      <Image
+                        src={project.image}
+                        alt={project.title}
+                        fill
+                        sizes="(max-width: 768px) 85vw, 400px"
+                        priority={idx < 3}
+                        className="object-cover group-hover/card:scale-110 transition duration-700"
+                      />
 
-                  <div className="absolute bottom-6 left-6 right-6 text-white pointer-events-none">
-                    <p className="text-xs font-bold tracking-widest text-[#F5C33C] uppercase mb-2">
-                      {project.type}
-                    </p>
+                      {/* Status and Type Badges */}
+                      <span
+                        className={`absolute top-4 left-4 z-30 ${badge.color} text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full shadow`}
+                      >
+                        {badge.label}
+                      </span>
 
-                    <h3 className="text-xl md:text-2xl font-bold mb-2 group-hover/card:text-[#29B1D2] transition-colors">
-                      {project.title}
-                    </h3>
+                      <span className="absolute top-4 right-4 z-30 bg-black/50 backdrop-blur-sm text-white text-[10px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded-full">
+                        {project.type}
+                      </span>
 
-                    <div className="flex justify-between items-end text-sm text-gray-300">
-                      <div className="flex items-center gap-1 font-light">
-                        <MapPin size={16} />
-                        {project.configurations}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent pointer-events-none"></div>
+
+                      <div className="absolute bottom-6 left-6 right-6 text-white pointer-events-none">
+                        <p className="text-xs font-bold tracking-widest text-[#F5C33C] uppercase mb-2">
+                          {project.type}
+                        </p>
+
+                        <h3 className="text-xl md:text-2xl font-bold mb-2 group-hover/card:text-[#29B1D2] transition-colors">
+                          {project.title}
+                        </h3>
+
+                        <div className="flex justify-between items-end text-sm text-gray-300">
+                          <div className="flex items-center gap-1 font-light">
+                            <MapPin size={16} />
+                            {project.configurations}
+                          </div>
+
+                          <span className="text-[#F5C33C] text-xs font-bold uppercase tracking-wider relative z-30 flex items-center gap-1">
+                            View <ChevronRight size={14} />
+                          </span>
+                        </div>
                       </div>
 
-                      <span className="text-[#F5C33C] text-xs font-bold uppercase tracking-wider relative z-30 flex items-center gap-1">
-                        View <ChevronRight size={14} />
-                      </span>
                     </div>
                   </div>
-
-                </div>
-              </div>
-            ))
+                );
+              })
             ) : (
               <div className="w-full text-center py-20 text-gray-500 font-bold uppercase tracking-widest text-sm">
                 No Projects Found

@@ -134,7 +134,46 @@ export default function StorySection({ variant = "compact" }: StorySectionProps)
 
     fetchAboutSections();
   }, []);
-  if (isLoading || !story) return null;
+  if (isLoading) {
+    return (
+      <section id="story" className="py-10 md:py-16 bg-white relative overflow-hidden animate-pulse">
+        <div className="container mx-auto px-4 lg:px-8 z-10 relative">
+          <div className="text-center mb-6 md:mb-12 flex flex-col items-center">
+            {/* Title skeleton */}
+            <div className="h-10 w-64 bg-gray-200 rounded-md mb-3" />
+            <div className="h-4 w-40 bg-gray-100 rounded-md" />
+          </div>
+          <div className="flex flex-col md:flex-row items-start gap-8 md:gap-12 lg:gap-20">
+            {/* Left Image placeholder */}
+            <div className="md:w-1/2 w-full h-[280px] md:h-[500px] bg-gray-200 rounded-lg" />
+            
+            {/* Right Text placeholder */}
+            <div className="md:w-1/2 w-full space-y-6">
+              <div className="h-6 w-3/4 bg-gray-200 rounded-md" />
+              <div className="space-y-3">
+                <div className="h-4 w-full bg-gray-100 rounded-md" />
+                <div className="h-4 w-full bg-gray-100 rounded-md" />
+                <div className="h-4 w-5/6 bg-gray-100 rounded-md" />
+                <div className="h-4 w-4/5 bg-gray-100 rounded-md" />
+              </div>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-6 pt-6">
+                <div className="space-y-2">
+                  <div className="h-8 w-16 bg-gray-200 rounded-md" />
+                  <div className="h-4 w-20 bg-gray-100 rounded-md" />
+                </div>
+                <div className="space-y-2">
+                  <div className="h-8 w-16 bg-gray-200 rounded-md" />
+                  <div className="h-4 w-20 bg-gray-100 rounded-md" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (!story) return null;
 
   const descriptionToUse = story.description;
 

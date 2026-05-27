@@ -36,12 +36,21 @@ export default function ProjectDetailsPage() {
           id: data._id,
           slides: data.banners?.map((b: string) => ({ image: b })) || [{ image: data.image || "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1600" }],
           gallery: data.gallery || [],
-          pricingRows: data.priceConfigurations?.map((pc: any) => ({
-            type: pc.configuration,
-            area: pc.carpetArea,
-            superBuiltUpArea: pc.superBuiltUpArea,
-            facing: pc.price // or adjust this mapping as necessary
-          })) || [],
+          pricingRows: (data.priceConfigurations || [])
+            .filter((pc: any) => 
+              pc.configuration?.trim() ||
+              pc.carpetArea?.trim() ||
+              pc.superBuiltUpArea?.trim() ||
+              pc.udsSqYards?.trim() ||
+              pc.price?.trim()
+            )
+            .map((pc: any) => ({
+              type: pc.configuration,
+              area: pc.carpetArea,
+              superBuiltUpArea: pc.superBuiltUpArea,
+              udsSqYards: pc.udsSqYards,
+              facing: pc.price // or adjust this mapping as necessary
+            })),
           configurations: data.priceConfigurations || [],
           nearbyLocations: data.landmarks?.map((lm: any) => ({
             name: lm.text,
@@ -190,10 +199,12 @@ export default function ProjectDetailsPage() {
               projectTitle={project.title}
             />
 
-            <ProjectPriceTable
-              projectTitle={project.title}
-              rows={project.pricingRows}
-            />
+            {project.pricingRows && project.pricingRows.length > 0 && (
+              <ProjectPriceTable
+                projectTitle={project.title}
+                rows={project.pricingRows}
+              />
+            )}
 
             <AmenitiesSection
               items={project.amenities}

@@ -86,7 +86,27 @@ export default function HeroBanner() {
     });
   };
 
-  if (loading || slides.length === 0) return null;
+  if (loading) {
+    return (
+      <section
+        id="hero"
+        className="relative w-full overflow-hidden flex items-center justify-center bg-gray-950"
+        style={{ height: "450px" }}
+      >
+        <style>{`
+          @media (min-width: 768px) {
+            #hero {
+              height: 100vh !important;
+              min-height: 600px !important;
+            }
+          }
+        `}</style>
+        <div className="absolute inset-0 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 animate-pulse" />
+      </section>
+    );
+  }
+
+  if (slides.length === 0) return null;
 
   const current = slides[index] || slides[0];
 

@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useState, useRef } from "react";
 import { motion } from "framer-motion";
-import Image from "next/image";
 
 export default function Preloader() {
   const [isVisible, setIsVisible] = useState(true);
@@ -54,13 +53,13 @@ export default function Preloader() {
       transition={{ duration: 0.5 }}
     >
       <div className="relative w-48 h-48 sm:w-60 sm:h-60 md:w-72 md:h-72 lg:w-80 lg:h-80 flex items-center justify-center">
-        <Image
-          src="/assets/Sankalp.gif"
-          alt="Sankalp Constructions Preloader"
-          fill
-          unoptimized
-          className="object-contain"
-          priority
+        <video
+          src="/assets/Preloader.mp4"
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="w-full h-full object-contain"
         />
       </div>
       {/* <motion.h1

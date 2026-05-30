@@ -45,7 +45,7 @@ export default function Preloader() {
   return (
     <motion.div
       suppressHydrationWarning
-      className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#BFC8D1]"
+      className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-white"
       style={{ display: hasLoaded ? "none" : "flex" }}
       initial={{ opacity: 1 }}
       exit={{ opacity: 0 }}

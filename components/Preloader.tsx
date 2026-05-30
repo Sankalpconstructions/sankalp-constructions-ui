@@ -28,7 +28,7 @@ export default function Preloader() {
 
     // Determine duration: 4 seconds if offline, 2 seconds if online
     const isOffline = typeof navigator !== "undefined" && !navigator.onLine;
-    const duration = isOffline ? 4000 : 2900;
+    const duration = isOffline ? 4000 : 2200;
 
     timerRef.current = setTimeout(hide, duration);
 
@@ -54,7 +54,7 @@ export default function Preloader() {
     >
       <div className="relative w-48 h-48 sm:w-60 sm:h-60 md:w-72 md:h-72 lg:w-80 lg:h-80 flex items-center justify-center">
         <video
-          src="/assets/Preloader.mp4"
+          src="/assets/preloader.mp4"
           autoPlay
           loop
           muted

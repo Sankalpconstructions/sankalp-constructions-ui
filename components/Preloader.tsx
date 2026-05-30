@@ -52,7 +52,7 @@ export default function Preloader() {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     >
-      <div className="relative w-48 h-48 sm:w-60 sm:h-60 md:w-72 md:h-72 lg:w-80 lg:h-80 flex items-center justify-center">
+      <div className="relative w-80 h-80 sm:w-96 sm:h-96 md:w-[32rem] md:h-[32rem] lg:w-[40rem] lg:h-[40rem] max-w-[90vw] max-h-[90vh] flex items-center justify-center">
         <video
           src="/assets/preloader.mp4"
           autoPlay

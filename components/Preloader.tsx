@@ -35,10 +35,8 @@ export default function Preloader() {
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // If already loaded, do not display anything
   const hasLoaded = typeof window !== "undefined" && sessionStorage.getItem("sankalp_preloader_loaded") === "true";
   if (!isVisible || hasLoaded) return null;
 
@@ -52,7 +50,7 @@ export default function Preloader() {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     >
-      <div className="relative w-80 h-80 sm:w-96 sm:h-96 md:w-[32rem] md:h-[32rem] lg:w-[40rem] lg:h-[40rem] max-w-[90vw] max-h-[90vh] flex items-center justify-center">
+      <div className="w-full h-full flex items-center justify-center p-4 sm:p-8">
         <video
           src="/assets/preloader.mp4"
           autoPlay
@@ -62,14 +60,6 @@ export default function Preloader() {
           className="w-full h-full object-contain"
         />
       </div>
-      {/* <motion.h1
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2 }}
-        className="text-base sm:text-lg md:text-2xl lg:text-3xl font-bold text-[#07aeda] uppercase tracking-widest mt-4 md:mt-6 text-center px-6 w-full max-w-[95vw] md:max-w-3xl leading-relaxed"
-      >
-        welcome to Sankalp Constructions
-      </motion.h1> */}
     </motion.div>
   );
 }

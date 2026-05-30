@@ -50,14 +50,14 @@ export default function Preloader() {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     >
-      <div className="w-full h-full flex items-center justify-center p-4 sm:p-8">
+      <div className="w-full h-full flex items-center justify-center">
         <video
           src="/assets/preloader.mp4"
           autoPlay
           loop
           muted
           playsInline
-          className="w-full h-full object-contain"
+          className="w-full h-full object-contain sm:object-cover"
         />
       </div>
     </motion.div>

@@ -5,7 +5,6 @@ import { motion } from "framer-motion";
 export default function Preloader() {
   const [isVisible, setIsVisible] = useState(true);
 
-  // Track when the preloader started showing
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const hiddenRef = useRef(false);
 
@@ -26,7 +25,6 @@ export default function Preloader() {
       return;
     }
 
-    // Determine duration: 4 seconds if offline, 2 seconds if online
     const isOffline = typeof navigator !== "undefined" && !navigator.onLine;
     const duration = isOffline ? 4000 : 2200;
 
@@ -43,7 +41,7 @@ export default function Preloader() {
   return (
     <motion.div
       suppressHydrationWarning
-      className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-white"
+      className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#b4b4b4]"
       style={{ display: hasLoaded ? "none" : "flex" }}
       initial={{ opacity: 1 }}
       exit={{ opacity: 0 }}

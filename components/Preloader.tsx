@@ -41,21 +41,18 @@ export default function Preloader() {
   return (
     <motion.div
       suppressHydrationWarning
-      className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#b4b4b4]"
+      className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-white"
       style={{ display: hasLoaded ? "none" : "flex" }}
       initial={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     >
-      <div className="w-full h-full flex items-center justify-center">
-        <video
-          src="/assets/preloader.mp4"
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="w-full h-full object-contain sm:object-cover"
+      <div className="w-full h-full md:w-[600px] md:h-[600px] flex items-center justify-center">
+        <img
+          src="/assets/preloader.gif"
+          alt="Loading..."
+          className="w-full h-full object-contain sm:object-contain md:p-4"
         />
       </div>
     </motion.div>

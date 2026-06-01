@@ -34,34 +34,21 @@ export default function Preloader() {
   if (!isVisible) return null;
 
   return (
-    <>
-      <script
-        dangerouslySetInnerHTML={{
-          __html: `
-            if (localStorage.getItem("sankalp_preloader_loaded") === "true") {
-              document.documentElement.style.setProperty('--preloader-display', 'none');
-            } else {
-              document.documentElement.style.setProperty('--preloader-display', 'flex');
-            }
-          `,
-        }}
-      />
-      <motion.div
-        suppressHydrationWarning
-        className="fixed inset-0 z-[100] flex-col items-center justify-center bg-white"
-        style={{ display: "var(--preloader-display, flex)" }}
-        initial={{ opacity: 1 }}
-        animate={{ opacity: isFadingOut ? 0 : 1 }}
-        transition={{ duration: 0.5, ease: "easeInOut" }}
-      >
-        <div className="w-full h-full md:w-[600px] md:h-[600px] flex items-center justify-center">
-          <img
-            src="/assets/preloader.gif"
-            alt="Loading..."
-            className="w-full h-full object-contain sm:object-contain md:p-4"
-          />
-        </div>
-      </motion.div>
-    </>
+    <motion.div
+      id="sankalp-preloader"
+      suppressHydrationWarning
+      className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-white"
+      initial={{ opacity: 1 }}
+      animate={{ opacity: isFadingOut ? 0 : 1 }}
+      transition={{ duration: 0.5, ease: "easeInOut" }}
+    >
+      <div className="w-full h-full md:w-[600px] md:h-[600px] flex items-center justify-center">
+        <img
+          src="/assets/preloader.gif"
+          alt="Loading..."
+          className="w-full h-full object-contain sm:object-contain md:p-4"
+        />
+      </div>
+    </motion.div>
   );
 }

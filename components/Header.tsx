@@ -35,7 +35,6 @@ export default function Header() {
 
   const { projects } = useProjects();
 
-  // Scroll Effect
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
@@ -48,7 +47,6 @@ export default function Header() {
     };
   }, []);
 
-  // Hash Scroll
   useEffect(() => {
     if (
       pathname === "/" &&
@@ -132,7 +130,6 @@ export default function Header() {
     >
       <div className="container mx-auto px-4 lg:px-8 flex justify-between items-center relative">
 
-        {/* Logo */}
         <Link href="/" className="z-20">
           <Image
             src={sankalpLogo}
@@ -147,7 +144,6 @@ export default function Header() {
           />
         </Link>
 
-        {/* Desktop Nav */}
         <nav className="hidden md:flex items-center gap-8 z-20">
           {navLinks.map((link) => (
             <div
@@ -174,12 +170,10 @@ export default function Header() {
                   )}
               </Link>
 
-              {/* Projects Dropdown */}
               {link.name === "Our Projects" && (
                 <div className="absolute top-full left-1/2 -translate-x-1/2 pt-6 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-500 z-50">
                   <div className="w-max bg-white/40 backdrop-blur-[40px] text-black shadow-2xl p-8 border border-black/10 flex gap-10">
 
-                    {/* Ongoing */}
                     <div className="flex-1">
                       <h3 className="text-black font-bold text-xs uppercase mb-6">
                         Ongoing Projects
@@ -199,7 +193,6 @@ export default function Header() {
                       </ul>
                     </div>
 
-                    {/* Upcoming */}
                     <div className="flex-1 border-l border-black/10 pl-10">
                       <h3 className="text-black font-bold text-xs uppercase mb-6">
                         Upcoming Projects
@@ -219,7 +212,6 @@ export default function Header() {
                       </ul>
                     </div>
 
-                    {/* Completed */}
                     <div className="flex-1 border-l border-black/10 pl-10">
                       <h3 className="text-black font-bold text-xs uppercase mb-6">
                         Completed Projects
@@ -243,12 +235,9 @@ export default function Header() {
                 </div>
               )}
 
-              {/* Rent Dropdown */}
               {link.name === "Rent" && (
                 <div className="absolute top-full left-1/2 -translate-x-1/2 pt-6 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-500 z-50">
                   <div className="w-max min-w-[300px] bg-white/40 backdrop-blur-[40px] text-black shadow-2xl p-8 border border-black/10 flex gap-10">
-
-                    {/* Residential */}
                     <div className="flex-1">
                       <h3 className="text-black font-bold text-xs uppercase mb-6">
                         Residential
@@ -262,7 +251,6 @@ export default function Header() {
                       </ul>
                     </div>
 
-                    {/* Commercial */}
                     <div className="flex-1 border-l border-black/10 pl-10">
                       <h3 className="text-black font-bold text-xs uppercase mb-6">
                         Commercial
@@ -282,7 +270,6 @@ export default function Header() {
             </div>
           ))}
 
-          {/* Search */}
           <button
             onClick={() =>
               setIsSearchOpen(!isSearchOpen)
@@ -296,7 +283,6 @@ export default function Header() {
             )}
           </button>
 
-          {/* CTA */}
           <Link
             href="/contact"
             className="px-5 py-2 border border-black/30 text-black font-bold hover:bg-black hover:text-white transition-all text-[10px] uppercase tracking-[0.2em]"
@@ -305,7 +291,6 @@ export default function Header() {
           </Link>
         </nav>
 
-        {/* Mobile Buttons */}
         <div className="flex md:hidden items-center gap-3 z-20">
           <button
             onClick={() =>
@@ -332,7 +317,6 @@ export default function Header() {
           </button>
         </div>
 
-        {/* Search Bar */}
         <AnimatePresence>
           {isSearchOpen && (
             <motion.div
@@ -367,7 +351,6 @@ export default function Header() {
         </AnimatePresence>
       </div>
 
-      {/* Mobile Menu */}
       <AnimatePresence>
         {isOpen && (
           <motion.nav

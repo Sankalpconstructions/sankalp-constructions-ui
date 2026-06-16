@@ -39,30 +39,18 @@ export default function RootLayout({
     <html lang="en" className={`${poppins.variable} ${geistMono.variable} scroll-smooth antialiased h-full`}>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              try {
-                if (localStorage.getItem("sankalp_preloader_loaded") === "true") {
-                  var style = document.createElement('style');
-                  style.innerHTML = '#sankalp-preloader { display: none !important; }';
-                  document.head.appendChild(style);
-                }
-              } catch (e) {}
-            `,
-          }}
-        />
+
       </head>
       <body className="min-h-full flex flex-col bg-white text-gray-900 override">
         <AppDataProvider>
-        <ProjectProvider>
-          <ScrollToTop />
-          <Header />
-          <main className="flex-grow flex flex-col relative">{children}</main>
-          <ContactFloating />
-          <ScrollController />
-          <Footer />
-        </ProjectProvider>
+          <ProjectProvider>
+            <ScrollToTop />
+            <Header />
+            <main className="flex-grow flex flex-col relative">{children}</main>
+            <ContactFloating />
+            <ScrollController />
+            <Footer />
+          </ProjectProvider>
         </AppDataProvider>
       </body>
     </html>

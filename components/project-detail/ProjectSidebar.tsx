@@ -149,12 +149,27 @@ function ProjectOverviewCard({
         >
           <MessageCircle size={16} /> Enquire Now
         </button>
-        <button
+        <motion.button
           onClick={handleDownloadBrochure}
-          className="flex-1 py-3.5 cursor-pointer  bg-white border-2 border-gray-200 hover:border-[#711113] hover:text-[#711113] text-gray-700 font-bold uppercase tracking-widest text-[10px] md:text-xs rounded-xl transition-all duration-300 flex items-center justify-center gap-2"
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          className="relative flex-1 py-3.5 cursor-pointer bg-white border-2 border-[#711113] text-[#711113] hover:bg-[#711113] hover:text-white font-bold uppercase tracking-widest text-[10px] md:text-xs rounded-xl overflow-hidden transition-colors duration-300 flex items-center justify-center gap-2 group"
         >
-          <FileDown size={16} /> Download Brochure
-        </button>
+          {/* Continuous Shimmer Effect */}
+          <motion.div
+            animate={{ x: ["-200%", "300%"] }}
+            transition={{ duration: 2.5, repeat: Infinity, ease: "linear" }}
+            className="absolute inset-0 w-full bg-gradient-to-r from-transparent via-[#711113]/20 group-hover:via-white/20 to-transparent -skew-x-12 pointer-events-none"
+          />
+          <motion.div
+             animate={{ y: [0, 2, 0] }}
+             transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+             className="relative z-10"
+          >
+            <FileDown size={16} />
+          </motion.div>
+          <span className="relative z-10">Download Brochure</span>
+        </motion.button>
       </div>
     </div>
   );

@@ -251,22 +251,32 @@ export default function BrochureDownloadSection({
                         </div>
                       </div>
 
-                      <button
+                      <motion.button
                         type="submit"
                         disabled={loading}
-                        className="mt-2 flex items-center justify-center gap-3 bg-[#F5C33C] hover:bg-white text-[#711113] font-extrabold uppercase tracking-widest text-sm py-4 rounded-2xl transition-all duration-300 shadow-xl shadow-[#F5C33C]/10 disabled:opacity-70"
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        className="mt-4 relative flex items-center justify-center gap-3 bg-gradient-to-r from-[#F5C33C] to-[#e0af2a] text-[#711113] font-extrabold uppercase tracking-widest text-sm py-4 rounded-2xl transition-all duration-300 shadow-xl shadow-[#F5C33C]/20 disabled:opacity-70 overflow-hidden group hover:from-white hover:to-gray-100"
                       >
+                        {/* Continuous Shimmer Effect */}
+                        <motion.div
+                          animate={{ x: ["-200%", "300%"] }}
+                          transition={{ duration: 2.5, repeat: Infinity, ease: "linear" }}
+                          className="absolute inset-0 w-full bg-gradient-to-r from-transparent via-white/40 group-hover:via-[#711113]/10 to-transparent -skew-x-12 pointer-events-none"
+                        />
+                        
                         {loading ? (
                           <>
-                            <span className="w-4 h-4 rounded-full border-2 border-[#711113]/30 border-t-[#711113] animate-spin" />
-                            Sending...
+                            <span className="w-4 h-4 rounded-full border-2 border-[#711113]/30 border-t-[#711113] animate-spin relative z-10" />
+                            <span className="relative z-10">Sending...</span>
                           </>
                         ) : (
                           <>
-                            <Download size={16} /> Download Free Brochure
+                            <Download size={18} className="relative z-10 group-hover:scale-110 transition-transform" /> 
+                            <span className="relative z-10">Download Free Brochure</span>
                           </>
                         )}
-                      </button>
+                      </motion.button>
 
                       <p className="text-white/30 text-[10px] text-center leading-relaxed">
                         By submitting, you agree to be contacted by our sales team.

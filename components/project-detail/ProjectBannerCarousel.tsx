@@ -6,6 +6,7 @@ import Link from "next/link";
 
 interface BannerSlide {
   image: string;
+  mobileImage?: string;
   label?: string;
 }
 
@@ -27,15 +28,27 @@ export default function ProjectBannerCarousel({ slides, title, location, type }:
     <section className="relative w-full h-[55vh] md:h-[75vh] overflow-hidden bg-black">
       <AnimatePresence mode="popLayout">
         <motion.img
-          key={current}
+          key={`desktop-${current}`}
           src={slides[current]?.image}
           alt={title}
           initial={{ opacity: 0, scale: 1.08 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.9 }}
-          className="absolute inset-0 w-full h-full object-cover opacity-70"
+          className={`absolute inset-0 w-full h-full object-cover opacity-70 ${slides[current]?.mobileImage ? 'hidden md:block' : ''}`}
         />
+        {slides[current]?.mobileImage && (
+          <motion.img
+            key={`mobile-${current}`}
+            src={slides[current]?.mobileImage}
+            alt={title}
+            initial={{ opacity: 0, scale: 1.08 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.9 }}
+            className="absolute inset-0 w-full h-full object-cover opacity-70 block md:hidden"
+          />
+        )}
       </AnimatePresence>
 
       {/* Gradient overlay */}

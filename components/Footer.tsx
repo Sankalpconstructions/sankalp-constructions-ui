@@ -34,16 +34,13 @@ export default function Footer() {
                 Experience the pinnacle of luxury living. With over two decades of experience, we build homes that redefine your lifestyle.
               </p>
               <div className="flex gap-6 items-center">
-                <a href="#" className="text-gray-900 hover:text-primary transition-colors">
+                <a href="https://x.com/SANKALPCONSTRUC" className="text-gray-900 hover:text-primary transition-colors">
                   <Twitter size={18} strokeWidth={2.5} />
                 </a>
-                <a href="#" className="text-gray-900 hover:text-primary transition-colors">
-                  <Linkedin size={18} strokeWidth={2.5} />
-                </a>
-                <Link href="/#instagram-feed" className="text-gray-900 hover:text-primary transition-colors">
+                <Link href="https://www.threads.com/@sankalpconstructions?hl=en" className="text-gray-900 hover:text-primary transition-colors">
                   <Instagram size={18} strokeWidth={2.5} />
                 </Link>
-                <a href="#" className="text-gray-900 hover:text-primary transition-colors">
+                <a href="https://www.facebook.com/profile.php?id=100064036060289" className="text-gray-900 hover:text-primary transition-colors">
                   <Facebook size={18} strokeWidth={2.5} />
                 </a>
               </div>

@@ -12,6 +12,29 @@ import {
 } from "lucide-react";
 import PageBanner from "@/components/PageBanner";
 
+const getYoutubeEmbedUrl = (url?: string) => {
+  if (!url) return null;
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+  const match = url.match(regExp);
+  return (match && match[2].length === 11) ? `https://www.youtube.com/embed/${match[2]}` : null;
+};
+
+const getYoutubeThumbnail = (url?: string) => {
+  if (!url) return null;
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+  const match = url.match(regExp);
+  return (match && match[2].length === 11) ? `https://img.youtube.com/vi/${match[2]}/maxresdefault.jpg` : null;
+};
+
+const getInstagramEmbedUrl = (url?: string) => {
+  if (!url) return null;
+  if (url.includes("instagram.com")) {
+    const cleanUrl = url.split('?')[0].replace(/\/$/, "");
+    return `${cleanUrl}/embed`;
+  }
+  return null;
+};
+
 export default function CSRClient() {
 
   const [events, setEvents] = useState<any[]>([]);
@@ -22,7 +45,7 @@ export default function CSRClient() {
     const fetchEvents = async () => {
       try {
         const baseUrl = process.env.NEXT_PUBLIC_API_URL || (typeof window !== "undefined" ? `${window.location.protocol}//${window.location.hostname}:3001` : 'http://localhost:3001');
-        const res = await fetch(`${baseUrl}/api/csr`);
+        const res = await fetch(`${baseUrl}/api/csr`, { cache: 'no-store' });
         if (res.ok) {
           const data = await res.json();
           const formatted = data.map((item: any) => ({
@@ -84,8 +107,8 @@ export default function CSRClient() {
               >
                 <div className="w-full h-48 lg:h-56 relative overflow-hidden flex-shrink-0">
                   <img
-                    src={item.images?.[0] || 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=1200'}
-                    alt={item.title}
+                    src={item.images?.[0] || getYoutubeThumbnail(item.youtubeLink) || 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=1200'}
+                    alt={item.title || "Event Highlight"}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-in-out"
                   />
 
@@ -161,9 +184,9 @@ export default function CSRClient() {
                 {/* Banner */}
                 <div className="w-full h-[300px] md:h-[450px] relative shrink-0">
                   <img
-                    src={selectedEvent.images?.[0] || 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=1200'}
-                    alt={selectedEvent.title}
-                    className="absolute inset-0 w-full h-full object-cover"
+                    src={selectedEvent.images?.[0] || getYoutubeThumbnail(selectedEvent.youtubeLink) || 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=1200'}
+                    alt={selectedEvent.title || "Event Highlight"}
+                    className="w-full h-full object-cover"
                   />
 
                   <div className="absolute inset-0 bg-gradient-to-t from-white via-black/20 to-transparent"></div>
@@ -200,31 +223,66 @@ export default function CSRClient() {
                     </p>
                   </div>
 
-                  {/* Gallery */}
-                  <div>
-                    <h4 className="text-[10px] font-bold uppercase tracking-[0.3em] text-gray-400 mb-8 flex items-center gap-4">
-                      <span>Event Gallery</span>
-                      <div className="flex-1 h-px bg-gray-100"></div>
-                    </h4>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                      {selectedEvent.images?.map((img: string, idx: number) => (
-                        <motion.div
-                          key={idx}
-                          whileHover={{ y: -5 }}
-                          className="aspect-video rounded-2xl overflow-hidden shadow-sm relative group cursor-pointer border border-gray-100"
-                        >
-                          <img
-                            src={img}
-                            alt={`${selectedEvent.title} ${idx + 1}`}
-                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                          />
-
-                          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
-                        </motion.div>
-                      ))}
+                  {/* Media Embeds (Youtube/Instagram) */}
+                  {(selectedEvent.youtubeLink || selectedEvent.instagramLink) && (
+                    <div className="mb-12">
+                      <h4 className="text-[10px] font-bold uppercase tracking-[0.3em] text-gray-400 mb-8 flex items-center gap-4">
+                        <span>Event Media</span>
+                        <div className="flex-1 h-px bg-gray-100"></div>
+                      </h4>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        {selectedEvent.youtubeLink && getYoutubeEmbedUrl(selectedEvent.youtubeLink) && (
+                          <div className="w-full aspect-video rounded-2xl overflow-hidden border border-gray-100 shadow-sm">
+                            <iframe 
+                              src={getYoutubeEmbedUrl(selectedEvent.youtubeLink) as string} 
+                              className="w-full h-full"
+                              allowFullScreen 
+                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            ></iframe>
+                          </div>
+                        )}
+                        {selectedEvent.instagramLink && getInstagramEmbedUrl(selectedEvent.instagramLink) && (
+                          <div className="w-full min-h-[400px] rounded-2xl overflow-hidden border border-gray-100 shadow-sm">
+                            <iframe 
+                              src={getInstagramEmbedUrl(selectedEvent.instagramLink) as string} 
+                              className="w-full h-full"
+                              scrolling="no"
+                              allowTransparency={true}
+                              allowFullScreen={true}
+                            ></iframe>
+                          </div>
+                        )}
+                      </div>
                     </div>
-                  </div>
+                  )}
+
+                  {/* Gallery */}
+                  {selectedEvent.images && selectedEvent.images.length > 0 && (
+                    <div>
+                      <h4 className="text-[10px] font-bold uppercase tracking-[0.3em] text-gray-400 mb-8 flex items-center gap-4">
+                        <span>Event Gallery</span>
+                        <div className="flex-1 h-px bg-gray-100"></div>
+                      </h4>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                        {selectedEvent.images.map((img: string, idx: number) => (
+                          <motion.div
+                            key={idx}
+                            whileHover={{ y: -5 }}
+                            className="aspect-video rounded-2xl overflow-hidden shadow-sm relative group cursor-pointer border border-gray-100"
+                          >
+                            <img
+                              src={img}
+                              alt={`${selectedEvent.title} ${idx + 1}`}
+                              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                            />
+
+                            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
+                          </motion.div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </motion.div>

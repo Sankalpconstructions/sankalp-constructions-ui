@@ -43,7 +43,7 @@ export default function ProjectPriceTable({ projectTitle, rows }: Props) {
         setIsSubmitting(false);
         setIsSuccess(false);
         setFormData({ name: "", phone: "", email: "" });
-      }, 2500);
+      }, 4500);
     } catch (error) {
       console.error(error);
       setIsSubmitting(false);
@@ -186,7 +186,7 @@ export default function ProjectPriceTable({ projectTitle, rows }: Props) {
                     <input
                       required
                       type="text"
-                      placeholder="Full Name"
+                      placeholder="Enter your full name"
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       className="p-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#711113]"
@@ -194,7 +194,7 @@ export default function ProjectPriceTable({ projectTitle, rows }: Props) {
                     <input
                       required
                       type="tel"
-                      placeholder="Phone Number"
+                      placeholder="Enter your phone number"
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                       className="p-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#711113]"
@@ -202,7 +202,7 @@ export default function ProjectPriceTable({ projectTitle, rows }: Props) {
                     <input
                       required
                       type="email"
-                      placeholder="Email (optional)"
+                      placeholder="Enter your email"
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                       className="p-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#711113]"

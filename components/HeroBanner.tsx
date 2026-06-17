@@ -2,6 +2,7 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const IMAGE_SLIDE_DURATION = 6000;
 
@@ -16,12 +17,12 @@ export default function HeroBanner() {
     const fetchBanners = async () => {
       try {
         const baseUrl = process.env.NEXT_PUBLIC_API_URL || (typeof window !== "undefined" ? `${window.location.protocol}//${window.location.hostname}:3001` : 'http://localhost:3001');
-        const res = await fetch(`${baseUrl}/api/herobanners`);
+        const res = await fetch(`${baseUrl}/api/herobanners`, { cache: 'no-store' });
         if (res.ok) {
           const data = await res.json();
           const activeSlides = data.filter((s: any) => s.isActive);
           if (activeSlides.length > 0) {
-            setSlides(activeSlides.map((s: any) => ({ type: s.type || 'image', src: s.image || s.url || s.src, mobileImage: s.mobileImage || s.image || s.url || s.src })));
+            setSlides(activeSlides.map((s: any) => ({ type: s.type || 'image', src: s.image || s.url || s.src, mobileImage: s.mobileImage || s.image || s.url || s.src, link: s.link })));
           } else {
             setSlides([]);
           }
@@ -41,6 +42,16 @@ export default function HeroBanner() {
   const [index, setIndex] = useState(0);
   const [direction, setDirection] = useState(1); // 1 = forward, -1 = backward
   const imageTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const router = useRouter();
+
+  const handleSlideClick = (link?: string) => {
+    if (!link) return;
+    if (link.startsWith("http")) {
+      window.location.href = link;
+    } else {
+      router.push(link);
+    }
+  };
 
   const advance = useCallback(() => {
     setDirection(1);
@@ -160,7 +171,8 @@ export default function HeroBanner() {
             animate="center"
             exit="exit"
             transition={{ duration: 0.45, ease: [0.25, 0.46, 0.45, 0.94] }}
-            className="absolute inset-0 w-full h-full"
+            className={`absolute inset-0 w-full h-full ${current.link ? 'cursor-pointer' : ''}`}
+            onClick={() => handleSlideClick(current.link)}
           >
             <source media="(max-width: 768px)" srcSet={current.mobileImage} />
             <img

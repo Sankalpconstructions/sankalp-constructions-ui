@@ -34,7 +34,7 @@ export default function ProjectDetailsPage() {
         const formattedProject = {
           ...data,
           id: data._id,
-          slides: data.banners?.map((b: string) => ({ image: b })) || [{ image: data.image || "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1600" }],
+          slides: data.banners?.map((b: string, i: number) => ({ image: b, mobileImage: data.mobileBanners?.[i] })) || [{ image: data.image || "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1600" }],
           gallery: data.gallery || [],
           pricingRows: (data.priceConfigurations || [])
             .filter((pc: any) => 
@@ -211,12 +211,14 @@ export default function ProjectDetailsPage() {
               amenitiesCount={project.amenitiesCount}
             />
 
-            <FloorPlansSection
-              projectTitle={project.title}
-              overviewImg={project.slides?.[0]?.image}
-              floorPlansCount={project.floorPlansCount}
-              configurations={project.configurations}
-            />
+            { (project.status?.toLowerCase() === "ongoing" || project.status?.toLowerCase() === "upcoming") && (
+              <FloorPlansSection
+                projectTitle={project.title}
+                overviewImg={project.slides?.[0]?.image}
+                floorPlansCount={project.floorPlansCount}
+                configurations={project.configurations}
+              />
+            )}
 
             <ProjectLocation
               mapSrc={project.mapSrc}

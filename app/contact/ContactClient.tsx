@@ -121,7 +121,7 @@ export default function ContactPage() {
                     </div>
 
                     <div>
-                      <label className="block text-sm uppercase tracking-wider font-semibold text-gray-600 mb-2">Email Address <span className="text-gray-400 font-normal lowercase">(Optional)</span></label>
+                      <label className="block text-sm uppercase tracking-wider font-semibold text-gray-600 mb-2">Email Address </label>
                       <input type="email" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} className="w-full p-4 bg-gray-50 border border-gray-200 rounded-lg outline-none focus:border-[#29B1D2] focus:bg-white transition-all text-gray-800 shadow-sm" placeholder="Your email address" />
                     </div>
 

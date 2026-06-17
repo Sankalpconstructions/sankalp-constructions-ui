@@ -22,6 +22,7 @@ interface AboutSection {
 
 interface StorySectionProps {
   variant?: "compact" | "full";
+  config?: Record<string, boolean>;
 }
 
 // Animated Counter
@@ -55,7 +56,7 @@ function AnimatedCounter({ value, className }: { value: string; className?: stri
   );
 }
 
-export default function StorySection({ variant = "compact" }: StorySectionProps) {
+export default function StorySection({ variant = "compact", config }: StorySectionProps) {
   // --- EXTRA SECTIONS ANIMATIONS ---
   const fadeUp = {
     hidden: { opacity: 0, y: 40 },
@@ -74,7 +75,31 @@ export default function StorySection({ variant = "compact" }: StorySectionProps)
   const [story, setStory] = useState<BrandStoryData | null>(null);
   const [aboutSections, setAboutSections] = useState<AboutSection[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  console.log("story", story)
+  const [pageConfig, setPageConfig] = useState<Record<string, boolean>>(config || {});
+
+  useEffect(() => {
+    if (config) {
+      setPageConfig(config);
+    }
+  }, [config]);
+
+  useEffect(() => {
+    if (!config) {
+      const fetchLocalConfig = async () => {
+        try {
+          const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+          const res = await fetch(`${baseUrl}/api/config`);
+          if (res.ok) {
+            const data = await res.json();
+            setPageConfig(data);
+          }
+        } catch (error) {
+          console.error("Failed to load configs inside StorySection:", error);
+        }
+      };
+      fetchLocalConfig();
+    }
+  }, [config]);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -175,87 +200,98 @@ export default function StorySection({ variant = "compact" }: StorySectionProps)
 
   if (!story) return null;
 
+  const isCompact = variant === "compact";
+  const showMainStory = isCompact 
+    ? pageConfig.show_story_section !== false 
+    : pageConfig.show_about_story_section !== false;
+  
+  const showVisionMission = !isCompact && pageConfig.show_about_vision_mission !== false;
+
+  if (!showMainStory && !showVisionMission) return null;
+
   const descriptionToUse = story.description;
 
   return (
     <div className={variant === "full" ? "bg-[#FAF9F6] selection:bg-[#711113] selection:text-white" : ""}>
 
       {/* BASE SHARED SECTION */}
-      <section id="story" className="py-10 md:py-16 bg-white relative overflow-hidden">
-        <div className="container mx-auto px-4 lg:px-8 z-10 relative">
-          <div className="text-center mb-6 md:mb-12 flex flex-col items-center">
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-[#711113] mb-3">
-              {story.title}
-            </h2>
-            <img src="/assets/Title-decorations.png" alt="Decoration" className="w-[150px] md:w-[200px] h-auto object-contain mt-1" />
-          </div>
-          <div className="flex flex-col md:flex-row items-start gap-8 md:gap-12 lg:gap-20 text-gray-900">
+      {showMainStory && (
+        <section id="story" className="py-10 md:py-16 bg-white relative overflow-hidden">
+          <div className="container mx-auto px-4 lg:px-8 z-10 relative">
+            <div className="text-center mb-6 md:mb-12 flex flex-col items-center">
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-[#711113] mb-3">
+                {story.title}
+              </h2>
+              <img src="/assets/Title-decorations.png" alt="Decoration" className="w-[150px] md:w-[200px] h-auto object-contain mt-1" />
+            </div>
+            <div className="flex flex-col md:flex-row items-start gap-8 md:gap-12 lg:gap-20 text-gray-900">
 
-            <motion.div
-              initial={{ opacity: 0, x: -50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-              className="md:w-1/2 w-full relative"
-            >
-              <img
-                src={story.image}
-                alt={story.subtitle}
-                className="rounded-lg shadow-2xl w-full object-cover h-[280px] md:h-[500px]"
-              />
-              <div className="absolute -bottom-10 -right-10 bg-[#711113] p-6 text-white rounded-lg hidden lg:block">
-                <h4 className="text-3xl font-bold">
-                  <AnimatedCounter value={story.yearsOfExcellence} />
-                </h4>
-                <p className="text-xs uppercase tracking-widest">
-                  Years of Excellence
+              <motion.div
+                initial={{ opacity: 0, x: -50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8 }}
+                className="md:w-1/2 w-full relative"
+              >
+                <img
+                  src={story.image}
+                  alt={story.subtitle}
+                  className="rounded-lg shadow-2xl w-full object-cover h-[280px] md:h-[500px]"
+                />
+                <div className="absolute -bottom-10 -right-10 bg-[#711113] p-6 text-white rounded-lg hidden lg:block">
+                  <h4 className="text-3xl font-bold">
+                    <AnimatedCounter value={story.yearsOfExcellence} />
+                  </h4>
+                  <p className="text-xs uppercase tracking-widest">
+                    Years of Excellence
+                  </p>
+                </div>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, x: 50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8 }}
+                className="md:w-1/2 flex flex-col h-full justify-center"
+              >
+
+                <h3 className="text-[#711113] uppercase text-md md:text-xl font-extrabold mb-4">
+                  {story.subtitle}
+                </h3>
+
+                <p className="text-gray-600 mb-8 whitespace-pre-line text-sm md:text-base leading-relaxed">
+                  {descriptionToUse}
                 </p>
-              </div>
-            </motion.div>
 
-            <motion.div
-              initial={{ opacity: 0, x: 50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-              className="md:w-1/2 flex flex-col h-full justify-center"
-            >
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-6 mb-10">
+                  {story.stats.map((stat, idx) => (
+                    <div key={idx}>
+                      <h4 className="text-2xl font-bold text-gray-900">
+                        <AnimatedCounter value={stat.value} />
+                      </h4>
+                      <p className="text-sm text-gray-500 font-medium">{stat.label}</p>
+                    </div>
+                  ))}
+                </div>
 
-              <h3 className="text-[#711113] uppercase text-md md:text-xl font-extrabold mb-4">
-                {story.subtitle}
-              </h3>
+                {/* Show "Explore More" only in compact variant */}
+                {variant === "compact" && (
+                  <Link href="/about" className="inline-flex items-center gap-2 bg-[#711113] text-white px-8 py-3 rounded-md font-semibold hover:bg-black transition-colors w-max group shadow-lg">
+                    Explore More
+                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  </Link>
+                )}
+              </motion.div>
 
-              <p className="text-gray-600 mb-8 whitespace-pre-line text-sm md:text-base leading-relaxed">
-                {descriptionToUse}
-              </p>
-
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-6 mb-10">
-                {story.stats.map((stat, idx) => (
-                  <div key={idx}>
-                    <h4 className="text-2xl font-bold text-gray-900">
-                      <AnimatedCounter value={stat.value} />
-                    </h4>
-                    <p className="text-sm text-gray-500 font-medium">{stat.label}</p>
-                  </div>
-                ))}
-              </div>
-
-              {/* Show "Explore More" only in compact variant */}
-              {variant === "compact" && (
-                <Link href="/about" className="inline-flex items-center gap-2 bg-[#711113] text-white px-8 py-3 rounded-md font-semibold hover:bg-black transition-colors w-max group shadow-lg">
-                  Explore More
-                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                </Link>
-              )}
-            </motion.div>
-
+            </div>
           </div>
-        </div>
 
-        <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[60vw] h-[60vw] max-w-[800px] bg-gray-50 rounded-full translate-x-1/2 -z-10"></div>
-      </section>
+          <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[60vw] h-[60vw] max-w-[800px] bg-gray-50 rounded-full translate-x-1/2 -z-10"></div>
+        </section>
+      )}
 
-      {variant === "full" && (
+      {showVisionMission && (
         <section className="py-12 md:py-16 bg-gray-50 relative">
           <div className="container mx-auto px-4 lg:px-8 max-w-5xl">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">

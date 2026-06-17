@@ -54,20 +54,24 @@ function buildEmbedSrc(mapSrc: string, address: string, activeLandmark?: NearbyL
 
 // ─── Main Component ────────────────────────────────────────────────────────────
 export default function ProjectLocation({ mapSrc, address, nearbyLocations }: Props) {
+  const validLandmarks = useMemo(() => {
+    return (nearbyLocations || []).filter(loc => loc && loc.name?.trim() !== "");
+  }, [nearbyLocations]);
+
   const [activeIdx, setActiveIdx] = useState<number | null>(null);
-  const activeLandmark = activeIdx !== null ? nearbyLocations[activeIdx] : null;
-  const embedSrc = useMemo(() => buildEmbedSrc(mapSrc, address, activeLandmark), [mapSrc, address, activeLandmark]);
+  const activeLandmark = activeIdx !== null ? validLandmarks[activeIdx] : null;
+  const embedSrc = useMemo(() => buildEmbedSrc(mapSrc || "", address, activeLandmark), [mapSrc, address, activeLandmark]);
 
   // Group by category for summary chips
   const grouped = useMemo(() => {
     const map: Record<string, number> = {};
-    nearbyLocations.forEach((l) => { map[l.category] = (map[l.category] || 0) + 1; });
+    validLandmarks.forEach((l) => { map[l.category] = (map[l.category] || 0) + 1; });
     return map;
-  }, [nearbyLocations]);
+  }, [validLandmarks]);
 
   const directionsUrl = useMemo(() => {
     if (activeLandmark) {
-      const dest = address || (!mapSrc.includes("<iframe") && !mapSrc.startsWith("http") ? mapSrc : "");
+      const dest = address || (mapSrc && !mapSrc.includes("<iframe") && !mapSrc.startsWith("http") ? mapSrc : "");
       return `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(activeLandmark.name)}&destination=${encodeURIComponent(dest)}`;
     }
     return address
@@ -75,8 +79,11 @@ export default function ProjectLocation({ mapSrc, address, nearbyLocations }: Pr
       : "#";
   }, [address, mapSrc, activeLandmark]);
 
+  // If no map source and no nearby locations, hide section
+  if (!mapSrc && validLandmarks.length === 0) return null;
+
   return (
-    <section className="py-12  bg-[#0d0d0d] border-t border-white/5 relative overflow-hidden rounded">
+    <section className="py-12 bg-[#0d0d0d] border-t border-white/5 relative overflow-hidden rounded animate-fadeIn">
 
       {/* Background grid */}
       <div
@@ -138,115 +145,111 @@ export default function ProjectLocation({ mapSrc, address, nearbyLocations }: Pr
         <div className="flex flex-col xl:flex-row gap-6 lg:gap-8 items-stretch">
 
           {/* ── Map panel ── */}
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="w-full xl:w-[58%]"
-          >
-            <div className="relative w-full h-[300px] sm:h-[380px] md:h-[480px] rounded-2xl overflow-hidden border border-white/10 shadow-2xl shadow-black/60">
+          {mapSrc && (
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className={`w-full ${validLandmarks.length > 0 ? "xl:w-[58%]" : "xl:w-full"}`}
+            >
+              <div className="relative w-full h-[300px] sm:h-[380px] md:h-[480px] rounded-2xl overflow-hidden border border-white/10 shadow-2xl shadow-black/60">
 
-              {embedSrc ? (
-                <iframe
-                  src={embedSrc}
-                  width="100%"
-                  height="100%"
-                  style={{ border: 0, filter: "grayscale(15%) contrast(1.05)" }}
-                  allowFullScreen
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                  title="Project Location Map"
-                />
-              ) : (
-                <div className="w-full h-full bg-gray-900 flex items-center justify-center">
-                  <div className="text-center">
-                    <MapPin size={40} className="text-[#711113] mx-auto mb-3" />
-                    <p className="text-gray-400 text-sm">Map coming soon</p>
-                  </div>
-                </div>
-              )}
-
-              {/* Glassmorphic bottom overlay card */}
-              <div className="absolute bottom-0 left-0 right-0 p-3 md:p-4 pointer-events-none">
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.5, duration: 0.5 }}
-                  className="bg-black/65 backdrop-blur-md border border-white/10 rounded-xl px-4 py-3 flex items-center gap-3"
-                >
-                  {/* Pulsing project pin */}
-                  <div className="relative shrink-0">
-                    <div className="w-9 h-9 rounded-full bg-[#711113] flex items-center justify-center shadow-lg shadow-[#711113]/50">
-                      <MapPin size={16} className="text-white fill-white" />
+                {embedSrc ? (
+                  <iframe
+                    src={embedSrc}
+                    width="100%"
+                    height="100%"
+                    style={{ border: 0, filter: "grayscale(15%) contrast(1.05)" }}
+                    allowFullScreen
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                    title="Project Location Map"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-gray-900 flex items-center justify-center">
+                    <div className="text-center">
+                      <MapPin size={40} className="text-[#711113] mx-auto mb-3" />
+                      <p className="text-gray-400 text-sm">Map coming soon</p>
                     </div>
-                    <span className="absolute inset-0 rounded-full bg-[#711113]/40 animate-ping" />
                   </div>
+                )}
 
-                  <div className="min-w-0 flex-1">
-                    <p className="text-white font-bold text-sm truncate">Project Location</p>
-                    <p className="text-gray-400 text-[11px] truncate">{address || "View on map"}</p>
-                  </div>
-
-                  <a
-                    href={directionsUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="pointer-events-auto shrink-0 flex items-center gap-1.5 bg-[#711113] hover:bg-[#8a1416] active:scale-95 text-white text-[10px] font-bold uppercase tracking-wider px-3 py-2 rounded-lg transition-all"
+                {/* Glassmorphic bottom overlay card */}
+                <div className="absolute bottom-0 left-0 right-0 p-3 md:p-4 pointer-events-none">
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.5, duration: 0.5 }}
+                    className="bg-black/65 backdrop-blur-md border border-white/10 rounded-xl px-4 py-3 flex items-center gap-3"
                   >
-                    <Navigation size={11} />
-                    {activeLandmark ? "View Route" : "Directions"}
-                  </a>
-                </motion.div>
-              </div>
-            </div>
+                    {/* Pulsing project pin */}
+                    <div className="relative shrink-0">
+                      <div className="w-9 h-9 rounded-full bg-[#711113] flex items-center justify-center shadow-lg shadow-[#711113]/50">
+                        <MapPin size={16} className="text-white fill-white" />
+                      </div>
+                      <span className="absolute inset-0 rounded-full bg-[#711113]/40 animate-ping" />
+                    </div>
 
-            {/* Open in Maps link */}
-            <div className="mt-2.5 flex justify-end">
-              <a
-                href={directionsUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-1.5 text-gray-600 hover:text-[#29B1D2] text-[11px] font-medium transition-colors"
-              >
-                <ExternalLink size={11} />
-                Open in Google Maps
-              </a>
-            </div>
-          </motion.div>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-white font-bold text-sm truncate">Project Location</p>
+                      <p className="text-gray-400 text-[11px] truncate">{address || "View on map"}</p>
+                    </div>
+
+                    <a
+                      href={directionsUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="pointer-events-auto shrink-0 flex items-center gap-1.5 bg-[#711113] hover:bg-[#8a1416] active:scale-95 text-white text-[10px] font-bold uppercase tracking-wider px-3 py-2 rounded-lg transition-all"
+                    >
+                      <Navigation size={11} />
+                      {activeLandmark ? "View Route" : "Directions"}
+                    </a>
+                  </motion.div>
+                </div>
+              </div>
+
+              {/* Open in Maps link */}
+              <div className="mt-2.5 flex justify-end">
+                <a
+                  href={directionsUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1.5 text-gray-600 hover:text-[#29B1D2] text-[11px] font-medium transition-colors"
+                >
+                  <ExternalLink size={11} />
+                  Open in Google Maps
+                </a>
+              </div>
+            </motion.div>
+          )}
 
           {/* ── Landmark list panel ── */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="w-full xl:w-[42%] flex flex-col"
-          >
-            {/* Panel header */}
-            <div className="flex items-center gap-2 mb-4">
-              <Navigation size={16} className="text-[#711113]" />
-              <h3 className="text-white font-bold uppercase tracking-widest text-sm">
-                Nearby Landmarks
-              </h3>
-              {nearbyLocations.length > 0 && (
+          {validLandmarks.length > 0 && (
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className={`w-full ${mapSrc ? "xl:w-[42%]" : "xl:w-full"} flex flex-col`}
+            >
+              {/* Panel header */}
+              <div className="flex items-center gap-2 mb-4">
+                <Navigation size={16} className="text-[#711113]" />
+                <h3 className="text-white font-bold uppercase tracking-widest text-sm">
+                  Nearby Landmarks
+                </h3>
                 <span className="ml-auto bg-white/5 border border-white/10 text-gray-400 text-[10px] font-bold px-2.5 py-0.5 rounded-full">
-                  {nearbyLocations.length}
+                  {validLandmarks.length}
                 </span>
-              )}
-            </div>
-
-            {nearbyLocations.length === 0 ? (
-              <div className="flex-1 flex items-center justify-center py-16">
-                <p className="text-gray-600 text-xs italic">Landmark details being updated...</p>
               </div>
-            ) : (
+
               <div
                 className="flex-1 space-y-2.5 overflow-y-auto pr-1"
                 style={{ maxHeight: "480px", scrollbarWidth: "thin", scrollbarColor: "rgba(255,255,255,0.1) transparent" }}
               >
-                {nearbyLocations.map((loc, i) => {
+                {validLandmarks.map((loc, i) => {
                   const cfg = getCategoryConfig(loc.category);
                   const isActive = activeIdx === i;
 
@@ -313,8 +316,8 @@ export default function ProjectLocation({ mapSrc, address, nearbyLocations }: Pr
                   );
                 })}
               </div>
-            )}
-          </motion.div>
+            </motion.div>
+          )}
         </div>
       </div>
     </section>

@@ -1,4 +1,3 @@
-"use client";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FileText } from "lucide-react";
@@ -28,6 +27,9 @@ const variants = {
 };
 
 export default function FloorPlansSection({ projectTitle, overviewImg, floorPlansCount = 0, configurations = [] }: Props) {
+  const validConfigs = (configurations || []).filter(
+    c => c && (c.configuration?.trim() || c.carpetArea?.trim() || c.superBuiltUpArea?.trim() || c.udsSqYards?.trim())
+  );
   const [activeTab, setActiveTab] = useState<Tab>("master");
   const [direction, setDirection] = useState<number>(1);
 
@@ -36,8 +38,9 @@ export default function FloorPlansSection({ projectTitle, overviewImg, floorPlan
     setDirection(tab === "floor" ? 1 : -1);
     setActiveTab(tab);
   };
-  // If no floor plans and no master plan, don't show
-  if (floorPlansCount === 0 && !overviewImg) return null;
+
+  // If no floor plans and no configs, don't show
+  if (floorPlansCount === 0 && validConfigs.length === 0) return null;
 
   return (
     <section id="floorplans" className="py-10 md:py-16 bg-gray-50 border-t border-gray-100">
@@ -55,34 +58,36 @@ export default function FloorPlansSection({ projectTitle, overviewImg, floorPlan
         </div>
 
         {/* Tab Bar */}
-        <div className="flex justify-center mb-8">
-          <div className="relative inline-flex items-center bg-white border border-gray-200 rounded-xl md:rounded-2xl p-1 md:p-1.5 shadow-sm">
-            <motion.div
-              layout
-              transition={{ type: "spring", stiffness: 380, damping: 32 }}
-              className="absolute inset-y-1 md:inset-y-1.5 rounded-lg md:rounded-xl bg-[#711113] shadow-md"
-              style={{
-                left: activeTab === "master" ? "4px" : "50%",
-                right: activeTab === "master" ? "50%" : "4px",
-              }}
-            />
-            {(
-              [
-                { key: "master", label: "Master Plan" },
-                { key: "floor", label: "Floor Plans" },
-              ] as { key: Tab; label: string }[]
-            ).map((tab) => (
-              <button
-                key={tab.key}
-                onClick={() => handleTabChange(tab.key)}
-                className={`relative z-10 px-4 md:px-8 py-2 md:py-3 text-[10px] md:text-sm font-bold uppercase tracking-widest rounded-lg md:rounded-xl transition-colors duration-300 min-w-[120px] md:min-w-[140px] ${activeTab === tab.key ? "text-white" : "text-gray-500 hover:text-gray-800"
-                  }`}
-              >
-                {tab.label}
-              </button>
-            ))}
+        {validConfigs.length > 0 && (
+          <div className="flex justify-center mb-8">
+            <div className="relative inline-flex items-center bg-white border border-gray-200 rounded-xl md:rounded-2xl p-1 md:p-1.5 shadow-sm">
+              <motion.div
+                layout
+                transition={{ type: "spring", stiffness: 380, damping: 32 }}
+                className="absolute inset-y-1 md:inset-y-1.5 rounded-lg md:rounded-xl bg-[#711113] shadow-md"
+                style={{
+                  left: activeTab === "master" ? "4px" : "50%",
+                  right: activeTab === "master" ? "50%" : "4px",
+                }}
+              />
+              {(
+                [
+                  { key: "master", label: "Master Plan" },
+                  { key: "floor", label: "Floor Plans" },
+                ] as { key: Tab; label: string }[]
+              ).map((tab) => (
+                <button
+                  key={tab.key}
+                  onClick={() => handleTabChange(tab.key)}
+                  className={`relative z-10 px-4 md:px-8 py-2 md:py-3 text-[10px] md:text-sm font-bold uppercase tracking-widest rounded-lg md:rounded-xl transition-colors duration-300 min-w-[120px] md:min-w-[140px] ${activeTab === tab.key ? "text-white" : "text-gray-500 hover:text-gray-800"
+                    }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Tab Content */}
         <div className="relative overflow-hidden min-h-[340px]">
@@ -114,7 +119,7 @@ export default function FloorPlansSection({ projectTitle, overviewImg, floorPlan
                   </div>
                 </div>
               </motion.div>
-            ) : (
+            ) : activeTab === "floor" && validConfigs.length > 0 ? (
               <motion.div
                 key="floor"
                 custom={direction}
@@ -125,7 +130,7 @@ export default function FloorPlansSection({ projectTitle, overviewImg, floorPlan
                 transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
               >
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {(configurations.length > 0 ? configurations : [1, 2, 3]).map((item, idx) => (
+                  {validConfigs.map((item, idx) => (
                     <div key={idx} className="relative rounded-2xl overflow-hidden border border-gray-100 bg-white shadow-sm">
                       <div>
                         <div className="p-5 border-b border-gray-100 flex items-center justify-between">
@@ -142,7 +147,7 @@ export default function FloorPlansSection({ projectTitle, overviewImg, floorPlan
                   ))}
                 </div>
               </motion.div>
-            )}
+            ) : null}
           </AnimatePresence>
         </div>
       </div>

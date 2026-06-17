@@ -34,6 +34,10 @@ export default function ProjectGallery({ images = [], projectTitle }: Props) {
     }
   }, [images, formattedImages.length, activeIndex]);
 
+  if (formattedImages.length === 0) {
+    return null;
+  }
+
   return (
     <section id="gallery" className="pt-4 sm:pt-0 pb-6 md:pb-16 bg-white">
       <div className="container mx-auto px-0">

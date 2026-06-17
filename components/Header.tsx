@@ -29,11 +29,42 @@ export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [config, setConfig] = useState<Record<string, boolean>>({});
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
 
   const pathname = usePathname();
   const router = useRouter();
 
   const { projects } = useProjects();
+
+  useEffect(() => {
+    const fetchConfig = async () => {
+      try {
+        const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
+        const res = await fetch(`${baseUrl}/api/config`);
+        if (res.ok) {
+          const data = await res.json();
+          setConfig(data);
+        }
+      } catch (err) {
+        console.error("Failed to load header configs:", err);
+      }
+    };
+    fetchConfig();
+  }, []);
+
+  const visibleNavLinks = useMemo(() => {
+    return navLinks.filter(link => {
+      if (link.name === "CSR" && config.show_csr_page === false) return false;
+      if (link.name === "Rent") {
+        const showRes = config.show_rental_residential !== false;
+        const showComm = config.show_rental_commercial !== false;
+        return showRes || showComm;
+      }
+      if (link.name === "Blog" && config.show_blog_page === false) return false;
+      return true;
+    });
+  }, [config]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -145,10 +176,16 @@ export default function Header() {
         </Link>
 
         <nav className="hidden md:flex items-center gap-8 z-20">
-          {navLinks.map((link) => (
+          {visibleNavLinks.map((link) => (
             <div
               key={link.name}
               className="relative group"
+              onMouseEnter={() => {
+                if (link.name === "Our Projects" || link.name === "Rent") {
+                  setActiveDropdown(link.name);
+                }
+              }}
+              onMouseLeave={() => setActiveDropdown(null)}
             >
               <Link
                 href={link.href}
@@ -165,13 +202,17 @@ export default function Header() {
                   link.name === "Rent") && (
                     <ChevronDown
                       size={14}
-                      className="group-hover:rotate-180 transition-transform"
+                      className={`transition-transform duration-300 ${
+                        activeDropdown === link.name ? "rotate-180" : ""
+                      }`}
                     />
                   )}
               </Link>
 
               {link.name === "Our Projects" && (
-                <div className="absolute top-full left-1/2 -translate-x-1/2 pt-6 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-500 z-50">
+                <div className={`absolute top-full left-1/2 -translate-x-1/2 pt-6 transition-all duration-500 z-50 ${
+                  activeDropdown === "Our Projects" ? "opacity-100 visible" : "opacity-0 invisible pointer-events-none"
+                }`}>
                   <div className="w-max bg-white/40 backdrop-blur-[40px] text-black shadow-2xl p-8 border border-black/10 flex gap-10">
 
                     <div className="flex-1">
@@ -184,6 +225,7 @@ export default function Header() {
                           <li key={p._id}>
                             <Link
                               href={`/projects/${p._id}`}
+                              onClick={() => setActiveDropdown(null)}
                               className="text-sm text-black/70 hover:text-black font-medium"
                             >
                               {p.title}
@@ -203,6 +245,7 @@ export default function Header() {
                           <li key={p._id}>
                             <Link
                               href={`/projects/${p._id}`}
+                              onClick={() => setActiveDropdown(null)}
                               className="text-sm text-black/70 hover:text-black font-medium"
                             >
                               {p.title}
@@ -222,6 +265,7 @@ export default function Header() {
                           <li key={p._id}>
                             <Link
                               href={`/projects/${p._id}`}
+                              onClick={() => setActiveDropdown(null)}
                               className="text-sm text-black/70 hover:text-black font-medium"
                             >
                               {p.title}
@@ -236,33 +280,47 @@ export default function Header() {
               )}
 
               {link.name === "Rent" && (
-                <div className="absolute top-full left-1/2 -translate-x-1/2 pt-6 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-500 z-50">
-                  <div className="w-max min-w-[300px] bg-white/40 backdrop-blur-[40px] text-black shadow-2xl p-8 border border-black/10 flex gap-10">
-                    <div className="flex-1">
-                      <h3 className="text-black font-bold text-xs uppercase mb-6">
-                        Residential
-                      </h3>
-                      <ul className="space-y-4">
-                        <li>
-                          <Link href="/rent/residential" className="text-sm text-black/70 hover:text-black font-medium">
-                            View Residential Properties
-                          </Link>
-                        </li>
-                      </ul>
-                    </div>
+                <div className={`absolute top-full left-1/2 -translate-x-1/2 pt-6 transition-all duration-500 z-50 ${
+                  activeDropdown === "Rent" ? "opacity-100 visible" : "opacity-0 invisible pointer-events-none"
+                }`}>
+                  <div className="w-max min-w-[200px] bg-white/40 backdrop-blur-[40px] text-black shadow-2xl p-8 border border-black/10 flex gap-10">
+                    {config.show_rental_residential !== false && (
+                      <div className="flex-1">
+                        <h3 className="text-black font-bold text-xs uppercase mb-6">
+                          Residential
+                        </h3>
+                        <ul className="space-y-4">
+                          <li>
+                            <Link 
+                              href="/rent/residential" 
+                              onClick={() => setActiveDropdown(null)}
+                              className="text-sm text-black/70 hover:text-black font-medium"
+                            >
+                              View Residential Properties
+                            </Link>
+                          </li>
+                        </ul>
+                      </div>
+                    )}
 
-                    <div className="flex-1 border-l border-black/10 pl-10">
-                      <h3 className="text-black font-bold text-xs uppercase mb-6">
-                        Commercial
-                      </h3>
-                      <ul className="space-y-4">
-                        <li>
-                          <Link href="/rent/commercial" className="text-sm text-black/70 hover:text-black font-medium">
-                            View Commercial Properties
-                          </Link>
-                        </li>
-                      </ul>
-                    </div>
+                    {config.show_rental_commercial !== false && (
+                      <div className={`flex-1 ${config.show_rental_residential !== false ? "border-l border-black/10 pl-10" : ""}`}>
+                        <h3 className="text-black font-bold text-xs uppercase mb-6">
+                          Commercial
+                        </h3>
+                        <ul className="space-y-4">
+                          <li>
+                            <Link 
+                              href="/rent/commercial" 
+                              onClick={() => setActiveDropdown(null)}
+                              className="text-sm text-black/70 hover:text-black font-medium"
+                            >
+                              View Commercial Properties
+                            </Link>
+                          </li>
+                        </ul>
+                      </div>
+                    )}
 
                   </div>
                 </div>
@@ -369,7 +427,7 @@ export default function Header() {
             className="md:hidden bg-white/40 backdrop-blur-[40px] overflow-hidden"
           >
             <ul className="flex flex-col items-start px-4 py-4 gap-3 w-full">
-              {navLinks.map((link) => (
+              {visibleNavLinks.map((link) => (
                 <li key={link.name} className="w-full flex flex-col items-start">
                   {link.name === "Our Projects" ? (
                     <div className="w-full">
@@ -423,8 +481,12 @@ export default function Header() {
                         {link.name} <ChevronDown size={13} />
                       </button>
                       <div id="mobile-rent" className="hidden w-full bg-white/20 py-2 px-3 mt-1.5 text-left rounded-md flex flex-col gap-0.5">
-                        <Link href="/rent/residential" onClick={() => setIsOpen(false)} className="text-black/80 font-bold text-[11px] uppercase tracking-widest hover:text-black block py-1.5">Residential</Link>
-                        <Link href="/rent/commercial" onClick={() => setIsOpen(false)} className="text-black/80 font-bold text-[11px] uppercase tracking-widest hover:text-black block py-1.5">Commercial</Link>
+                        {config.show_rental_residential !== false && (
+                          <Link href="/rent/residential" onClick={() => setIsOpen(false)} className="text-black/80 font-bold text-[11px] uppercase tracking-widest hover:text-black block py-1.5">Residential</Link>
+                        )}
+                        {config.show_rental_commercial !== false && (
+                          <Link href="/rent/commercial" onClick={() => setIsOpen(false)} className="text-black/80 font-bold text-[11px] uppercase tracking-widest hover:text-black block py-1.5">Commercial</Link>
+                        )}
                       </div>
                     </div>
                   ) : (

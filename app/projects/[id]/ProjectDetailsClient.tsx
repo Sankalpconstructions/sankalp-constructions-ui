@@ -41,8 +41,7 @@ export default function ProjectDetailsPage() {
               pc.configuration?.trim() ||
               pc.carpetArea?.trim() ||
               pc.superBuiltUpArea?.trim() ||
-              pc.udsSqYards?.trim() ||
-              pc.price?.trim()
+              pc.udsSqYards?.trim()
             )
             .map((pc: any) => ({
               type: pc.configuration,

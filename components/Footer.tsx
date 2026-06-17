@@ -6,11 +6,30 @@ import Image from "next/image";
 import sankalpLogo from "../public/assets/Sankalplogo.png";
 import { useProjects } from "@/context/ProjectContext";
 
+import { useState, useEffect } from "react";
+
 export default function Footer() {
   const { projects, loading } = useProjects();
+  const [config, setConfig] = useState<Record<string, boolean>>({});
 
   // Take only the top 5 projects for the footer
   const topProjects = projects.slice(0, 5);
+
+  useEffect(() => {
+    const fetchConfig = async () => {
+      try {
+        const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
+        const res = await fetch(`${baseUrl}/api/config`);
+        if (res.ok) {
+          const data = await res.json();
+          setConfig(data);
+        }
+      } catch (err) {
+        console.error("Failed to load footer configs:", err);
+      }
+    };
+    fetchConfig();
+  }, []);
 
   return (
     <footer className="bg-[#f8f9fa] pt-16 relative overflow-hidden flex flex-col mt-auto">
@@ -54,8 +73,12 @@ export default function Footer() {
                 <ul className="space-y-4">
                   <li><Link href="/about" className="text-sm text-gray-500 hover:text-gray-900 transition-colors">Brand Story</Link></li>
                   <li><Link href="/projects" className="text-sm text-gray-500 hover:text-gray-900 transition-colors">Our Projects</Link></li>
-                  <li><Link href="/csr" className="text-sm text-gray-500 hover:text-gray-900 transition-colors">CSR Initiatives</Link></li>
-                  {/* <li><Link href="/blog" className="text-sm text-gray-500 hover:text-gray-900 transition-colors">Insights & Blogs</Link></li> */}
+                  {config.show_csr_page !== false && (
+                    <li><Link href="/csr" className="text-sm text-gray-500 hover:text-gray-900 transition-colors">CSR Initiatives</Link></li>
+                  )}
+                  {config.show_blog_page === true && (
+                    <li><Link href="/blog" className="text-sm text-gray-500 hover:text-gray-900 transition-colors">Insights & Blogs</Link></li>
+                  )}
                 </ul>
               </div>
 

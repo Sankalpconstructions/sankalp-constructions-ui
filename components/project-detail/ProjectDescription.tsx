@@ -16,6 +16,7 @@ interface Props {
 
 export default function ProjectDescription({ description, highlights }: Props) {
   const [expanded, setExpanded] = useState(false);
+  const validHighlights = (highlights || []).filter(h => h && h.trim() !== "");
 
   return (
     <section className="pt-6 md:pt-0 py-10 lg:py-12">
@@ -45,22 +46,26 @@ export default function ProjectDescription({ description, highlights }: Props) {
           </button>
         </div>
 
-        <h3 className="tracking-wide text-2xl md:text-3xl font-extrabold text-gray-900 mb-4 leading-tight">Key Highlights</h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {highlights.map((h, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, x: -10 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.06 }}
-              className="flex items-start gap-3 bg-gray-50 rounded-xl p-3 md:p-4 border border-gray-100"
-            >
-              <HousePlus size={18} className="text-[#711113] flex-shrink-0 mt-0.5" />
-              <span className="text-sm text-gray-700 font-medium">{h}</span>
-            </motion.div>
-          ))}
-        </div>
+        {validHighlights.length > 0 && (
+          <>
+            <h3 className="tracking-wide text-2xl md:text-3xl font-extrabold text-gray-900 mb-4 leading-tight">Key Highlights</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {validHighlights.map((h, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, x: -10 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.06 }}
+                  className="flex items-start gap-3 bg-gray-50 rounded-xl p-3 md:p-4 border border-gray-100"
+                >
+                  <HousePlus size={18} className="text-[#711113] flex-shrink-0 mt-0.5" />
+                  <span className="text-sm text-gray-700 font-medium">{h}</span>
+                </motion.div>
+              ))}
+            </div>
+          </>
+        )}
       </div>
     </section>
   );

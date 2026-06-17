@@ -19,6 +19,8 @@ export default function Chatbot() {
   const [isOpen, setIsOpen] = useState(false);
   const [isHoverToggleHovered, setIsHoverToggleHovered] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [fetchedProjects, setFetchedProjects] = useState<any[]>([]);
+  const [selectedProject, setSelectedProject] = useState<any>(null);
 
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -55,7 +57,17 @@ export default function Chatbot() {
 
     const res = await fetch(url);
     const data = await res.json();
-    return data.projects || [];
+    const projs = data.projects || [];
+
+    // Cache the fetched projects
+    setFetchedProjects(prev => {
+      const map = new Map();
+      prev.forEach(p => map.set(p._id || p.id, p));
+      projs.forEach((p: any) => map.set(p._id || p.id, p));
+      return Array.from(map.values());
+    });
+
+    return projs;
   };
 
   const fetchAvailableBHKs = async () => {
@@ -134,6 +146,16 @@ export default function Chatbot() {
         return;
       }
 
+      if (option === "See Project") {
+        removeTyping(typingId);
+        if (selectedProject) {
+          window.location.href = `/projects/${selectedProject._id || selectedProject.id}`;
+        } else {
+          goToMainMenu();
+        }
+        return;
+      }
+
       // Browse Categories
       if (option === "Browse Apartments") {
         const bhkOptions = await fetchAvailableBHKs();
@@ -183,12 +205,16 @@ export default function Chatbot() {
         };
       }
       // Project Selected
-      else if (option !== "Contact Us" && option !== "Book Site Visit") {
+      else if (option !== "Contact Us" && option !== "Book Site Visit" && option !== "See Project") {
+        const matchedProject = fetchedProjects.find(p => p.title === option);
+        if (matchedProject) {
+          setSelectedProject(matchedProject);
+        }
         botMsg = {
           id: String(messageIdCounter++),
           sender: "bot",
           text: `You selected **${option}**.`,
-          options: ["Book Site Visit", "Browse More Projects", "Back to Main Menu"]
+          options: ["See Project", "Book Site Visit", "Browse More Projects", "Back to Main Menu"]
         };
       }
       // Lead Form

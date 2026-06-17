@@ -8,6 +8,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ContactFloating from "@/components/ContactFloating";
 import ScrollController from "@/components/ScrollController";
+import GoogleAnalytics from "@/components/GoogleAnalytics";
 
 const poppins = Poppins({
   weight: ["300", "400", "500", "600", "700", "800", "900"],
@@ -39,7 +40,7 @@ export default function RootLayout({
     <html lang="en" className={`${poppins.variable} ${geistMono.variable} scroll-smooth antialiased h-full`}>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-
+        <GoogleAnalytics />
       </head>
       <body className="min-h-full flex flex-col bg-white text-gray-900 override">
         <AppDataProvider>

@@ -4,7 +4,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Camera, ImageIcon } from "lucide-react";
 
 interface GalleryImage {
-  src: string;
+  desktopSrc: string;
+  mobileSrc: string;
   title: string;
   description?: string;
 }
@@ -19,14 +20,20 @@ export default function ProjectGallery({ images = [], projectTitle }: Props) {
 
   const formattedImages: GalleryImage[] = images.map((img, i) => {
     if (typeof img === 'string') {
-      return { src: img, title: `${projectTitle || "Project"} View ${i + 1}`, description: "" };
+      return { 
+        desktopSrc: img, 
+        mobileSrc: img, 
+        title: `${projectTitle || "Project"} View ${i + 1}`, 
+        description: "" 
+      };
     }
     return {
-      src: img.src || img.url || "",
+      desktopSrc: img.desktop || img.src || img.url || "",
+      mobileSrc: img.mobile || img.src || img.url || "",
       title: img.title || `${projectTitle || "Project"} Image ${i + 1}`,
       description: img.description || ""
     };
-  }).filter(img => !!img.src);
+  }).filter(img => !!img.desktopSrc);
 
   useEffect(() => {
     if (activeIndex >= formattedImages.length) {
@@ -55,7 +62,7 @@ export default function ProjectGallery({ images = [], projectTitle }: Props) {
                     }`}
                 >
                   <img
-                    src={img.src}
+                    src={img.mobileSrc || img.desktopSrc}
                     alt={img.title}
                     className="w-full h-full object-cover"
                   />
@@ -65,16 +72,23 @@ export default function ProjectGallery({ images = [], projectTitle }: Props) {
 
             <div className="flex-1 relative rounded-2xl overflow-hidden bg-gray-100 border border-gray-200 shadow-sm">
               <AnimatePresence mode="wait">
-                <motion.img
+                <motion.div
                   key={activeIndex}
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -20 }}
                   transition={{ duration: 0.3 }}
-                  src={formattedImages[activeIndex]?.src}
-                  alt={formattedImages[activeIndex]?.title}
-                  className="absolute inset-0 w-full h-full object-cover"
-                />
+                  className="absolute inset-0 w-full h-full"
+                >
+                  <picture className="w-full h-full">
+                    <source media="(max-width: 640px)" srcSet={formattedImages[activeIndex]?.mobileSrc} />
+                    <img
+                      src={formattedImages[activeIndex]?.desktopSrc}
+                      alt={formattedImages[activeIndex]?.title}
+                      className="w-full h-full object-cover"
+                    />
+                  </picture>
+                </motion.div>
               </AnimatePresence>
 
               <div className="absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-black/80 via-black/40 to-transparent">

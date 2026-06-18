@@ -51,6 +51,7 @@ export default function ProjectDetailsPage() {
               facing: pc.price // or adjust this mapping as necessary
             })),
           configurations: data.priceConfigurations || [],
+          floorPlans: data.floorPlans || [],
           nearbyLocations: data.landmarks?.map((lm: any) => ({
             name: lm.text,
             distance: "",
@@ -215,6 +216,7 @@ export default function ProjectDetailsPage() {
                 projectTitle={project.title}
                 overviewImg={project.slides?.[0]?.image}
                 floorPlansCount={project.floorPlansCount}
+                floorPlans={project.floorPlans}
                 configurations={project.configurations}
               />
             )}

@@ -25,7 +25,10 @@ export default function FAQSection() {
         const res = await fetch(`${baseUrl}/api/faqs`);
         if (res.ok) {
           const data = await res.json();
-          // Assuming API returns { _id, question, answer }
+          // Sort by order ascending
+          if (Array.isArray(data)) {
+            data.sort((a: any, b: any) => (a.order || 0) - (b.order || 0));
+          }
           setFaqs(data);
         }
       } catch (error) {

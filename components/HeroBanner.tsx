@@ -46,10 +46,13 @@ export default function HeroBanner() {
 
   const handleSlideClick = (link?: string) => {
     if (!link) return;
-    if (link.startsWith("http")) {
-      window.location.href = link;
+    const cleanLink = link.trim();
+    if (cleanLink.startsWith("http")) {
+      window.location.href = cleanLink;
+    } else if (/^[0-9a-fA-F]{24}$/.test(cleanLink)) {
+      router.push(`/projects/${cleanLink}`);
     } else {
-      router.push(link);
+      router.push(cleanLink);
     }
   };
 

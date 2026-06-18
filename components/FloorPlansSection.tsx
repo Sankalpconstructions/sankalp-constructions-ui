@@ -6,6 +6,7 @@ interface Props {
   projectTitle?: string;
   overviewImg?: string;
   floorPlansCount?: number;
+  floorPlans?: string[];
   configurations?: any[];
 }
 
@@ -26,7 +27,7 @@ const variants = {
   }),
 };
 
-export default function FloorPlansSection({ projectTitle, overviewImg, floorPlansCount = 0, configurations = [] }: Props) {
+export default function FloorPlansSection({ projectTitle, overviewImg, floorPlansCount = 0, floorPlans = [], configurations = [] }: Props) {
   const validConfigs = (configurations || []).filter(
     c => c && (c.configuration?.trim() || c.carpetArea?.trim() || c.superBuiltUpArea?.trim() || c.udsSqYards?.trim())
   );
@@ -79,7 +80,7 @@ export default function FloorPlansSection({ projectTitle, overviewImg, floorPlan
                 <button
                   key={tab.key}
                   onClick={() => handleTabChange(tab.key)}
-                  className={`relative z-10 px-4 md:px-8 py-2 md:py-3 text-[10px] md:text-sm font-bold uppercase tracking-widest rounded-lg md:rounded-xl transition-colors duration-300 min-w-[120px] md:min-w-[140px] ${activeTab === tab.key ? "text-white" : "text-gray-500 hover:text-gray-800"
+                  className={`cursor-pointer relative z-10 px-4 md:px-8 py-2 md:py-3 text-[10px] md:text-sm font-bold uppercase tracking-widest rounded-lg md:rounded-xl transition-colors duration-300 min-w-[120px] md:min-w-[140px] ${activeTab === tab.key ? "text-white" : "text-gray-500 hover:text-gray-800"
                     }`}
                 >
                   {tab.label}
@@ -140,7 +141,7 @@ export default function FloorPlansSection({ projectTitle, overviewImg, floorPlan
                           </span>
                         </div>
                         <div className="p-4">
-                          <img src={overviewImg || "https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?w=600"} alt="Plan Preview" className="w-full aspect-video object-cover rounded-xl" />
+                          <img src={floorPlans?.[idx] || overviewImg || "https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?w=600"} alt="Plan Preview" className="w-full aspect-video object-cover rounded-xl" />
                         </div>
                       </div>
                     </div>

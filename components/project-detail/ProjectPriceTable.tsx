@@ -73,7 +73,7 @@ export default function ProjectPriceTable({ projectTitle, rows }: Props) {
                   <span className="text-white text-xs font-extrabold tracking-wide">{row.type}</span>
                   <button
                     onClick={() => setShowForm(true)}
-                    className="flex items-center gap-1 text-[9px] font-bold bg-white text-[#711113] px-2.5 py-0.5 rounded-full hover:bg-[#F5C33C] hover:text-[#711113] transition-all shadow-sm"
+                    className="flex cursor-pointer items-center gap-1 text-[9px] font-bold bg-white text-[#711113] px-2.5 py-0.5 rounded-full hover:bg-[#F5C33C] hover:text-[#711113] transition-all shadow-sm"
                   >
                     <Lock size={8} /> Get Price
                   </button>

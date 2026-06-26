@@ -20,11 +20,11 @@ export default function ProjectGallery({ images = [], projectTitle }: Props) {
 
   const formattedImages: GalleryImage[] = images.map((img, i) => {
     if (typeof img === 'string') {
-      return { 
-        desktopSrc: img, 
-        mobileSrc: img, 
-        title: `${projectTitle || "Project"} View ${i + 1}`, 
-        description: "" 
+      return {
+        desktopSrc: img,
+        mobileSrc: img,
+        title: `${projectTitle || "Project"} View ${i + 1}`,
+        description: ""
       };
     }
     return {
@@ -50,7 +50,7 @@ export default function ProjectGallery({ images = [], projectTitle }: Props) {
       <div className="container mx-auto px-0">
 
         {formattedImages.length > 0 ? (
-          <div className="flex flex-col-reverse lg:flex-row gap-2 sm:gap-4 h-[280px] sm:h-[400px] md:h-[500px] lg:h-[600px]">
+          <div className="flex flex-col-reverse lg:flex-row gap-2 sm:gap-4 h-[380px] sm:h-[400px] md:h-[500px] lg:h-[600px]">
             <div className="w-full lg:w-48 xl:w-56 flex flex-row lg:flex-col gap-2 sm:gap-3 overflow-x-auto lg:overflow-y-auto no-scrollbar pt-2 pb-2 lg:pt-0 lg:pb-0 pr-0 lg:pr-2">
               {formattedImages.map((img, i) => (
                 <button
@@ -64,7 +64,7 @@ export default function ProjectGallery({ images = [], projectTitle }: Props) {
                   <img
                     src={img.mobileSrc || img.desktopSrc}
                     alt={img.title}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-fill"
                   />
                 </button>
               ))}
@@ -85,18 +85,18 @@ export default function ProjectGallery({ images = [], projectTitle }: Props) {
                     <img
                       src={formattedImages[activeIndex]?.desktopSrc}
                       alt={formattedImages[activeIndex]?.title}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-fill md:object-cover"
                     />
                   </picture>
                 </motion.div>
               </AnimatePresence>
 
-              <div className="absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
-                <h3 className="text-white text-xl font-bold tracking-wide">
+              <div className="absolute inset-x-0 bottom-0 p-4 sm:p-6 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
+                <h3 className="text-white text-base sm:text-xl font-bold tracking-wide">
                   {formattedImages[activeIndex]?.title}
                 </h3>
                 {formattedImages[activeIndex]?.description && (
-                  <p className="text-white/80 mt-1 text-sm">
+                  <p className="text-white/80 mt-1 text-xs sm:text-sm">
                     {formattedImages[activeIndex].description}
                   </p>
                 )}

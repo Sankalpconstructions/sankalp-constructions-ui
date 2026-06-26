@@ -202,17 +202,15 @@ export default function Header() {
                   link.name === "Rent") && (
                     <ChevronDown
                       size={14}
-                      className={`transition-transform duration-300 ${
-                        activeDropdown === link.name ? "rotate-180" : ""
-                      }`}
+                      className={`transition-transform duration-300 ${activeDropdown === link.name ? "rotate-180" : ""
+                        }`}
                     />
                   )}
               </Link>
 
               {link.name === "Our Projects" && (
-                <div className={`absolute top-full left-1/2 -translate-x-1/2 pt-6 transition-all duration-500 z-50 ${
-                  activeDropdown === "Our Projects" ? "opacity-100 visible" : "opacity-0 invisible pointer-events-none"
-                }`}>
+                <div className={`absolute top-full left-1/2 -translate-x-1/2 pt-6 transition-all duration-500 z-50 ${activeDropdown === "Our Projects" ? "opacity-100 visible" : "opacity-0 invisible pointer-events-none"
+                  }`}>
                   <div className="w-max bg-white/40 backdrop-blur-[40px] text-black shadow-2xl p-8 border border-black/10 flex gap-10">
 
                     <div className="flex-1">
@@ -280,9 +278,8 @@ export default function Header() {
               )}
 
               {link.name === "Rent" && (
-                <div className={`absolute top-full left-1/2 -translate-x-1/2 pt-6 transition-all duration-500 z-50 ${
-                  activeDropdown === "Rent" ? "opacity-100 visible" : "opacity-0 invisible pointer-events-none"
-                }`}>
+                <div className={`absolute top-full left-1/2 -translate-x-1/2 pt-6 transition-all duration-500 z-50 ${activeDropdown === "Rent" ? "opacity-100 visible" : "opacity-0 invisible pointer-events-none"
+                  }`}>
                   <div className="w-max min-w-[200px] bg-white/40 backdrop-blur-[40px] text-black shadow-2xl p-8 border border-black/10 flex gap-10">
                     {config.show_rental_residential !== false && (
                       <div className="flex-1">
@@ -291,8 +288,8 @@ export default function Header() {
                         </h3>
                         <ul className="space-y-4">
                           <li>
-                            <Link 
-                              href="/rent/residential" 
+                            <Link
+                              href="/rent/residential"
                               onClick={() => setActiveDropdown(null)}
                               className="text-sm text-black/70 hover:text-black font-medium"
                             >
@@ -310,8 +307,8 @@ export default function Header() {
                         </h3>
                         <ul className="space-y-4">
                           <li>
-                            <Link 
-                              href="/rent/commercial" 
+                            <Link
+                              href="/rent/commercial"
                               onClick={() => setActiveDropdown(null)}
                               className="text-sm text-black/70 hover:text-black font-medium"
                             >

@@ -85,7 +85,7 @@ export default function ProjectGallery({ images = [], projectTitle }: Props) {
                     <img
                       src={formattedImages[activeIndex]?.desktopSrc}
                       alt={formattedImages[activeIndex]?.title}
-                      className="w-full h-full object-fill md:object-cover"
+                      className="w-full h-full object-cover md:object-cover"
                     />
                   </picture>
                 </motion.div>

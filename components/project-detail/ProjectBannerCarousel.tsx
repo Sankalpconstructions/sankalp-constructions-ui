@@ -42,6 +42,7 @@ export default function ProjectBannerCarousel({ slides, title, location, type }:
             fill
             className="object-cover"
             priority
+            unoptimized
           />
         </motion.div>
         {slides[current]?.mobileImage && (
@@ -59,6 +60,7 @@ export default function ProjectBannerCarousel({ slides, title, location, type }:
               fill
               className="object-cover"
               priority
+              unoptimized
             />
           </motion.div>
         )}

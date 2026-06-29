@@ -21,7 +21,8 @@ export default function ProjectsShowcase() {
   const [isManualScrolling, setIsManualScrolling] = useState(false);
 
   // Read from global prefetch cache — data is already loading during preloader
-  const { projects, isReady } = useAppData();
+  const { projects: allProjects, isReady } = useAppData();
+  const projects = allProjects.filter(p => (p.status || "").toLowerCase() !== "completed");
   const loading = !isReady;
 
   // Duplicate projects to create an infinite scroll illusion

@@ -47,6 +47,7 @@ export default function Footer() {
                   height={200}
                   className="w-auto h-10 md:h-12 object-contain"
                   priority
+                  unoptimized
                 />
               </Link>
               <p className="text-sm text-gray-500 mb-8 leading-relaxed max-w-sm">

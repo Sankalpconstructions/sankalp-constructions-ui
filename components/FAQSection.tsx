@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Plus, Minus, ChevronDown, ChevronUp } from "lucide-react";
+import Image from "next/image";
 
 interface FAQ {
   _id: string;
@@ -62,7 +63,7 @@ export default function FAQSection() {
           >
             Frequently Asked Questions
           </motion.h2>
-          <img src="/assets/Title-decorations.png" alt="Decoration" className="w-[150px] md:w-[200px] h-auto object-contain mt-1 mb-4" />
+          <Image src="/assets/Title-decorations.png" alt="Decoration" width={200} height={30} className="w-[150px] md:w-[200px] h-auto object-contain mt-1 mb-4" unoptimized />
           <p className="text-gray-600 text-sm md:text-base leading-relaxed">
             Everything you need to know about our projects, booking process, and company policies.
           </p>

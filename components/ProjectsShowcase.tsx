@@ -110,7 +110,7 @@ export default function ProjectsShowcase() {
             <h2 className="text-2xl text-center md:text-left md:text-3xl lg:text-4xl font-bold text-[#711113] mb-3">
               Our Projects
             </h2>
-            <img src="/assets/Title-decorations.png" alt="Decoration" className="m-auto md:ml-0 w-[150px] md:w-[200px] h-auto object-contain mt-1 mb-4" />
+            <Image src="/assets/Title-decorations.png" alt="Decoration" width={200} height={30} className="m-auto md:ml-0 w-[150px] md:w-[200px] h-auto object-contain mt-1 mb-4" unoptimized />
             <p className="text-gray-600 text-center md:text-left mb-3 whitespace-pre-line">
               Explore our residential & commercial projects.
             </p>
@@ -180,6 +180,7 @@ export default function ProjectsShowcase() {
                         sizes="(max-width: 768px) 100vw, (max-width: 1024px) 60vw, 38vw"
                         priority={idx < 3}
                         className="object-cover group-hover/card:scale-110 transition duration-700"
+                        unoptimized
                       />
 
                       {/* Status and Type Badges */}

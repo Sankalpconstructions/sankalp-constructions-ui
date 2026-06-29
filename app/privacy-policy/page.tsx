@@ -1,5 +1,6 @@
 import React from 'react';
 import PageBanner from "@/components/PageBanner";
+import Image from "next/image";
 
 export const privacyPolicy = [
   {
@@ -55,7 +56,7 @@ export default function PrivacyPolicy() {
           <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-primary mb-3">
             Privacy Policy
           </h1>
-          <img src="/assets/Title-decorations.png" alt="Decoration" className="w-[150px] md:w-[200px] h-auto object-contain mt-1 mb-4" />
+          <Image src="/assets/Title-decorations.png" alt="Decoration" width={200} height={30} className="w-[150px] md:w-[200px] h-auto object-contain mt-1 mb-4" unoptimized />
           <p className="text-gray-600 text-sm md:text-base leading-relaxed">
             Last updated: May 2026
           </p>

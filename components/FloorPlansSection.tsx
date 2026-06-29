@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FileText } from "lucide-react";
+import Image from "next/image";
 
 interface Props {
   projectTitle?: string;
@@ -106,11 +107,15 @@ export default function FloorPlansSection({ projectTitle, overviewImg, floorPlan
                 <div className="relative bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden p-4 md:p-8">
                   <div>
                     {overviewImg ? (
-                      <img
-                        src={overviewImg}
-                        alt="Master Plan"
-                        className="w-full max-h-[520px] object-contain rounded-xl bg-gray-50"
-                      />
+                      <div className="relative w-full h-[300px] md:h-[520px] rounded-xl overflow-hidden bg-white">
+                        <Image
+                          src={overviewImg}
+                          alt="Master Plan"
+                          fill
+                          className="object-contain p-2"
+                          unoptimized
+                        />
+                      </div>
 
                     ) : (
                       <div className="py-20 text-center text-gray-400">
@@ -140,8 +145,14 @@ export default function FloorPlansSection({ projectTitle, overviewImg, floorPlan
                             <FileText size={12} /> {item.carpetArea || "TBA"}
                           </span>
                         </div>
-                        <div className="p-4">
-                          <img src={floorPlans?.[idx] || overviewImg || "https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?w=600"} alt="Plan Preview" className="w-full aspect-video object-cover rounded-xl" />
+                        <div className="relative p-4 w-full aspect-video bg-white rounded-xl">
+                          <Image
+                            src={floorPlans?.[idx] || overviewImg || "https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?w=600"}
+                            alt="Plan Preview"
+                            fill
+                            className="object-contain p-2"
+                            unoptimized
+                          />
                         </div>
                       </div>
                     </div>

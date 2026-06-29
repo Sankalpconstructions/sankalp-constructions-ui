@@ -174,6 +174,7 @@ export default function Header() {
             width={190}
             height={190}
             priority
+            unoptimized
             className={`w-auto object-contain transition-all duration-700 ${isScrolled
               ? "h-16 md:h-16"
               : "h-16 md:h-16"

@@ -2,6 +2,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 
 interface Breadcrumb {
   label: string;
@@ -19,10 +20,12 @@ export default function PageBanner({ title, subtitle, image, breadcrumbs }: Page
   return (
     <section className="relative w-full min-h-[40vh] md:min-h-[50vh] flex items-center justify-center pt-24 pb-12 bg-gray-900 overflow-hidden">
       <div className="absolute inset-0">
-        <img
+        <Image
           src={image}
           alt="Banner Background"
-          className="w-full h-full object-cover opacity-30 block"
+          fill
+          className="object-cover opacity-30 block"
+          unoptimized
         />
         <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/60 to-transparent"></div>
       </div>

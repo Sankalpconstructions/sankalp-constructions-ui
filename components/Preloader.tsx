@@ -30,6 +30,7 @@ export default function Preloader() {
         height={300}
         className="w-48 md:w-64 h-auto object-contain animate-pulse"
         priority
+        unoptimized
       />
     </div>
   );

@@ -3,6 +3,7 @@ import { useState, useCallback, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 const IMAGE_SLIDE_DURATION = 6000;
 
@@ -166,7 +167,7 @@ export default function HeroBanner() {
             className="absolute inset-0 w-full h-full object-contain md:object-cover"
           />
         ) : (
-          <motion.picture
+          <motion.div
             key={`image-${index}`}
             custom={direction}
             variants={slideVariants}
@@ -177,13 +178,27 @@ export default function HeroBanner() {
             className={`absolute inset-0 w-full h-full ${current.link ? 'cursor-pointer' : ''}`}
             onClick={() => handleSlideClick(current.link)}
           >
-            <source media="(max-width: 768px)" srcSet={current.mobileImage} />
-            <img
-              src={current.src}
-              alt="Hero Background"
-              className="w-full h-full object-cover"
-            />
-          </motion.picture>
+            <div className="block md:hidden absolute inset-0">
+              <Image
+                src={current.mobileImage || current.src}
+                alt="Hero Background Mobile"
+                fill
+                className="object-cover"
+                unoptimized
+                priority
+              />
+            </div>
+            <div className="hidden md:block absolute inset-0">
+              <Image
+                src={current.src}
+                alt="Hero Background Desktop"
+                fill
+                className="object-cover"
+                unoptimized
+                priority
+              />
+            </div>
+          </motion.div>
         )}
       </AnimatePresence>
 

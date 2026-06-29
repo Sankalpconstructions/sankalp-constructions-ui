@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import { motion } from "framer-motion";
+import Image from "next/image";
 import { useAppData } from "@/context/AppDataContext";
 import type { TeamMember } from "@/context/AppDataContext";
 
@@ -26,7 +27,9 @@ export default function TeamSection() {
           >
             Meet Our Team
           </motion.h2>
-          <img src="/assets/Title-decorations.png" alt="Decoration" className="w-[150px] md:w-[200px] h-auto object-contain mt-1 mb-4" />
+          <div className="flex justify-center md:justify-start">
+            <Image src="/assets/Title-decorations.png" alt="Decoration" width={200} height={30} className="w-[150px] md:w-[200px] h-auto object-contain mt-1 mb-4" unoptimized />
+          </div>
           <p className="text-gray-500 text-xs md:text-base px-2 leading-relaxed">
             The visionary leaders and dedicated experts behind Sankalp Constructions&apos; success.
           </p>
@@ -47,10 +50,12 @@ export default function TeamSection() {
                 className="absolute inset-x-3 top-3 bottom-[120px] group-hover:bottom-3 overflow-hidden transition-all duration-500 z-0"
                 style={{ borderRadius: "24px" }}
               >
-                <img
+                <Image
                   src={member.image}
                   alt={member.name}
-                  className="w-full h-full object-cover object-top"
+                  fill
+                  className="object-cover object-top"
+                  unoptimized
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-white via-white/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
               </div>

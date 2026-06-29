@@ -10,6 +10,7 @@ import {
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import PageBanner from "@/components/PageBanner";
+import Image from "next/image";
 
 // ─── Data ────────────────────────────────────────────────────────────────────
 type ProjectStatus = "ongoing" | "upcoming" | "completed";
@@ -191,10 +192,12 @@ export default function AllProjectsPage() {
                     className="bg-white rounded-2xl shadow-md hover:shadow-2xl transition-all duration-400 overflow-hidden group flex flex-col border border-gray-100"
                   >
                     <div className="relative h-60 overflow-hidden">
-                      <img
+                      <Image
                         src={project.image}
                         alt={project.title}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-in-out"
+                        fill
+                        className="object-cover group-hover:scale-110 transition-transform duration-700 ease-in-out"
+                        unoptimized
                       />
 
                       <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />

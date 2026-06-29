@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { MapPin, Phone, MessageCircle, Building2, Maximize, Compass } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import PageBanner from "@/components/PageBanner";
+import Image from "next/image";
 
 interface RentalProperty {
   id: string;
@@ -79,10 +80,12 @@ export default function CommercialClient() {
                     className="bg-white rounded-2xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] hover:shadow-[0_8px_30px_-4px_rgba(113,17,19,0.15)] transition-all duration-500 overflow-hidden group flex flex-col border border-gray-100"
                   >
                     <div className="relative h-64 overflow-hidden">
-                      <img
+                      <Image
                         src={property.image}
                         alt={property.title}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-in-out"
+                        fill
+                        className="object-cover group-hover:scale-110 transition-transform duration-700 ease-in-out"
+                        unoptimized
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
                       

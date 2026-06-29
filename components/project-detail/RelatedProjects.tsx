@@ -53,6 +53,7 @@ export default function RelatedProjects({ projects }: Props) {
                     alt={p.title}
                     fill
                     className="object-cover group-hover:scale-110 transition-transform duration-700"
+                    unoptimized
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                   <span className="absolute top-3 left-3 bg-[#F5C33C] text-[#711113] text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full">

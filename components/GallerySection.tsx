@@ -2,6 +2,7 @@
 import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import Image from "next/image";
 
 export default function GallerySection() {
   const [galleryImages, setGalleryImages] = useState<any[]>([]);
@@ -100,10 +101,12 @@ export default function GallerySection() {
                 className="min-w-[85vw] sm:min-w-[350px] md:min-w-[400px] snap-center flex flex-col group cursor-pointer"
               >
                 <div className="relative overflow-hidden h-[250px] md:h-[300px] w-full rounded-2xl shadow-md border-white">
-                  <img
+                  <Image
                     src={img.url}
                     alt={img.title}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-in-out"
+                    fill
+                    className="object-cover group-hover:scale-110 transition-transform duration-700 ease-in-out"
+                    unoptimized
                   />
                   <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                      <span className="text-white border border-white px-4 py-2 uppercase tracking-widest text-xs font-bold font-mono hover:bg-white hover:text-black transition-colors pointer-events-none">

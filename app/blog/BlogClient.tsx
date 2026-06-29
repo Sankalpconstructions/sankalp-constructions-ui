@@ -4,6 +4,7 @@ import { Search, ChevronRight, Loader2, ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import PageBanner from "@/components/PageBanner";
+import Image from "next/image";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
@@ -138,10 +139,12 @@ export default function BlogPage() {
                     className="bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all border border-gray-100 overflow-hidden group flex flex-col"
                   >
                     <div className="h-64 overflow-hidden relative">
-                      <img 
+                      <Image 
                         src={blog.image} 
                         alt={blog.title} 
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-in-out" 
+                        fill
+                        className="object-cover group-hover:scale-110 transition-transform duration-700 ease-in-out" 
+                        unoptimized
                       />
                       <div className="absolute top-4 left-4 bg-[#711113] text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded">
                         {blog.category}

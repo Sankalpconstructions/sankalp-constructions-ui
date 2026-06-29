@@ -67,6 +67,7 @@ export default function ProjectGallery({ images = [], projectTitle }: Props) {
                     alt={img.title}
                     fill
                     className="object-cover"
+                    unoptimized
                   />
                 </button>
               ))}
@@ -90,6 +91,7 @@ export default function ProjectGallery({ images = [], projectTitle }: Props) {
                         fill
                         className="object-cover"
                         priority
+                        unoptimized
                       />
                     </div>
                     <div className="hidden sm:block absolute inset-0 w-full h-full">
@@ -99,6 +101,7 @@ export default function ProjectGallery({ images = [], projectTitle }: Props) {
                         fill
                         className="object-cover md:object-cover"
                         priority
+                        unoptimized
                       />
                     </div>
                   </div>

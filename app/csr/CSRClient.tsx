@@ -11,6 +11,7 @@ import {
   Image as ImageIcon,
 } from "lucide-react";
 import PageBanner from "@/components/PageBanner";
+import Image from "next/image";
 
 const getYoutubeEmbedUrl = (url?: string) => {
   if (!url) return null;
@@ -106,10 +107,12 @@ export default function CSRClient() {
                 className="bg-white border border-gray-100 rounded-2xl shadow-sm hover:shadow-xl hover:border-[#711113]/20 transition-all duration-300 cursor-pointer overflow-hidden group flex flex-col h-full"
               >
                 <div className="w-full h-48 lg:h-56 relative overflow-hidden flex-shrink-0">
-                  <img
+                  <Image
                     src={item.images?.[0] || getYoutubeThumbnail(item.youtubeLink) || 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=1200'}
                     alt={item.title || "Event Highlight"}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-in-out"
+                    fill
+                    className="object-cover group-hover:scale-110 transition-transform duration-700 ease-in-out"
+                    unoptimized
                   />
 
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
@@ -183,10 +186,12 @@ export default function CSRClient() {
               <div className="overflow-y-auto no-scrollbar flex-1">
                 {/* Banner */}
                 <div className="w-full h-[300px] md:h-[450px] relative shrink-0">
-                  <img
+                  <Image
                     src={selectedEvent.images?.[0] || getYoutubeThumbnail(selectedEvent.youtubeLink) || 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=1200'}
                     alt={selectedEvent.title || "Event Highlight"}
-                    className="w-full h-full object-cover"
+                    fill
+                    className="object-cover"
+                    unoptimized
                   />
 
                   <div className="absolute inset-0 bg-gradient-to-t from-white via-black/20 to-transparent"></div>
@@ -271,10 +276,12 @@ export default function CSRClient() {
                             whileHover={{ y: -5 }}
                             className="aspect-video rounded-2xl overflow-hidden shadow-sm relative group cursor-pointer border border-gray-100"
                           >
-                            <img
+                            <Image
                               src={img}
                               alt={`${selectedEvent.title} ${idx + 1}`}
-                              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                              fill
+                              className="object-cover group-hover:scale-110 transition-transform duration-700"
+                              unoptimized
                             />
 
                             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />

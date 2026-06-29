@@ -7,6 +7,7 @@ import { Navigation, Autoplay, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
+import Image from "next/image";
 import { useAppData } from "@/context/AppDataContext";
 import type { Testimonial } from "@/context/AppDataContext";
 
@@ -216,9 +217,11 @@ export default function TestimonialsSection() {
                           "{t.quote}"
                         </p>
                         <div className="flex items-center gap-4 mt-auto pt-4 border-t border-gray-50">
-                          {t.avatar ? (
-                             <img src={t.avatar} alt={t.name} className="w-14 h-14 rounded-full object-cover ring-4 ring-gray-50 shadow-sm" />
-                          ) : (
+                           {t.avatar ? (
+                             <div className="relative w-14 h-14 rounded-full overflow-hidden ring-4 ring-gray-50 shadow-sm shrink-0">
+                               <Image src={t.avatar} alt={t.name} fill className="object-cover" unoptimized />
+                             </div>
+                           ) : (
                              <div className="w-14 h-14 rounded-full bg-gray-100 flex items-center justify-center font-bold text-gray-400 ring-4 ring-gray-50 shadow-sm">
                                {t.name.charAt(0)}
                              </div>

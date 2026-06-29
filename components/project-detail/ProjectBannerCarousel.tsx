@@ -46,7 +46,7 @@ export default function ProjectBannerCarousel({ slides, title, location, type }:
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.9 }}
-            className="absolute inset-0 w-full h-full object-fill opacity-70 block md:hidden"
+            className="absolute inset-0 w-full h-full object-cover opacity-70 block md:hidden"
           />
         )}
       </AnimatePresence>

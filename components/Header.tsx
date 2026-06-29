@@ -476,7 +476,7 @@ export default function Header() {
               opacity: 0,
               height: 0,
             }}
-            className="md:hidden bg-white/40 backdrop-blur-[40px] overflow-hidden"
+            className="md:hidden bg-white/40 backdrop-blur-[40px] overflow-y-auto max-h-[calc(100vh-80px)]"
           >
             <ul className="flex flex-col items-start px-4 py-4 gap-3 w-full">
               {visibleNavLinks.map((link) => (

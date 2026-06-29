@@ -11,6 +11,8 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import PageBanner from "@/components/PageBanner";
 import Image from "next/image";
+import { useSearchParams, useRouter } from "next/navigation";
+import { Search, X } from "lucide-react";
 
 // ─── Data ────────────────────────────────────────────────────────────────────
 type ProjectStatus = "ongoing" | "upcoming" | "completed";
@@ -65,8 +67,22 @@ const STATUS_BADGE: Record<
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 export default function AllProjectsPage() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState(searchParams.get("search") || "");
+
+  const handleSearchChange = (val: string) => {
+    setSearchQuery(val);
+    const newParams = new URLSearchParams(searchParams.toString());
+    if (val) {
+      newParams.set("search", val);
+    } else {
+      newParams.delete("search");
+    }
+    router.replace(`/projects?${newParams.toString()}`, { scroll: false });
+  };
 
   React.useEffect(() => {
     const fetchProjects = async () => {
@@ -98,10 +114,13 @@ export default function AllProjectsPage() {
   const [activeTab, setActiveTab] =
     useState<ProjectStatus | "all">("all");
 
-  const filteredProjects =
-    activeTab === "all"
-      ? projects
-      : projects.filter((p) => p.status === activeTab);
+  const filteredProjects = projects.filter((p) => {
+    const matchesTab = activeTab === "all" || p.status === activeTab;
+    const matchesSearch = p.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                          p.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                          p.type.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesTab && matchesSearch;
+  });
 
   return (
     <div className="bg-[#f8f5f0] text-gray-900">
@@ -142,6 +161,26 @@ export default function AllProjectsPage() {
               </>
             )}
           </span>
+        </div>
+        
+        {/* Search Input */}
+        <div className="relative max-w-xl mb-12">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+          <input
+            type="text"
+            placeholder="Search projects by name, location, or type..."
+            className="w-full pl-12 pr-12 py-3 rounded-xl border border-gray-200 shadow-sm focus:outline-none focus:border-[#29B1D2] focus:ring-1 focus:ring-[#29B1D2] transition-colors"
+            value={searchQuery}
+            onChange={(e) => handleSearchChange(e.target.value)}
+          />
+          {searchQuery && (
+            <button
+              onClick={() => handleSearchChange("")}
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#711113] transition-colors cursor-pointer"
+            >
+              <X size={18} />
+            </button>
+          )}
         </div>
 
         {/* Projects Grid */}

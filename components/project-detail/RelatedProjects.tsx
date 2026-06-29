@@ -2,6 +2,7 @@
 import { motion } from "framer-motion";
 import { MapPin, ChevronRight } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 interface RelatedProject {
   id: string;
@@ -47,10 +48,11 @@ export default function RelatedProjects({ projects }: Props) {
             >
               <Link href={`/projects/${p.id}`}>
                 <div className="relative h-52 overflow-hidden">
-                  <img
+                  <Image
                     src={p.image}
                     alt={p.title}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                    fill
+                    className="object-cover group-hover:scale-110 transition-transform duration-700"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                   <span className="absolute top-3 left-3 bg-[#F5C33C] text-[#711113] text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full">

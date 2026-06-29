@@ -3,6 +3,7 @@ import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 interface BannerSlide {
   image: string;
@@ -27,32 +28,44 @@ export default function ProjectBannerCarousel({ slides, title, location, type }:
   return (
     <section className="relative w-full aspect-[4/5] md:aspect-auto md:h-[75vh] overflow-hidden bg-black">
       <AnimatePresence mode="popLayout">
-        <motion.img
+        <motion.div
           key={`desktop-${current}`}
-          src={slides[current]?.image}
-          alt={title}
           initial={{ opacity: 0, scale: 1.08 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.9 }}
-          className={`absolute inset-0 w-full h-full object-cover opacity-70 ${slides[current]?.mobileImage ? 'hidden md:block' : ''}`}
-        />
-        {slides[current]?.mobileImage && (
-          <motion.img
-            key={`mobile-${current}`}
-            src={slides[current]?.mobileImage}
+          className={`absolute inset-0 w-full h-full ${slides[current]?.mobileImage ? 'hidden md:block' : ''}`}
+        >
+          <Image
+            src={slides[current]?.image}
             alt={title}
+            fill
+            className="object-cover"
+            priority
+          />
+        </motion.div>
+        {slides[current]?.mobileImage && (
+          <motion.div
+            key={`mobile-${current}`}
             initial={{ opacity: 0, scale: 1.08 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.9 }}
-            className="absolute inset-0 w-full h-full object-cover opacity-70 block md:hidden"
-          />
+            className="absolute inset-0 w-full h-full block md:hidden"
+          >
+            <Image
+              src={slides[current]?.mobileImage}
+              alt={title}
+              fill
+              className="object-cover"
+              priority
+            />
+          </motion.div>
         )}
       </AnimatePresence>
 
       {/* Gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-black/30" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
 
       {/* Content */}
       <div className="absolute inset-x-0 bottom-0 p-6 md:p-12 z-10 text-white">

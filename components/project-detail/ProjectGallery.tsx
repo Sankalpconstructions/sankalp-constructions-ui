@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Camera, ImageIcon } from "lucide-react";
+import Image from "next/image";
 
 interface GalleryImage {
   desktopSrc: string;
@@ -61,10 +62,11 @@ export default function ProjectGallery({ images = [], projectTitle }: Props) {
                     : "border-gray-200 opacity-70 hover:opacity-100 hover:border-gray-300"
                     }`}
                 >
-                  <img
+                  <Image
                     src={img.mobileSrc || img.desktopSrc}
                     alt={img.title}
-                    className="w-full h-full object-fill"
+                    fill
+                    className="object-cover"
                   />
                 </button>
               ))}
@@ -80,14 +82,26 @@ export default function ProjectGallery({ images = [], projectTitle }: Props) {
                   transition={{ duration: 0.3 }}
                   className="absolute inset-0 w-full h-full"
                 >
-                  <picture className="w-full h-full">
-                    <source media="(max-width: 640px)" srcSet={formattedImages[activeIndex]?.mobileSrc} />
-                    <img
-                      src={formattedImages[activeIndex]?.desktopSrc}
-                      alt={formattedImages[activeIndex]?.title}
-                      className="w-full h-full object-cover md:object-cover"
-                    />
-                  </picture>
+                  <div className="w-full h-full">
+                    <div className="block sm:hidden absolute inset-0 w-full h-full">
+                      <Image
+                        src={formattedImages[activeIndex]?.mobileSrc || formattedImages[activeIndex]?.desktopSrc}
+                        alt={formattedImages[activeIndex]?.title}
+                        fill
+                        className="object-cover"
+                        priority
+                      />
+                    </div>
+                    <div className="hidden sm:block absolute inset-0 w-full h-full">
+                      <Image
+                        src={formattedImages[activeIndex]?.desktopSrc}
+                        alt={formattedImages[activeIndex]?.title}
+                        fill
+                        className="object-cover md:object-cover"
+                        priority
+                      />
+                    </div>
+                  </div>
                 </motion.div>
               </AnimatePresence>
 

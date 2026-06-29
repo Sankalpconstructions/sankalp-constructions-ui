@@ -19,6 +19,7 @@ const navLinks = [
   { name: "Our Projects", href: "/projects" },
   { name: "CSR", href: "/csr" },
   { name: "Rent", href: "#" },
+  { name: "Resale", href: "#" },
   { name: "Contact", href: "/contact" },
 ];
 
@@ -59,6 +60,11 @@ export default function Header() {
       if (link.name === "Rent") {
         const showRes = config.show_rental_residential !== false;
         const showComm = config.show_rental_commercial !== false;
+        return showRes || showComm;
+      }
+      if (link.name === "Resale") {
+        const showRes = config.show_resale_residential !== false;
+        const showComm = config.show_resale_commercial !== false;
         return showRes || showComm;
       }
       if (link.name === "Blog" && config.show_blog_page === false) return false;
@@ -181,7 +187,7 @@ export default function Header() {
               key={link.name}
               className="relative group"
               onMouseEnter={() => {
-                if (link.name === "Our Projects" || link.name === "Rent") {
+                if (link.name === "Our Projects" || link.name === "Rent" || link.name === "Resale") {
                   setActiveDropdown(link.name);
                 }
               }}
@@ -192,6 +198,7 @@ export default function Header() {
                 onClick={(e) =>
                   link.name !== "Our Projects" &&
                   link.name !== "Rent" &&
+                  link.name !== "Resale" &&
                   handleScrollTo(e, link.href)
                 }
                 className="text-black/80 hover:text-black text-[11px] uppercase font-bold tracking-[0.2em] transition-colors flex items-center gap-1"
@@ -199,20 +206,19 @@ export default function Header() {
                 {link.name}
 
                 {(link.name === "Our Projects" ||
-                  link.name === "Rent") && (
+                  link.name === "Rent" ||
+                  link.name === "Resale") && (
                     <ChevronDown
                       size={14}
-                      className={`transition-transform duration-300 ${
-                        activeDropdown === link.name ? "rotate-180" : ""
-                      }`}
+                      className={`transition-transform duration-300 ${activeDropdown === link.name ? "rotate-180" : ""
+                        }`}
                     />
                   )}
               </Link>
 
               {link.name === "Our Projects" && (
-                <div className={`absolute top-full left-1/2 -translate-x-1/2 pt-6 transition-all duration-500 z-50 ${
-                  activeDropdown === "Our Projects" ? "opacity-100 visible" : "opacity-0 invisible pointer-events-none"
-                }`}>
+                <div className={`absolute top-full left-1/2 -translate-x-1/2 pt-6 transition-all duration-500 z-50 ${activeDropdown === "Our Projects" ? "opacity-100 visible" : "opacity-0 invisible pointer-events-none"
+                  }`}>
                   <div className="w-max bg-white/40 backdrop-blur-[40px] text-black shadow-2xl p-8 border border-black/10 flex gap-10">
 
                     <div className="flex-1">
@@ -280,9 +286,8 @@ export default function Header() {
               )}
 
               {link.name === "Rent" && (
-                <div className={`absolute top-full left-1/2 -translate-x-1/2 pt-6 transition-all duration-500 z-50 ${
-                  activeDropdown === "Rent" ? "opacity-100 visible" : "opacity-0 invisible pointer-events-none"
-                }`}>
+                <div className={`absolute top-full left-1/2 -translate-x-1/2 pt-6 transition-all duration-500 z-50 ${activeDropdown === "Rent" ? "opacity-100 visible" : "opacity-0 invisible pointer-events-none"
+                  }`}>
                   <div className="w-max min-w-[200px] bg-white/40 backdrop-blur-[40px] text-black shadow-2xl p-8 border border-black/10 flex gap-10">
                     {config.show_rental_residential !== false && (
                       <div className="flex-1">
@@ -291,8 +296,8 @@ export default function Header() {
                         </h3>
                         <ul className="space-y-4">
                           <li>
-                            <Link 
-                              href="/rent/residential" 
+                            <Link
+                              href="/rent/residential"
                               onClick={() => setActiveDropdown(null)}
                               className="text-sm text-black/70 hover:text-black font-medium"
                             >
@@ -310,8 +315,54 @@ export default function Header() {
                         </h3>
                         <ul className="space-y-4">
                           <li>
-                            <Link 
-                              href="/rent/commercial" 
+                            <Link
+                              href="/rent/commercial"
+                              onClick={() => setActiveDropdown(null)}
+                              className="text-sm text-black/70 hover:text-black font-medium"
+                            >
+                              View Commercial Properties
+                            </Link>
+                          </li>
+                        </ul>
+                      </div>
+                    )}
+
+                  </div>
+                </div>
+              )}
+
+              {link.name === "Resale" && (
+                <div className={`absolute top-full left-1/2 -translate-x-1/2 pt-6 transition-all duration-500 z-50 ${activeDropdown === "Resale" ? "opacity-100 visible" : "opacity-0 invisible pointer-events-none"
+                  }`}>
+                  <div className="w-max min-w-[200px] bg-white/40 backdrop-blur-[40px] text-black shadow-2xl p-8 border border-black/10 flex gap-10">
+                    {config.show_resale_residential !== false && (
+                      <div className="flex-1">
+                        <h3 className="text-black font-bold text-xs uppercase mb-6">
+                          Residential
+                        </h3>
+                        <ul className="space-y-4">
+                          <li>
+                            <Link
+                              href="/resale/residential"
+                              onClick={() => setActiveDropdown(null)}
+                              className="text-sm text-black/70 hover:text-black font-medium"
+                            >
+                              View Residential Properties
+                            </Link>
+                          </li>
+                        </ul>
+                      </div>
+                    )}
+
+                    {config.show_resale_commercial !== false && (
+                      <div className={`flex-1 ${config.show_resale_residential !== false ? "border-l border-black/10 pl-10" : ""}`}>
+                        <h3 className="text-black font-bold text-xs uppercase mb-6">
+                          Commercial
+                        </h3>
+                        <ul className="space-y-4">
+                          <li>
+                            <Link
+                              href="/resale/commercial"
                               onClick={() => setActiveDropdown(null)}
                               className="text-sm text-black/70 hover:text-black font-medium"
                             >
@@ -486,6 +537,26 @@ export default function Header() {
                         )}
                         {config.show_rental_commercial !== false && (
                           <Link href="/rent/commercial" onClick={() => setIsOpen(false)} className="text-black/80 font-bold text-[11px] uppercase tracking-widest hover:text-black block py-1.5">Commercial</Link>
+                        )}
+                      </div>
+                    </div>
+                  ) : link.name === "Resale" ? (
+                    <div className="w-full">
+                      <button
+                        className="text-black uppercase text-[11px] tracking-[0.15em] hover:text-black/70 flex items-center justify-between w-full pb-2 border-b border-black/10"
+                        onClick={() => {
+                          const el = document.getElementById('mobile-resale');
+                          if (el) el.classList.toggle('hidden');
+                        }}
+                      >
+                        {link.name} <ChevronDown size={13} />
+                      </button>
+                      <div id="mobile-resale" className="hidden w-full bg-white/20 py-2 px-3 mt-1.5 text-left rounded-md flex flex-col gap-0.5">
+                        {config.show_resale_residential !== false && (
+                          <Link href="/resale/residential" onClick={() => setIsOpen(false)} className="text-black/80 font-bold text-[11px] uppercase tracking-widest hover:text-black block py-1.5">Residential</Link>
+                        )}
+                        {config.show_resale_commercial !== false && (
+                          <Link href="/resale/commercial" onClick={() => setIsOpen(false)} className="text-black/80 font-bold text-[11px] uppercase tracking-widest hover:text-black block py-1.5">Commercial</Link>
                         )}
                       </div>
                     </div>

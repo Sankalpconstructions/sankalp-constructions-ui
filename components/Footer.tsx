@@ -113,15 +113,15 @@ export default function Footer() {
                 <ul className="space-y-4">
                   <li className="flex items-start gap-3 text-sm text-gray-500">
                     <MapPin size={16} className="shrink-0 text-gray-400 mt-0.5" />
-                    <span className="leading-relaxed">S S Arcade, Sainikpuri 1st Main Rd, Secunderabad, TS 500094</span>
+                    <a href="https://www.google.com/maps/search/?api=1&query=Sankalp+constructions,+S+S+Arcade,+Sainikpuri+1st+Main+Rd,+Secunderabad,+TS+500094" target="_blank" rel="noopener noreferrer" className="leading-relaxed hover:text-gray-900 transition-colors">S S Arcade, Sainikpuri 1st Main Rd, Secunderabad, TS 500094</a>
                   </li>
                   <li className="flex items-center gap-3 text-sm text-gray-500">
                     <Phone size={16} className="shrink-0 text-gray-400" />
-                    <span>+91 73307 70111</span>
+                    <a href="tel:+917330770111" className="hover:text-gray-900 transition-colors">+91 73307 70111</a>
                   </li>
                   <li className="flex items-center gap-3 text-sm text-gray-500">
                     <Mail size={16} className="shrink-0 text-gray-400" />
-                    <span className="truncate">info@sankalpconstructions.in</span>
+                    <a href="mailto:info@sankalpconstructions.in" className="truncate hover:text-gray-900 transition-colors">info@sankalpconstructions.in</a>
                   </li>
                 </ul>
               </div>

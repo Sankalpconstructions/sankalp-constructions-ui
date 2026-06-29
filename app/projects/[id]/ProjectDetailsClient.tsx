@@ -174,7 +174,7 @@ export default function ProjectDetailsPage() {
 
   return (
     <div className="bg-white">
-      <div className="pt-0">
+      <div className="pt-[88px]">
         <ProjectBannerCarousel
           slides={project.slides}
           title={project.title}

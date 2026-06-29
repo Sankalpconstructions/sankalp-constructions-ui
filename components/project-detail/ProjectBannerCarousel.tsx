@@ -25,7 +25,7 @@ export default function ProjectBannerCarousel({ slides, title, location, type }:
   const prev = useCallback(() => setCurrent((p) => (p === 0 ? total - 1 : p - 1)), [total]);
 
   return (
-    <section className="relative w-full h-[55vh] md:h-[75vh] overflow-hidden bg-black">
+    <section className="relative w-full aspect-[4/5] md:aspect-auto md:h-[75vh] overflow-hidden bg-black">
       <AnimatePresence mode="popLayout">
         <motion.img
           key={`desktop-${current}`}

@@ -18,6 +18,7 @@ export interface Project {
   title: string;
   location: string;
   image: string;
+  mobileImage?: string;
   type: string;
   status: string;
   configurations: string[];
@@ -75,7 +76,7 @@ export const AppDataProvider = ({
     if (hasFetched.current) return;
     hasFetched.current = true;
 
-    const fetchProjects = fetch(`${API_BASE_URL}/api/projects`)
+    const fetchProjects = fetch(`${API_BASE_URL}/api/projects?minimal=true`)
       .then((r) => (r.ok ? r.json() : []))
       .then((data: any[]) => {
         const formatted: Project[] = data.map((p) => ({
@@ -84,6 +85,7 @@ export const AppDataProvider = ({
           title: p.title,
           location: p.location,
           image:
+            (p.mobileBanners && p.mobileBanners.length > 0 ? p.mobileBanners[0] : null) ||
             p.mainImage ||
             p.image ||
             "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800",

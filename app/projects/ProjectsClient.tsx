@@ -88,7 +88,7 @@ export default function AllProjectsPage() {
     const fetchProjects = async () => {
       try {
         const baseUrl = process.env.NEXT_PUBLIC_API_URL || (typeof window !== "undefined" ? `${window.location.protocol}//${window.location.hostname}:3001` : 'http://localhost:3001');
-        const res = await fetch(`${baseUrl}/api/projects`);
+        const res = await fetch(`${baseUrl}/api/projects?minimal=true`);
         if (res.ok) {
           const data = await res.json();
           const formatted = data.map((p: any) => ({
@@ -96,7 +96,7 @@ export default function AllProjectsPage() {
             title: p.title,
             category: p.type || "Residential",
             location: p.location,
-            image: p.banners?.[0] || p.image || "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1600",
+            image: p.mobileBanners?.[0] || p.banners?.[0] || p.image || "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1600",
             status: (p.status || "upcoming").toLowerCase(),
             possessionDate: p.possessionDate || "TBA",
             type: p.type
@@ -116,9 +116,9 @@ export default function AllProjectsPage() {
 
   const filteredProjects = projects.filter((p) => {
     const matchesTab = activeTab === "all" || p.status === activeTab;
-    const matchesSearch = p.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                          p.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          p.type.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSearch = p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      p.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      p.type.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesTab && matchesSearch;
   });
 
@@ -162,7 +162,7 @@ export default function AllProjectsPage() {
             )}
           </span>
         </div>
-        
+
         {/* Search Input */}
         <div className="relative max-w-xl mb-12">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
@@ -230,12 +230,13 @@ export default function AllProjectsPage() {
                     transition={{ duration: 0.4 }}
                     className="bg-white rounded-2xl shadow-md hover:shadow-2xl transition-all duration-400 overflow-hidden group flex flex-col border border-gray-100"
                   >
-                    <div className="relative h-60 overflow-hidden">
+                    <div className="relative aspect-[2/2] overflow-hidden">
                       <Image
                         src={project.image}
                         alt={project.title}
                         fill
-                        className="object-cover group-hover:scale-110 transition-transform duration-700 ease-in-out"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                        className="object-cover object-top group-hover:scale-110 transition-transform duration-700 ease-in-out"
                         unoptimized
                       />
 

@@ -17,26 +17,24 @@ const STATUS_BADGE: Record<
 
 export default function ProjectsShowcase() {
   const scrollRef = useRef<HTMLDivElement>(null);
-  const [isHovered, setIsHovered] = useState(false);
-  const [isManualScrolling, setIsManualScrolling] = useState(false);
+  const isHovered = useRef(false);
+  const isManualScrolling = useRef(false);
 
-  // Read from global prefetch cache — data is already loading during preloader
+  // Read from global prefetch cache
   const { projects: allProjects, isReady } = useAppData();
   const projects = allProjects.filter(p => (p.status || "").toLowerCase() !== "completed");
   const loading = !isReady;
 
-  // Duplicate projects to create an infinite scroll illusion
-  // Using 4 sets ensures we have enough items for very wide screens and seamless wrapping
   const duplicatedProjects = projects.length > 0 ? [...projects, ...projects, ...projects, ...projects] : [];
-  console.log("du", duplicatedProjects)
+
   const handleScrollClick = useCallback((direction: "left" | "right") => {
     if (!scrollRef.current || projects.length === 0) return;
-    setIsManualScrolling(true);
+    isManualScrolling.current = true;
 
     const container = scrollRef.current;
     const firstCard = container.firstElementChild as HTMLElement;
     if (!firstCard) {
-      setIsManualScrolling(false);
+      isManualScrolling.current = false;
       return;
     }
 
@@ -44,7 +42,6 @@ export default function ProjectsShowcase() {
     const cardWidth = firstCard.offsetWidth + gap;
     const singleSetWidth = cardWidth * projects.length;
 
-    // Wrap around logic to keep scroll in the middle sets invisibly
     if (direction === "right" && container.scrollLeft >= singleSetWidth * 2 - 10) {
       container.scrollLeft -= singleSetWidth;
     } else if (direction === "left" && container.scrollLeft <= 10) {
@@ -58,12 +55,11 @@ export default function ProjectsShowcase() {
       });
 
       setTimeout(() => {
-        setIsManualScrolling(false);
-      }, 600); // Wait for smooth scroll to finish
+        isManualScrolling.current = false;
+      }, 600);
     });
   }, [projects.length]);
 
-  // Set initial scroll position to the second set to allow immediate left scrolling
   useEffect(() => {
     if (scrollRef.current && projects.length > 0) {
       const container = scrollRef.current;
@@ -76,37 +72,25 @@ export default function ProjectsShowcase() {
     }
   }, [projects]);
 
-  // Infinite loop Slide -> Stop -> Slide -> Stop
+  // Infinite loop
   useEffect(() => {
     if (projects.length === 0 || loading) return;
 
-    let intervalId: ReturnType<typeof setInterval>;
-
-    const startCarousel = () => {
-      intervalId = setInterval(() => {
+    const intervalId = setInterval(() => {
+      if (!isHovered.current && !isManualScrolling.current) {
         handleScrollClick("right");
-      }, 3500); // 3.5 seconds pause between transitions
-    };
+      }
+    }, 3500);
 
-    if (!isHovered && !isManualScrolling) {
-      startCarousel();
-    }
-
-    return () => {
-      if (intervalId) clearInterval(intervalId);
-    };
-  }, [projects.length, loading, isHovered, isManualScrolling, handleScrollClick]);
+    return () => clearInterval(intervalId);
+  }, [projects.length, loading, handleScrollClick]);
 
   return (
     <section id="projects" className="py-8 md:py-16 bg-gray-50 text-gray-900 overflow-hidden">
       <div className="container mx-auto px-4 lg:px-8">
 
         <div className="flex flex-col md:flex-row justify-between md:items-end gap-6 mb-6 md:mb-12">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
+          <div>
             <h2 className="text-2xl text-center md:text-left md:text-3xl lg:text-4xl font-bold text-[#711113] mb-3">
               Our Projects
             </h2>
@@ -114,7 +98,7 @@ export default function ProjectsShowcase() {
             <p className="text-gray-600 text-center md:text-left mb-3 whitespace-pre-line">
               Explore our residential & commercial projects.
             </p>
-          </motion.div>
+          </div>
 
           <div className="flex gap-4 self-end md:self-auto">
             <button
@@ -136,11 +120,11 @@ export default function ProjectsShowcase() {
 
         <div
           className="relative group w-full"
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
-          onTouchStart={() => setIsHovered(true)}
+          onMouseEnter={() => { isHovered.current = true; }}
+          onMouseLeave={() => { isHovered.current = false; }}
+          onTouchStart={() => { isHovered.current = true; }}
           onTouchEnd={() => {
-            setTimeout(() => setIsHovered(false), 2000);
+            setTimeout(() => { isHovered.current = false; }, 2000);
           }}
         >
           <div
@@ -167,9 +151,9 @@ export default function ProjectsShowcase() {
                 return (
                   <div
                     key={`${project.id}-${idx}`}
-                    className="w-full md:w-[60%] lg:w-[38%] shrink-0 snap-start"
+                    className="w-full sm:w-[60%] md:w-[45%] lg:w-[calc(33.333%-21px)] shrink-0 snap-start"
                   >
-                    <div className="relative h-[300px] md:h-[400px] rounded-lg overflow-hidden shadow-xl group/card">
+                    <div className="relative h-[400px] sm:h-[500px] rounded-lg overflow-hidden shadow-xl group/card">
 
                       <Link href={`/projects/${project.id}`} className="absolute inset-0 z-20" />
 
@@ -178,8 +162,8 @@ export default function ProjectsShowcase() {
                         alt={project.title}
                         fill
                         sizes="(max-width: 768px) 100vw, (max-width: 1024px) 60vw, 38vw"
-                        priority={idx < 3}
-                        className="object-cover group-hover/card:scale-110 transition duration-700"
+                        priority={true}
+                        className="object-cover object-top group-hover/card:scale-110 transition duration-700 bg-gray-300"
                         unoptimized
                       />
 

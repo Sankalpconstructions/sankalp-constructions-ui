@@ -20,6 +20,7 @@ const navLinks = [
   { name: "CSR", href: "/csr" },
   { name: "Rent", href: "#" },
   { name: "Resale", href: "#" },
+  { name: "Blog", href: "/blog" },
   { name: "Contact", href: "/contact" },
 ];
 
@@ -220,7 +221,7 @@ export default function Header() {
               {link.name === "Our Projects" && (
                 <div className={`absolute top-full left-1/2 -translate-x-1/2 pt-6 transition-all duration-500 z-50 ${activeDropdown === "Our Projects" ? "opacity-100 visible" : "opacity-0 invisible pointer-events-none"
                   }`}>
-                  <div className="w-max bg-white/40 backdrop-blur-[40px] text-black shadow-2xl p-8 border border-black/10 flex gap-10">
+                  <div className="w-max max-h-[65vh] overflow-y-auto overscroll-contain bg-white/40 backdrop-blur-[40px] text-black shadow-2xl p-8 border border-black/10 flex gap-10 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
 
                     <div className="flex-1">
                       <h3 className="text-black font-bold text-xs uppercase mb-6">

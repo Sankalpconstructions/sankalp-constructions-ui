@@ -31,7 +31,7 @@ export default function TeamSection() {
             <Image src="/assets/Title-decorations.png" alt="Decoration" width={200} height={30} className="w-[150px] md:w-[200px] h-auto object-contain mt-1 mb-4" unoptimized />
           </div>
           <p className="text-gray-500 text-xs md:text-base px-2 leading-relaxed">
-            The visionary leaders and dedicated experts behind Sankalp Constructions&apos; success.
+            The visionary leaders and dedicated experts behind the success of Sankalp Constructions.
           </p>
         </div>
 

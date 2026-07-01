@@ -13,6 +13,8 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  // Added to allow testing on phone
+  allowedDevOrigins: ["10.143.240.53"],
 };
 
 export default nextConfig;

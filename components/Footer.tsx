@@ -77,9 +77,7 @@ export default function Footer() {
                   {config.show_csr_page !== false && (
                     <li><Link href="/csr" className="text-sm text-gray-500 hover:text-gray-900 transition-colors">CSR Initiatives</Link></li>
                   )}
-                  {config.show_blog_page === true && (
-                    <li><Link href="/blog" className="text-sm text-gray-500 hover:text-gray-900 transition-colors">Insights & Blogs</Link></li>
-                  )}
+                  <li><Link href="/blog" className="text-sm text-gray-500 hover:text-gray-900 transition-colors">Insights & Blogs</Link></li>
                 </ul>
               </div>
 

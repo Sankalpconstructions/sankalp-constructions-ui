@@ -153,7 +153,7 @@ function ProjectOverviewCard({
           onClick={handleDownloadBrochure}
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
-          className="relative flex-1 py-3.5 cursor-pointer bg-white border-2 border-[#711113] text-[#711113] hover:bg-[#711113] hover:text-white font-bold uppercase tracking-widest text-[10px] md:text-xs rounded-xl overflow-hidden transition-colors duration-300 flex items-center justify-center gap-2 group"
+          className="relative flex-1 py-3.5 cursor-pointer bg-[#F5C33C] border-2 border-[#F5C33C] text-black font-bold uppercase tracking-widest text-[10px] md:text-xs rounded-xl overflow-hidden transition-colors duration-300 flex items-center justify-center gap-2 group"
         >
           {/* Continuous Shimmer Effect */}
           <motion.div

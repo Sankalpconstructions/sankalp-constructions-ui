@@ -45,6 +45,66 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   });
 }
 
-export default async function ProjectDetailsServerPage() {
-  return <ProjectDetailsClient />;
+export default async function ProjectDetailsServerPage({ params }: Props) {
+  const resolvedParams = await params;
+  const id = resolvedParams.id;
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+
+  let project = null;
+  let relatedProjects = [];
+
+  try {
+    // 1. Fetch specific project
+    const res = await fetch(`${baseUrl}/api/projects/${id}`, { cache: 'no-store' });
+    if (res.ok) {
+      const data = await res.json();
+      project = {
+        ...data,
+        id: data._id,
+        slides: data.banners?.map((b: string, i: number) => ({ image: b, mobileImage: data.mobileBanners?.[i] })) || [{ image: data.image || "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1600" }],
+        gallery: data.gallery || [],
+        pricingRows: (data.priceConfigurations || [])
+          .filter((pc: any) => 
+            pc.configuration?.trim() || pc.carpetArea?.trim() || pc.superBuiltUpArea?.trim() || pc.udsSqYards?.trim()
+          )
+          .map((pc: any) => ({
+            type: pc.configuration,
+            area: pc.carpetArea,
+            superBuiltUpArea: pc.superBuiltUpArea,
+            udsSqYards: pc.udsSqYards,
+            facing: pc.price
+          })),
+        configurations: data.priceConfigurations || [],
+        floorPlans: data.floorPlans || [],
+        nearbyLocations: data.landmarks?.map((lm: any) => ({
+          name: lm.text,
+          distance: "",
+          category: lm.type
+        })) || [],
+        floorPlansCount: data.floorPlans?.length || 0,
+        brochureUrl: data.brochures?.[0]?.url || "",
+        address: data.address || data.location
+      };
+    }
+
+    // 2. Fetch related projects
+    const allRes = await fetch(`${baseUrl}/api/projects?minimal=true`, { cache: 'no-store' });
+    if (allRes.ok) {
+      const allData = await allRes.json();
+      relatedProjects = allData
+        .filter((p: any) => p._id !== id)
+        .slice(0, 3)
+        .map((p: any) => ({
+          id: p._id,
+          title: p.title,
+          location: p.location,
+          type: p.type,
+          image: p.banners?.[0] || p.image || "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1600",
+        }));
+    }
+  } catch (err) {
+    console.error("Error fetching project data in server component:", err);
+  }
+
+  return <ProjectDetailsClient initialProject={project} initialRelated={relatedProjects} />;
 }

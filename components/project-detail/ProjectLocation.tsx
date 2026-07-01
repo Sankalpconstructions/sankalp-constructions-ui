@@ -140,7 +140,7 @@ export default function ProjectLocation({ mapSrc, address, nearbyLocations }: Pr
       <div className="container mx-auto px-4 lg:px-8 py-10 relative">
 
           {Object.keys(grouped).length > 0 && (
-            <div className="flex flex-wrap gap-2.5 justify-center mt-6">
+            <div className="flex flex-wrap gap-2.5 justify-center mt-6 mb-10">
               <motion.button
                 initial={{ opacity: 0, scale: 0.8 }}
                 whileInView={{ opacity: 1, scale: 1 }}
